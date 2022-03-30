@@ -1,0 +1,17 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "hekya.info",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "inka",
+            "database": "u1448869_inkaproject",
+            "username": "u1448869_inka",
+            "password": "osbfTpaJ7FSG"
+        }
+    ]
+}

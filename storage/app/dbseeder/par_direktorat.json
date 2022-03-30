@@ -1,0 +1,30 @@
+ [
+    {
+      "direktorat_id": "1",
+      "direktorat_name": "Direktorat Utama",
+      "direktorat_del_st": "1",
+      "created_at": "",
+      "updated_at": "27/10/2021 21:39:12"
+    },
+    {
+      "direktorat_id": "2",
+      "direktorat_name": "Direktorat Keuangan, SDM dan Manajemen Risiko",
+      "direktorat_del_st": "1",
+      "created_at": "",
+      "updated_at": "27/10/2021 21:39:55"
+    },
+    {
+      "direktorat_id": "3",
+      "direktorat_name": "Direktorat Pengembangan",
+      "direktorat_del_st": "1",
+      "created_at": "",
+      "updated_at": "27/10/2021 21:40:13"
+    },
+    {
+      "direktorat_id": "4",
+      "direktorat_name": "Direktorat Operasi",
+      "direktorat_del_st": "1",
+      "created_at": "",
+      "updated_at": "27/10/2021 21:40:31"
+    }
+  ]

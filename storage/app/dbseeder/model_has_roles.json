@@ -1,0 +1,162 @@
+[
+    {
+      "role_id": "1",
+      "model_type": "App\\Models\\User",
+      "model_id": "23"
+    },
+    {
+      "role_id": "1",
+      "model_type": "App\\Models\\User",
+      "model_id": "59"
+    },
+    {
+      "role_id": "1",
+      "model_type": "App\\Models\\User",
+      "model_id": "60"
+    },
+    {
+      "role_id": "1",
+      "model_type": "App\\Models\\User",
+      "model_id": "61"
+    },
+    {
+      "role_id": "1",
+      "model_type": "App\\Models\\User",
+      "model_id": "62"
+    },
+    {
+      "role_id": "1",
+      "model_type": "App\\Models\\User",
+      "model_id": "75"
+    },
+    {
+      "role_id": "1",
+      "model_type": "App\\Models\\User",
+      "model_id": "83"
+    },
+    {
+      "role_id": "1",
+      "model_type": "App\\Models\\User",
+      "model_id": "87"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "19"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "25"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "26"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "29"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "31"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "32"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "34"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "35"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "37"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "38"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "40"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "42"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "45"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "52"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "57"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "60"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "64"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "65"
+    },
+    {
+      "role_id": "2",
+      "model_type": "App\\Models\\User",
+      "model_id": "66"
+    },
+    {
+      "role_id": "4",
+      "model_type": "App\\Models\\User",
+      "model_id": "97"
+    },
+    {
+      "role_id": "6",
+      "model_type": "App\\Models\\User",
+      "model_id": "90"
+    },
+    {
+      "role_id": "6",
+      "model_type": "App\\Models\\User",
+      "model_id": "91"
+    },
+    {
+      "role_id": "8",
+      "model_type": "App\\Models\\User",
+      "model_id": "88"
+    },
+    {
+      "role_id": "10",
+      "model_type": "App\\Models\\User",
+      "model_id": "89"
+    }
+  ]

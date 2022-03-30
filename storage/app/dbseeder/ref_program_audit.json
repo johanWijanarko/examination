@@ -1,0 +1,14 @@
+[
+    {
+      "ref_program_id": "1",
+      "ref_program_id_type": "2",
+      "ref_program_code": "1",
+      "ref_program_aspek_id": "1",
+      "ref_program_title": "Memastikan bahwa telah terdapat prosedur dalam proses penyusunan dan penerbitan peraturan-peraturan perusahaan dan telah mencukupi s.d. proses pengujian peraturan sebelum diterbitkan.",
+      "ref_program_procedure": "<p>1. Lakukan wawancara pendahuluan untuk mengetahui kondisi unit kerja terkait<br />\r\n2. Lakukan evaluasi dan identifikasi proses penyusunan dan penerbitan peraturan-peraturan perusahaan.<br />\r\n3. Lakukan analisa apakah terdapat kekosongan proses secara prosedur untuk masing-masing tahapan.</p>\r\n\r\n<ul>\r\n\t<li>Jika Ya, lakukan identifikasi pada proses mana yang terjadi kekosongan. Kemudian lakukan konfirmasi kepada pihak-pihak penanggungjawab dan tuangkan dalam permintaan tanggapan.</li>\r\n\t<li>Jika Tidak, buat kesimpulan atas proses penyusunan dan penerbitan Peraturan</li>\r\n</ul>\r\n\r\n<p>4. Buat kesimpulan dan tuangkan dalam laporan secara rinci kondisinya atas evaluasi di atas.</p>",
+      "ref_program_dokumen": "<p>1. Pedoman proses penyusunan tata naskah dinas perusahaan. <br />2. Instruksi Mutu proses penyusunan dan penerbitan peraturan perusahaan <br />3. Peraturan Direksi terkait Struktur Organisasi yang menjelaskan Jobdesc</p>",
+      "ref_program_del_st": "1",
+      "created_at": "",
+      "updated_at": "17/11/2021 23:27:35"
+    }
+]

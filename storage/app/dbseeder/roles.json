@@ -1,0 +1,58 @@
+[
+    {
+      "id": "1",
+      "name": "Admin",
+      "guard_name": "web",
+      "created_at": "4/5/2021 10:06:08",
+      "updated_at": "4/5/2021 10:06:08"
+    },
+    {
+      "id": "2",
+      "name": "Inspector",
+      "guard_name": "web",
+      "created_at": "4/5/2021 23:37:39",
+      "updated_at": "4/5/2021 23:37:39"
+    },
+    {
+      "id": "4",
+      "name": "Auditee",
+      "guard_name": "web",
+      "created_at": "17/11/2021 00:55:51",
+      "updated_at": "17/11/2021 00:55:51"
+    },
+    {
+      "id": "5",
+      "name": "Auditor Eksternal",
+      "guard_name": "web",
+      "created_at": "24/11/2021 02:15:38",
+      "updated_at": "24/11/2021 02:15:38"
+    },
+    {
+      "id": "6",
+      "name": "Auditor",
+      "guard_name": "web",
+      "created_at": "12/12/2021 16:10:14",
+      "updated_at": "12/12/2021 16:10:14"
+    },
+    {
+      "id": "7",
+      "name": "Sekretaris Divisi",
+      "guard_name": "web",
+      "created_at": "12/12/2021 20:33:10",
+      "updated_at": "12/12/2021 21:04:16"
+    },
+    {
+      "id": "8",
+      "name": "GM",
+      "guard_name": "web",
+      "created_at": "12/12/2021 20:37:04",
+      "updated_at": "12/12/2021 20:37:04"
+    },
+    {
+      "id": "10",
+      "name": "SM",
+      "guard_name": "web",
+      "created_at": "16/12/2021 18:31:29",
+      "updated_at": "16/12/2021 18:31:29"
+    }
+  ]

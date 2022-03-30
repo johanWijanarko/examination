@@ -1,0 +1,20 @@
+ [
+    {
+      "jenis_temuan_id": "1",
+      "jenis_temuan_code": "adm",
+      "jenis_temuan_name": "Administrasi",
+      "jenis_temuan_del_st": "1",
+      "created_at": "23/2/2022 10:59:42",
+      "updated_at": "23/2/2022 10:59:42",
+      "jenis_temuan_id_sub_type": ""
+    },
+    {
+      "jenis_temuan_id": "2",
+      "jenis_temuan_code": "kp",
+      "jenis_temuan_name": "Kepatuhan",
+      "jenis_temuan_del_st": "1",
+      "created_at": "",
+      "updated_at": "23/2/2022 11:09:11",
+      "jenis_temuan_id_sub_type": ""
+    }
+  ]

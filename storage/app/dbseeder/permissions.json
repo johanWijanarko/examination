@@ -1,0 +1,1325 @@
+[
+    {
+      "id": "1",
+      "name": "role-list",
+      "guard_name": "web",
+      "created_at": "4/5/2021 10:06:07",
+      "updated_at": "4/5/2021 10:06:07"
+    },
+    {
+      "id": "2",
+      "name": "role-create",
+      "guard_name": "web",
+      "created_at": "4/5/2021 10:06:07",
+      "updated_at": "4/5/2021 10:06:07"
+    },
+    {
+      "id": "3",
+      "name": "role-edit",
+      "guard_name": "web",
+      "created_at": "4/5/2021 10:06:07",
+      "updated_at": "4/5/2021 10:06:07"
+    },
+    {
+      "id": "4",
+      "name": "role-delete",
+      "guard_name": "web",
+      "created_at": "4/5/2021 10:06:07",
+      "updated_at": "4/5/2021 10:06:07"
+    },
+    {
+      "id": "29",
+      "name": "role_menu-list",
+      "guard_name": "web",
+      "created_at": "4/5/2021 11:49:16",
+      "updated_at": "4/5/2021 11:49:16"
+    },
+    {
+      "id": "30",
+      "name": "role_menu-create",
+      "guard_name": "web",
+      "created_at": "4/5/2021 11:49:17",
+      "updated_at": "4/5/2021 11:49:17"
+    },
+    {
+      "id": "31",
+      "name": "role_menu-edit",
+      "guard_name": "web",
+      "created_at": "4/5/2021 11:49:17",
+      "updated_at": "4/5/2021 11:49:17"
+    },
+    {
+      "id": "32",
+      "name": "role_menu-delete",
+      "guard_name": "web",
+      "created_at": "4/5/2021 11:49:17",
+      "updated_at": "4/5/2021 11:49:17"
+    },
+    {
+      "id": "33",
+      "name": "role_menu-detail",
+      "guard_name": "web",
+      "created_at": "4/5/2021 11:49:17",
+      "updated_at": "4/5/2021 11:49:17"
+    },
+    {
+      "id": "34",
+      "name": "daftar_user-list",
+      "guard_name": "web",
+      "created_at": "4/5/2021 21:29:25",
+      "updated_at": "4/5/2021 21:29:25"
+    },
+    {
+      "id": "35",
+      "name": "daftar_user-create",
+      "guard_name": "web",
+      "created_at": "4/5/2021 21:29:25",
+      "updated_at": "4/5/2021 21:29:25"
+    },
+    {
+      "id": "36",
+      "name": "daftar_user-edit",
+      "guard_name": "web",
+      "created_at": "4/5/2021 21:29:25",
+      "updated_at": "4/5/2021 21:29:25"
+    },
+    {
+      "id": "37",
+      "name": "daftar_user-delete",
+      "guard_name": "web",
+      "created_at": "4/5/2021 21:29:26",
+      "updated_at": "4/5/2021 21:29:26"
+    },
+    {
+      "id": "38",
+      "name": "daftar_user-detail",
+      "guard_name": "web",
+      "created_at": "4/5/2021 21:29:26",
+      "updated_at": "4/5/2021 21:29:26"
+    },
+    {
+      "id": "39",
+      "name": "group_user-list",
+      "guard_name": "web",
+      "created_at": "4/5/2021 21:30:17",
+      "updated_at": "4/5/2021 21:30:17"
+    },
+    {
+      "id": "40",
+      "name": "group_user-create",
+      "guard_name": "web",
+      "created_at": "4/5/2021 21:30:17",
+      "updated_at": "4/5/2021 21:30:17"
+    },
+    {
+      "id": "41",
+      "name": "group_user-edit",
+      "guard_name": "web",
+      "created_at": "4/5/2021 21:30:18",
+      "updated_at": "4/5/2021 21:30:18"
+    },
+    {
+      "id": "42",
+      "name": "group_user-delete",
+      "guard_name": "web",
+      "created_at": "4/5/2021 21:30:18",
+      "updated_at": "4/5/2021 21:30:18"
+    },
+    {
+      "id": "43",
+      "name": "group_user-detail",
+      "guard_name": "web",
+      "created_at": "4/5/2021 21:30:19",
+      "updated_at": "4/5/2021 21:30:19"
+    },
+    {
+      "id": "44",
+      "name": "menu-list",
+      "guard_name": "web",
+      "created_at": "4/5/2021 21:31:09",
+      "updated_at": "4/5/2021 21:31:09"
+    },
+    {
+      "id": "45",
+      "name": "menu-create",
+      "guard_name": "web",
+      "created_at": "4/5/2021 21:31:09",
+      "updated_at": "4/5/2021 21:31:09"
+    },
+    {
+      "id": "46",
+      "name": "menu-edit",
+      "guard_name": "web",
+      "created_at": "4/5/2021 21:31:10",
+      "updated_at": "4/5/2021 21:31:10"
+    },
+    {
+      "id": "47",
+      "name": "menu-delete",
+      "guard_name": "web",
+      "created_at": "4/5/2021 21:31:10",
+      "updated_at": "4/5/2021 21:31:10"
+    },
+    {
+      "id": "48",
+      "name": "menu-detail",
+      "guard_name": "web",
+      "created_at": "4/5/2021 21:31:11",
+      "updated_at": "4/5/2021 21:31:11"
+    },
+    {
+      "id": "119",
+      "name": "help-list",
+      "guard_name": "web",
+      "created_at": "3/8/2021 02:35:24",
+      "updated_at": "3/8/2021 02:35:24"
+    },
+    {
+      "id": "120",
+      "name": "help-create",
+      "guard_name": "web",
+      "created_at": "3/8/2021 02:35:24",
+      "updated_at": "3/8/2021 02:35:24"
+    },
+    {
+      "id": "121",
+      "name": "help-edit",
+      "guard_name": "web",
+      "created_at": "3/8/2021 02:35:24",
+      "updated_at": "3/8/2021 02:35:24"
+    },
+    {
+      "id": "122",
+      "name": "help-delete",
+      "guard_name": "web",
+      "created_at": "3/8/2021 02:35:24",
+      "updated_at": "3/8/2021 02:35:24"
+    },
+    {
+      "id": "123",
+      "name": "help-detail",
+      "guard_name": "web",
+      "created_at": "3/8/2021 02:35:24",
+      "updated_at": "3/8/2021 02:35:24"
+    },
+    {
+      "id": "124",
+      "name": "help_chat-list",
+      "guard_name": "web",
+      "created_at": "3/8/2021 02:39:39",
+      "updated_at": "3/8/2021 02:39:39"
+    },
+    {
+      "id": "125",
+      "name": "help_chat-create",
+      "guard_name": "web",
+      "created_at": "3/8/2021 02:39:39",
+      "updated_at": "3/8/2021 02:39:39"
+    },
+    {
+      "id": "126",
+      "name": "help_chat-edit",
+      "guard_name": "web",
+      "created_at": "3/8/2021 02:39:39",
+      "updated_at": "3/8/2021 02:39:39"
+    },
+    {
+      "id": "127",
+      "name": "help_chat-delete",
+      "guard_name": "web",
+      "created_at": "3/8/2021 02:39:39",
+      "updated_at": "3/8/2021 02:39:39"
+    },
+    {
+      "id": "128",
+      "name": "help_chat-detail",
+      "guard_name": "web",
+      "created_at": "3/8/2021 02:39:39",
+      "updated_at": "3/8/2021 02:39:39"
+    },
+    {
+      "id": "149",
+      "name": "audit-list",
+      "guard_name": "web",
+      "created_at": "14/10/2021 19:31:40",
+      "updated_at": "14/10/2021 19:31:40"
+    },
+    {
+      "id": "150",
+      "name": "audit-create",
+      "guard_name": "web",
+      "created_at": "14/10/2021 19:31:41",
+      "updated_at": "14/10/2021 19:31:41"
+    },
+    {
+      "id": "151",
+      "name": "audit-edit",
+      "guard_name": "web",
+      "created_at": "14/10/2021 19:31:41",
+      "updated_at": "14/10/2021 19:31:41"
+    },
+    {
+      "id": "152",
+      "name": "audit-delete",
+      "guard_name": "web",
+      "created_at": "14/10/2021 19:31:41",
+      "updated_at": "14/10/2021 19:31:41"
+    },
+    {
+      "id": "153",
+      "name": "audit-detail",
+      "guard_name": "web",
+      "created_at": "14/10/2021 19:31:41",
+      "updated_at": "14/10/2021 19:31:41"
+    },
+    {
+      "id": "154",
+      "name": "profil_risiko-list",
+      "guard_name": "web",
+      "created_at": "14/10/2021 19:59:12",
+      "updated_at": "14/10/2021 19:59:12"
+    },
+    {
+      "id": "155",
+      "name": "profil_risiko-create",
+      "guard_name": "web",
+      "created_at": "14/10/2021 19:59:12",
+      "updated_at": "14/10/2021 19:59:12"
+    },
+    {
+      "id": "156",
+      "name": "profil_risiko-edit",
+      "guard_name": "web",
+      "created_at": "14/10/2021 19:59:12",
+      "updated_at": "14/10/2021 19:59:12"
+    },
+    {
+      "id": "157",
+      "name": "profil_risiko-delete",
+      "guard_name": "web",
+      "created_at": "14/10/2021 19:59:12",
+      "updated_at": "14/10/2021 19:59:12"
+    },
+    {
+      "id": "158",
+      "name": "profil_risiko-detail",
+      "guard_name": "web",
+      "created_at": "14/10/2021 19:59:12",
+      "updated_at": "14/10/2021 19:59:12"
+    },
+    {
+      "id": "159",
+      "name": "audit_plan-list",
+      "guard_name": "web",
+      "created_at": "14/10/2021 19:59:48",
+      "updated_at": "14/10/2021 19:59:48"
+    },
+    {
+      "id": "160",
+      "name": "audit_plan-create",
+      "guard_name": "web",
+      "created_at": "14/10/2021 19:59:48",
+      "updated_at": "14/10/2021 19:59:48"
+    },
+    {
+      "id": "161",
+      "name": "audit_plan-edit",
+      "guard_name": "web",
+      "created_at": "14/10/2021 19:59:48",
+      "updated_at": "14/10/2021 19:59:48"
+    },
+    {
+      "id": "162",
+      "name": "audit_plan-delete",
+      "guard_name": "web",
+      "created_at": "14/10/2021 19:59:48",
+      "updated_at": "14/10/2021 19:59:48"
+    },
+    {
+      "id": "163",
+      "name": "audit_plan-detail",
+      "guard_name": "web",
+      "created_at": "14/10/2021 19:59:48",
+      "updated_at": "14/10/2021 19:59:48"
+    },
+    {
+      "id": "164",
+      "name": "audit_assign-list",
+      "guard_name": "web",
+      "created_at": "14/10/2021 20:00:25",
+      "updated_at": "14/10/2021 20:00:25"
+    },
+    {
+      "id": "165",
+      "name": "audit_assign-create",
+      "guard_name": "web",
+      "created_at": "14/10/2021 20:00:25",
+      "updated_at": "14/10/2021 20:00:25"
+    },
+    {
+      "id": "166",
+      "name": "audit_assign-edit",
+      "guard_name": "web",
+      "created_at": "14/10/2021 20:00:25",
+      "updated_at": "14/10/2021 20:00:25"
+    },
+    {
+      "id": "167",
+      "name": "audit_assign-delete",
+      "guard_name": "web",
+      "created_at": "14/10/2021 20:00:25",
+      "updated_at": "14/10/2021 20:00:25"
+    },
+    {
+      "id": "168",
+      "name": "audit_assign-detail",
+      "guard_name": "web",
+      "created_at": "14/10/2021 20:00:26",
+      "updated_at": "14/10/2021 20:00:26"
+    },
+    {
+      "id": "179",
+      "name": "pegawai_-list",
+      "guard_name": "web",
+      "created_at": "16/10/2021 04:54:51",
+      "updated_at": "16/10/2021 04:54:51"
+    },
+    {
+      "id": "180",
+      "name": "pegawai_-create",
+      "guard_name": "web",
+      "created_at": "16/10/2021 04:54:53",
+      "updated_at": "16/10/2021 04:54:53"
+    },
+    {
+      "id": "181",
+      "name": "pegawai_-edit",
+      "guard_name": "web",
+      "created_at": "16/10/2021 04:54:55",
+      "updated_at": "16/10/2021 04:54:55"
+    },
+    {
+      "id": "182",
+      "name": "pegawai_-delete",
+      "guard_name": "web",
+      "created_at": "16/10/2021 04:54:55",
+      "updated_at": "16/10/2021 04:54:55"
+    },
+    {
+      "id": "183",
+      "name": "pegawai_-detail",
+      "guard_name": "web",
+      "created_at": "16/10/2021 04:54:57",
+      "updated_at": "16/10/2021 04:54:57"
+    },
+    {
+      "id": "184",
+      "name": "daftarpegawai_-list",
+      "guard_name": "web",
+      "created_at": "16/10/2021 04:55:47",
+      "updated_at": "16/10/2021 04:55:47"
+    },
+    {
+      "id": "185",
+      "name": "daftarpegawai_-create",
+      "guard_name": "web",
+      "created_at": "16/10/2021 04:55:49",
+      "updated_at": "16/10/2021 04:55:49"
+    },
+    {
+      "id": "186",
+      "name": "daftarpegawai_-edit",
+      "guard_name": "web",
+      "created_at": "16/10/2021 04:55:54",
+      "updated_at": "16/10/2021 04:55:54"
+    },
+    {
+      "id": "187",
+      "name": "daftarpegawai_-delete",
+      "guard_name": "web",
+      "created_at": "16/10/2021 04:55:57",
+      "updated_at": "16/10/2021 04:55:57"
+    },
+    {
+      "id": "188",
+      "name": "daftarpegawai_-detail",
+      "guard_name": "web",
+      "created_at": "16/10/2021 04:55:59",
+      "updated_at": "16/10/2021 04:55:59"
+    },
+    {
+      "id": "189",
+      "name": "dafatarauditee_-list",
+      "guard_name": "web",
+      "created_at": "16/10/2021 04:57:15",
+      "updated_at": "16/10/2021 04:57:15"
+    },
+    {
+      "id": "190",
+      "name": "dafatarauditee_-create",
+      "guard_name": "web",
+      "created_at": "16/10/2021 04:57:16",
+      "updated_at": "16/10/2021 04:57:16"
+    },
+    {
+      "id": "191",
+      "name": "dafatarauditee_-edit",
+      "guard_name": "web",
+      "created_at": "16/10/2021 04:57:18",
+      "updated_at": "16/10/2021 04:57:18"
+    },
+    {
+      "id": "192",
+      "name": "dafatarauditee_-delete",
+      "guard_name": "web",
+      "created_at": "16/10/2021 04:57:20",
+      "updated_at": "16/10/2021 04:57:20"
+    },
+    {
+      "id": "193",
+      "name": "dafatarauditee_-detail",
+      "guard_name": "web",
+      "created_at": "16/10/2021 04:57:24",
+      "updated_at": "16/10/2021 04:57:24"
+    },
+    {
+      "id": "194",
+      "name": "tindaklanjut-list",
+      "guard_name": "web",
+      "created_at": "16/10/2021 05:23:00",
+      "updated_at": "16/10/2021 05:23:00"
+    },
+    {
+      "id": "195",
+      "name": "tindaklanjut-create",
+      "guard_name": "web",
+      "created_at": "16/10/2021 05:23:01",
+      "updated_at": "16/10/2021 05:23:01"
+    },
+    {
+      "id": "196",
+      "name": "tindaklanjut-edit",
+      "guard_name": "web",
+      "created_at": "16/10/2021 05:23:02",
+      "updated_at": "16/10/2021 05:23:02"
+    },
+    {
+      "id": "197",
+      "name": "tindaklanjut-delete",
+      "guard_name": "web",
+      "created_at": "16/10/2021 05:23:03",
+      "updated_at": "16/10/2021 05:23:03"
+    },
+    {
+      "id": "198",
+      "name": "tindaklanjut-detail",
+      "guard_name": "web",
+      "created_at": "16/10/2021 05:23:03",
+      "updated_at": "16/10/2021 05:23:03"
+    },
+    {
+      "id": "199",
+      "name": "parameter_manajement-list",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:02:06",
+      "updated_at": "18/10/2021 00:02:06"
+    },
+    {
+      "id": "200",
+      "name": "parameter_manajement-create",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:02:09",
+      "updated_at": "18/10/2021 00:02:09"
+    },
+    {
+      "id": "201",
+      "name": "parameter_manajement-edit",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:02:11",
+      "updated_at": "18/10/2021 00:02:11"
+    },
+    {
+      "id": "202",
+      "name": "parameter_manajement-delete",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:02:14",
+      "updated_at": "18/10/2021 00:02:14"
+    },
+    {
+      "id": "203",
+      "name": "parameter_manajement-detail",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:02:17",
+      "updated_at": "18/10/2021 00:02:17"
+    },
+    {
+      "id": "204",
+      "name": "jabatan_pic-list",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:09:20",
+      "updated_at": "18/10/2021 00:09:20"
+    },
+    {
+      "id": "205",
+      "name": "jabatan_pic-create",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:09:24",
+      "updated_at": "18/10/2021 00:09:24"
+    },
+    {
+      "id": "206",
+      "name": "jabatan_pic-edit",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:09:27",
+      "updated_at": "18/10/2021 00:09:27"
+    },
+    {
+      "id": "207",
+      "name": "jabatan_pic-delete",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:09:31",
+      "updated_at": "18/10/2021 00:09:31"
+    },
+    {
+      "id": "208",
+      "name": "jabatan_pic-detail",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:09:34",
+      "updated_at": "18/10/2021 00:09:34"
+    },
+    {
+      "id": "209",
+      "name": "jabatan-list",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:10:56",
+      "updated_at": "18/10/2021 00:10:56"
+    },
+    {
+      "id": "210",
+      "name": "jabatan-create",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:10:58",
+      "updated_at": "18/10/2021 00:10:58"
+    },
+    {
+      "id": "211",
+      "name": "jabatan-edit",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:11:01",
+      "updated_at": "18/10/2021 00:11:01"
+    },
+    {
+      "id": "212",
+      "name": "jabatan-delete",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:11:04",
+      "updated_at": "18/10/2021 00:11:04"
+    },
+    {
+      "id": "213",
+      "name": "jabatan-detail",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:11:07",
+      "updated_at": "18/10/2021 00:11:07"
+    },
+    {
+      "id": "214",
+      "name": "direktorat-list",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:12:06",
+      "updated_at": "18/10/2021 00:12:06"
+    },
+    {
+      "id": "215",
+      "name": "direktorat-create",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:12:09",
+      "updated_at": "18/10/2021 00:12:09"
+    },
+    {
+      "id": "216",
+      "name": "direktorat-edit",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:12:12",
+      "updated_at": "18/10/2021 00:12:12"
+    },
+    {
+      "id": "217",
+      "name": "direktorat-delete",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:12:14",
+      "updated_at": "18/10/2021 00:12:14"
+    },
+    {
+      "id": "218",
+      "name": "direktorat-detail",
+      "guard_name": "web",
+      "created_at": "18/10/2021 00:12:17",
+      "updated_at": "18/10/2021 00:12:17"
+    },
+    {
+      "id": "219",
+      "name": "faktor_resiko-list",
+      "guard_name": "web",
+      "created_at": "18/10/2021 07:46:16",
+      "updated_at": "18/10/2021 07:46:16"
+    },
+    {
+      "id": "220",
+      "name": "faktor_resiko-create",
+      "guard_name": "web",
+      "created_at": "18/10/2021 07:46:17",
+      "updated_at": "18/10/2021 07:46:17"
+    },
+    {
+      "id": "221",
+      "name": "faktor_resiko-edit",
+      "guard_name": "web",
+      "created_at": "18/10/2021 07:46:18",
+      "updated_at": "18/10/2021 07:46:18"
+    },
+    {
+      "id": "222",
+      "name": "faktor_resiko-delete",
+      "guard_name": "web",
+      "created_at": "18/10/2021 07:46:19",
+      "updated_at": "18/10/2021 07:46:19"
+    },
+    {
+      "id": "223",
+      "name": "faktor_resiko-detail",
+      "guard_name": "web",
+      "created_at": "18/10/2021 07:46:20",
+      "updated_at": "18/10/2021 07:46:20"
+    },
+    {
+      "id": "224",
+      "name": "indikator_risiko-list",
+      "guard_name": "web",
+      "created_at": "18/10/2021 07:49:45",
+      "updated_at": "18/10/2021 07:49:45"
+    },
+    {
+      "id": "225",
+      "name": "indikator_risiko-create",
+      "guard_name": "web",
+      "created_at": "18/10/2021 07:49:46",
+      "updated_at": "18/10/2021 07:49:46"
+    },
+    {
+      "id": "226",
+      "name": "indikator_risiko-edit",
+      "guard_name": "web",
+      "created_at": "18/10/2021 07:49:46",
+      "updated_at": "18/10/2021 07:49:46"
+    },
+    {
+      "id": "227",
+      "name": "indikator_risiko-delete",
+      "guard_name": "web",
+      "created_at": "18/10/2021 07:49:47",
+      "updated_at": "18/10/2021 07:49:47"
+    },
+    {
+      "id": "228",
+      "name": "indikator_risiko-detail",
+      "guard_name": "web",
+      "created_at": "18/10/2021 07:49:48",
+      "updated_at": "18/10/2021 07:49:48"
+    },
+    {
+      "id": "229",
+      "name": "pustaka-list",
+      "guard_name": "web",
+      "created_at": "18/10/2021 17:50:55",
+      "updated_at": "18/10/2021 17:50:55"
+    },
+    {
+      "id": "230",
+      "name": "pustaka-create",
+      "guard_name": "web",
+      "created_at": "18/10/2021 17:50:57",
+      "updated_at": "18/10/2021 17:50:57"
+    },
+    {
+      "id": "231",
+      "name": "pustaka-edit",
+      "guard_name": "web",
+      "created_at": "18/10/2021 17:50:59",
+      "updated_at": "18/10/2021 17:50:59"
+    },
+    {
+      "id": "232",
+      "name": "pustaka-delete",
+      "guard_name": "web",
+      "created_at": "18/10/2021 17:51:00",
+      "updated_at": "18/10/2021 17:51:00"
+    },
+    {
+      "id": "233",
+      "name": "pustaka-detail",
+      "guard_name": "web",
+      "created_at": "18/10/2021 17:51:01",
+      "updated_at": "18/10/2021 17:51:01"
+    },
+    {
+      "id": "234",
+      "name": "refrensi-list",
+      "guard_name": "web",
+      "created_at": "18/10/2021 17:52:21",
+      "updated_at": "18/10/2021 17:52:21"
+    },
+    {
+      "id": "235",
+      "name": "refrensi-create",
+      "guard_name": "web",
+      "created_at": "18/10/2021 17:52:21",
+      "updated_at": "18/10/2021 17:52:21"
+    },
+    {
+      "id": "236",
+      "name": "refrensi-edit",
+      "guard_name": "web",
+      "created_at": "18/10/2021 17:52:22",
+      "updated_at": "18/10/2021 17:52:22"
+    },
+    {
+      "id": "237",
+      "name": "refrensi-delete",
+      "guard_name": "web",
+      "created_at": "18/10/2021 17:52:22",
+      "updated_at": "18/10/2021 17:52:22"
+    },
+    {
+      "id": "238",
+      "name": "refrensi-detail",
+      "guard_name": "web",
+      "created_at": "18/10/2021 17:52:23",
+      "updated_at": "18/10/2021 17:52:23"
+    },
+    {
+      "id": "239",
+      "name": "audit_plann-list",
+      "guard_name": "web",
+      "created_at": "20/10/2021 03:58:44",
+      "updated_at": "20/10/2021 03:58:44"
+    },
+    {
+      "id": "240",
+      "name": "audit_plann-create",
+      "guard_name": "web",
+      "created_at": "20/10/2021 03:58:45",
+      "updated_at": "20/10/2021 03:58:45"
+    },
+    {
+      "id": "241",
+      "name": "audit_plann-edit",
+      "guard_name": "web",
+      "created_at": "20/10/2021 03:58:46",
+      "updated_at": "20/10/2021 03:58:46"
+    },
+    {
+      "id": "242",
+      "name": "audit_plann-delete",
+      "guard_name": "web",
+      "created_at": "20/10/2021 03:58:47",
+      "updated_at": "20/10/2021 03:58:47"
+    },
+    {
+      "id": "243",
+      "name": "audit_plann-detail",
+      "guard_name": "web",
+      "created_at": "20/10/2021 03:58:47",
+      "updated_at": "20/10/2021 03:58:47"
+    },
+    {
+      "id": "244",
+      "name": "programAudit-list",
+      "guard_name": "web",
+      "created_at": "21/10/2021 10:05:43",
+      "updated_at": "21/10/2021 10:05:43"
+    },
+    {
+      "id": "245",
+      "name": "programAudit-create",
+      "guard_name": "web",
+      "created_at": "21/10/2021 10:05:44",
+      "updated_at": "21/10/2021 10:05:44"
+    },
+    {
+      "id": "246",
+      "name": "programAudit-edit",
+      "guard_name": "web",
+      "created_at": "21/10/2021 10:05:44",
+      "updated_at": "21/10/2021 10:05:44"
+    },
+    {
+      "id": "247",
+      "name": "programAudit-delete",
+      "guard_name": "web",
+      "created_at": "21/10/2021 10:05:45",
+      "updated_at": "21/10/2021 10:05:45"
+    },
+    {
+      "id": "248",
+      "name": "programAudit-detail",
+      "guard_name": "web",
+      "created_at": "21/10/2021 10:05:45",
+      "updated_at": "21/10/2021 10:05:45"
+    },
+    {
+      "id": "249",
+      "name": "par_audit-list",
+      "guard_name": "web",
+      "created_at": "21/10/2021 21:03:58",
+      "updated_at": "21/10/2021 21:03:58"
+    },
+    {
+      "id": "250",
+      "name": "par_audit-create",
+      "guard_name": "web",
+      "created_at": "21/10/2021 21:03:59",
+      "updated_at": "21/10/2021 21:03:59"
+    },
+    {
+      "id": "251",
+      "name": "par_audit-edit",
+      "guard_name": "web",
+      "created_at": "21/10/2021 21:03:59",
+      "updated_at": "21/10/2021 21:03:59"
+    },
+    {
+      "id": "252",
+      "name": "par_audit-delete",
+      "guard_name": "web",
+      "created_at": "21/10/2021 21:04:00",
+      "updated_at": "21/10/2021 21:04:00"
+    },
+    {
+      "id": "253",
+      "name": "par_audit-detail",
+      "guard_name": "web",
+      "created_at": "21/10/2021 21:04:00",
+      "updated_at": "21/10/2021 21:04:00"
+    },
+    {
+      "id": "254",
+      "name": "pegawaispi-list",
+      "guard_name": "web",
+      "created_at": "26/10/2021 23:24:47",
+      "updated_at": "26/10/2021 23:24:47"
+    },
+    {
+      "id": "255",
+      "name": "pegawaispi-create",
+      "guard_name": "web",
+      "created_at": "26/10/2021 23:24:47",
+      "updated_at": "26/10/2021 23:24:47"
+    },
+    {
+      "id": "256",
+      "name": "pegawaispi-edit",
+      "guard_name": "web",
+      "created_at": "26/10/2021 23:24:48",
+      "updated_at": "26/10/2021 23:24:48"
+    },
+    {
+      "id": "257",
+      "name": "pegawaispi-delete",
+      "guard_name": "web",
+      "created_at": "26/10/2021 23:24:48",
+      "updated_at": "26/10/2021 23:24:48"
+    },
+    {
+      "id": "258",
+      "name": "pegawaispi-detail",
+      "guard_name": "web",
+      "created_at": "26/10/2021 23:24:49",
+      "updated_at": "26/10/2021 23:24:49"
+    },
+    {
+      "id": "259",
+      "name": "par_auditee-list",
+      "guard_name": "web",
+      "created_at": "27/10/2021 02:56:41",
+      "updated_at": "27/10/2021 02:56:41"
+    },
+    {
+      "id": "260",
+      "name": "par_auditee-create",
+      "guard_name": "web",
+      "created_at": "27/10/2021 02:56:42",
+      "updated_at": "27/10/2021 02:56:42"
+    },
+    {
+      "id": "261",
+      "name": "par_auditee-edit",
+      "guard_name": "web",
+      "created_at": "27/10/2021 02:56:42",
+      "updated_at": "27/10/2021 02:56:42"
+    },
+    {
+      "id": "262",
+      "name": "par_auditee-delete",
+      "guard_name": "web",
+      "created_at": "27/10/2021 02:56:43",
+      "updated_at": "27/10/2021 02:56:43"
+    },
+    {
+      "id": "263",
+      "name": "par_auditee-detail",
+      "guard_name": "web",
+      "created_at": "27/10/2021 02:56:43",
+      "updated_at": "27/10/2021 02:56:43"
+    },
+    {
+      "id": "264",
+      "name": "audit_eksternal-list",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:53:23",
+      "updated_at": "1/11/2021 20:53:23"
+    },
+    {
+      "id": "265",
+      "name": "audit_eksternal-create",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:53:24",
+      "updated_at": "1/11/2021 20:53:24"
+    },
+    {
+      "id": "266",
+      "name": "audit_eksternal-edit",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:53:24",
+      "updated_at": "1/11/2021 20:53:24"
+    },
+    {
+      "id": "267",
+      "name": "audit_eksternal-delete",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:53:25",
+      "updated_at": "1/11/2021 20:53:25"
+    },
+    {
+      "id": "268",
+      "name": "audit_eksternal-detail",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:53:25",
+      "updated_at": "1/11/2021 20:53:25"
+    },
+    {
+      "id": "269",
+      "name": "temuan_rek_eks-list",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:55:21",
+      "updated_at": "1/11/2021 20:55:21"
+    },
+    {
+      "id": "270",
+      "name": "temuan_rek_eks-create",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:55:25",
+      "updated_at": "1/11/2021 20:55:25"
+    },
+    {
+      "id": "271",
+      "name": "temuan_rek_eks-edit",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:55:28",
+      "updated_at": "1/11/2021 20:55:28"
+    },
+    {
+      "id": "272",
+      "name": "temuan_rek_eks-delete",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:55:31",
+      "updated_at": "1/11/2021 20:55:31"
+    },
+    {
+      "id": "273",
+      "name": "temuan_rek_eks-detail",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:55:34",
+      "updated_at": "1/11/2021 20:55:34"
+    },
+    {
+      "id": "274",
+      "name": "tl-list",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:58:03",
+      "updated_at": "1/11/2021 20:58:03"
+    },
+    {
+      "id": "275",
+      "name": "tl-create",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:58:05",
+      "updated_at": "1/11/2021 20:58:05"
+    },
+    {
+      "id": "276",
+      "name": "tl-edit",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:58:09",
+      "updated_at": "1/11/2021 20:58:09"
+    },
+    {
+      "id": "277",
+      "name": "tl-delete",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:58:12",
+      "updated_at": "1/11/2021 20:58:12"
+    },
+    {
+      "id": "278",
+      "name": "tl-detail",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:58:15",
+      "updated_at": "1/11/2021 20:58:15"
+    },
+    {
+      "id": "279",
+      "name": "pelaporan_temuan-list",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:59:36",
+      "updated_at": "1/11/2021 20:59:36"
+    },
+    {
+      "id": "280",
+      "name": "pelaporan_temuan-create",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:59:36",
+      "updated_at": "1/11/2021 20:59:36"
+    },
+    {
+      "id": "281",
+      "name": "pelaporan_temuan-edit",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:59:37",
+      "updated_at": "1/11/2021 20:59:37"
+    },
+    {
+      "id": "282",
+      "name": "pelaporan_temuan-delete",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:59:37",
+      "updated_at": "1/11/2021 20:59:37"
+    },
+    {
+      "id": "283",
+      "name": "pelaporan_temuan-detail",
+      "guard_name": "web",
+      "created_at": "1/11/2021 20:59:38",
+      "updated_at": "1/11/2021 20:59:38"
+    },
+    {
+      "id": "284",
+      "name": "dashboard_eks-list",
+      "guard_name": "web",
+      "created_at": "1/11/2021 21:00:41",
+      "updated_at": "1/11/2021 21:00:41"
+    },
+    {
+      "id": "285",
+      "name": "dashboard_eks-create",
+      "guard_name": "web",
+      "created_at": "1/11/2021 21:00:43",
+      "updated_at": "1/11/2021 21:00:43"
+    },
+    {
+      "id": "286",
+      "name": "dashboard_eks-edit",
+      "guard_name": "web",
+      "created_at": "1/11/2021 21:00:46",
+      "updated_at": "1/11/2021 21:00:46"
+    },
+    {
+      "id": "287",
+      "name": "dashboard_eks-delete",
+      "guard_name": "web",
+      "created_at": "1/11/2021 21:00:49",
+      "updated_at": "1/11/2021 21:00:49"
+    },
+    {
+      "id": "288",
+      "name": "dashboard_eks-detail",
+      "guard_name": "web",
+      "created_at": "1/11/2021 21:00:51",
+      "updated_at": "1/11/2021 21:00:51"
+    },
+    {
+      "id": "289",
+      "name": "action_plan-list",
+      "guard_name": "web",
+      "created_at": "28/11/2021 06:05:59",
+      "updated_at": "28/11/2021 06:05:59"
+    },
+    {
+      "id": "290",
+      "name": "action_plan-create",
+      "guard_name": "web",
+      "created_at": "28/11/2021 06:06:01",
+      "updated_at": "28/11/2021 06:06:01"
+    },
+    {
+      "id": "291",
+      "name": "action_plan-edit",
+      "guard_name": "web",
+      "created_at": "28/11/2021 06:06:03",
+      "updated_at": "28/11/2021 06:06:03"
+    },
+    {
+      "id": "292",
+      "name": "action_plan-delete",
+      "guard_name": "web",
+      "created_at": "28/11/2021 06:06:04",
+      "updated_at": "28/11/2021 06:06:04"
+    },
+    {
+      "id": "293",
+      "name": "action_plan-detail",
+      "guard_name": "web",
+      "created_at": "28/11/2021 06:06:06",
+      "updated_at": "28/11/2021 06:06:06"
+    },
+    {
+      "id": "294",
+      "name": "log-list",
+      "guard_name": "web",
+      "created_at": "12/12/2021 17:16:56",
+      "updated_at": "12/12/2021 17:16:56"
+    },
+    {
+      "id": "295",
+      "name": "log-create",
+      "guard_name": "web",
+      "created_at": "12/12/2021 17:17:00",
+      "updated_at": "12/12/2021 17:17:00"
+    },
+    {
+      "id": "296",
+      "name": "log-edit",
+      "guard_name": "web",
+      "created_at": "12/12/2021 17:17:04",
+      "updated_at": "12/12/2021 17:17:04"
+    },
+    {
+      "id": "297",
+      "name": "log-delete",
+      "guard_name": "web",
+      "created_at": "12/12/2021 17:17:08",
+      "updated_at": "12/12/2021 17:17:08"
+    },
+    {
+      "id": "298",
+      "name": "log-detail",
+      "guard_name": "web",
+      "created_at": "12/12/2021 17:17:11",
+      "updated_at": "12/12/2021 17:17:11"
+    },
+    {
+      "id": "299",
+      "name": "tes-list",
+      "guard_name": "web",
+      "created_at": "14/12/2021 00:45:13",
+      "updated_at": "14/12/2021 00:45:13"
+    },
+    {
+      "id": "300",
+      "name": "tes-create",
+      "guard_name": "web",
+      "created_at": "14/12/2021 00:45:16",
+      "updated_at": "14/12/2021 00:45:16"
+    },
+    {
+      "id": "301",
+      "name": "tes-edit",
+      "guard_name": "web",
+      "created_at": "14/12/2021 00:45:20",
+      "updated_at": "14/12/2021 00:45:20"
+    },
+    {
+      "id": "302",
+      "name": "tes-delete",
+      "guard_name": "web",
+      "created_at": "14/12/2021 00:45:24",
+      "updated_at": "14/12/2021 00:45:24"
+    },
+    {
+      "id": "303",
+      "name": "tes-detail",
+      "guard_name": "web",
+      "created_at": "14/12/2021 00:45:28",
+      "updated_at": "14/12/2021 00:45:28"
+    },
+    {
+      "id": "304",
+      "name": "sdfsdf-list",
+      "guard_name": "web",
+      "created_at": "14/12/2021 00:48:45",
+      "updated_at": "14/12/2021 00:48:45"
+    },
+    {
+      "id": "305",
+      "name": "sdfsdf-create",
+      "guard_name": "web",
+      "created_at": "14/12/2021 00:48:49",
+      "updated_at": "14/12/2021 00:48:49"
+    },
+    {
+      "id": "306",
+      "name": "sdfsdf-edit",
+      "guard_name": "web",
+      "created_at": "14/12/2021 00:48:53",
+      "updated_at": "14/12/2021 00:48:53"
+    },
+    {
+      "id": "307",
+      "name": "sdfsdf-delete",
+      "guard_name": "web",
+      "created_at": "14/12/2021 00:48:56",
+      "updated_at": "14/12/2021 00:48:56"
+    },
+    {
+      "id": "308",
+      "name": "sdfsdf-detail",
+      "guard_name": "web",
+      "created_at": "14/12/2021 00:49:00",
+      "updated_at": "14/12/2021 00:49:00"
+    },
+    {
+      "id": "309",
+      "name": "--list",
+      "guard_name": "web",
+      "created_at": "29/12/2021 06:10:19",
+      "updated_at": "29/12/2021 06:10:19"
+    },
+    {
+      "id": "310",
+      "name": "--create",
+      "guard_name": "web",
+      "created_at": "29/12/2021 06:10:20",
+      "updated_at": "29/12/2021 06:10:20"
+    },
+    {
+      "id": "311",
+      "name": "--edit",
+      "guard_name": "web",
+      "created_at": "29/12/2021 06:10:20",
+      "updated_at": "29/12/2021 06:10:20"
+    },
+    {
+      "id": "312",
+      "name": "--delete",
+      "guard_name": "web",
+      "created_at": "29/12/2021 06:10:20",
+      "updated_at": "29/12/2021 06:10:20"
+    },
+    {
+      "id": "313",
+      "name": "--detail",
+      "guard_name": "web",
+      "created_at": "29/12/2021 06:10:20",
+      "updated_at": "29/12/2021 06:10:20"
+    }
+  ]

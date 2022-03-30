@@ -1,0 +1,32 @@
+ [
+    {
+      "audit_type_id": "1",
+      "audit_type_name": "Monitoring",
+      "audit_type_code": "monev",
+      "audit_type_desc": "KIN",
+      "audit_type_opsi": "1",
+      "audit_type_del_st": "1",
+      "created_at": "",
+      "updated_at": "5/12/2021 10:47:11"
+    },
+    {
+      "audit_type_id": "2",
+      "audit_type_name": "Audit",
+      "audit_type_code": "reviu",
+      "audit_type_desc": "KHS",
+      "audit_type_opsi": "1",
+      "audit_type_del_st": "1",
+      "created_at": "",
+      "updated_at": "5/12/2021 10:46:05"
+    },
+    {
+      "audit_type_id": "21",
+      "audit_type_name": "Reviu",
+      "audit_type_code": "",
+      "audit_type_desc": "RV",
+      "audit_type_opsi": "",
+      "audit_type_del_st": "1",
+      "created_at": "5/12/2021 10:46:34",
+      "updated_at": "5/12/2021 10:46:34"
+    }
+  ]
