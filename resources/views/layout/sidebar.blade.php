@@ -12,10 +12,10 @@
 <div class="main-sidebar" style="background: #f7f7f7;">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="#"><img src="{{ asset('assets/img/cccc.png') }}" class="img-responsive" width="100%" height="115px"></a>
+            <a href="#"><img src="{{ asset('assets/img/inv2.png') }}" class="img-responsive" width="100%" height="115px"></a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="#"><img src="{{ asset('assets/img/ccccc.png') }}" class="img-responsive" width="40"></a>
+            <a href="#"><img src="{{ asset('assets/img/inv2.png') }}" class="img-responsive" width="40"></a>
         </div>
 
 		<div class="sidebar-avatars mt-4">
