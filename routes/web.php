@@ -6,12 +6,8 @@ use App\Http\Controllers\BackupDb;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Pelatihan;
-use App\Http\Controllers\ParUnitSpi;
-use App\Http\Controllers\Pendidikan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ParamJabatan;
-use App\Http\Controllers\ParamPegawai;
 use App\Http\Controllers\LaporanGrafik;
 use App\Http\Controllers\LaporanMutasi;
 use Illuminate\Support\Facades\Artisan;
@@ -20,7 +16,6 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AplikasiLaporan;
-use App\Http\Controllers\ParPelatihanCtr;
 use App\Http\Controllers\BagianController;
 use App\Http\Controllers\FungsiController;
 use App\Http\Controllers\GedungController;
@@ -44,7 +39,6 @@ use App\Http\Controllers\InventarisController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\LogActivityController;
 use App\Http\Controllers\DataAplikasiController;
-use App\Http\Controllers\DataKelompokController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\TipeKategoryController;
 use App\Http\Controllers\TransaksiInvController;
@@ -155,24 +149,11 @@ Route::get('/dau', function () {
     echo '<script>alert("dump-autoload Success")</script>';
 });
 
-// Route::get('backup', function () {
-    
-// })->name('backup');
 
-Route::get('/cektime', function () {
-    
-    echo session('last_active');
-});
 Route::get('/', [LoginController::class, 'showLoginForm']);
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::get('backup_', function () {
-        $exitCode=\Artisan::call('backup:run',['--only-db'=>true]);
-         Log::error($exitCode); 
-        // Artisan::call('backup:run --only-db');
-        echo '<script>alert("dump-autoload Success")</script>';
-    })->name('backup');
 
     Route::get('dashboard/', [Dashboard::class, 'index'])->name('dashboard');
     Route::post('dashboard/', [Dashboard::class, 'index'])->name('dashboard');
@@ -231,52 +212,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('pelatihan/delete/{id}/{id_pgwai}', [pelatihan::class, 'delete'])->name('delpelatihan');
 
 
-
-    // pendidikan
-    Route::post('pendidikan/save', [Pendidikan::class, 'save'])->name('tbhPendidikan');
-    Route::get('pendidikan/edit', [Pendidikan::class, 'edit'])->name('editPendidikan');
-    Route::post('pendidikan/update', [Pendidikan::class, 'update'])->name('updatePendidikan');
-    Route::get('pendidikan/confrim/{id}', [Pendidikan::class, 'confrim'])->name('confrimpendidikan');
-    Route::get('pendidikan/delete/{id}/{id_pgwai}', [Pendidikan::class, 'delete'])->name('delpendidikan');
-
-
-    Route::group(['prefix' => 'parameter/pegawaispi'], function () {
-        Route::get('/', [ParamPegawai::class, 'index'])->name('pegawaispi');
-
-        // Jabatan
-        Route::get('/jabatan', [ParamJabatan::class, 'index'])->name('jabatan');
-        Route::get('/getjabatan', [ParamJabatan::class, 'getjabatan'])->name('getjabatan');
-        Route::get('/tambahjabatan', [ParamJabatan::class, 'tambah'])->name('tambahjabatan');
-        Route::post('/savejabatan', [ParamJabatan::class, 'save'])->name('savejabatan');
-        Route::get('/editjbtn/{id}', [ParamJabatan::class, 'edit'])->name('editjbtn');
-        Route::post('/updatejabatan/{id}', [ParamJabatan::class, 'update'])->name('updatejabatan');
-        Route::get('/detailjabatan/{id}', [ParamJabatan::class, 'detail'])->name('detailjabatan');
-        Route::get('/confrimJbtn/{id}', [ParamJabatan::class, 'confrimDel'])->name('confrimJbtn_');
-        Route::get('/deletejbtn/{id}', [ParamJabatan::class, 'delete'])->name('deletejbtn_');
-
-        // jabatan SPI
-        Route::get('/unitspi', [ParUnitSpi::class, 'index'])->name('unitspi');
-        Route::get('/tambahunitspi', [ParUnitSpi::class, 'tambah'])->name('tambahunitspi');
-        Route::post('/saveunitspi', [ParUnitSpi::class, 'save'])->name('saveunitspi');
-        Route::get('/editunitspi/{id}', [ParUnitSpi::class, 'edit'])->name('editunitspi');
-        Route::post('/updateunitspi/{id}', [ParUnitSpi::class, 'update'])->name('updateunitspi');
-        Route::get('/detailunitspi/{id}', [ParUnitSpi::class, 'detail'])->name('detailunitspi');
-        Route::get('/confrimunitspi/{id}', [ParUnitSpi::class, 'confrimDel'])->name('confrimunitspi');
-        Route::get('/deleteunitspi/{id}', [ParUnitSpi::class, 'delete'])->name('deleteunitspi');
-
-        // Pelatihan
-        Route::get('/p_pelatihan', [ParPelatihanCtr::class, 'index'])->name('p_pelatihan');
-        Route::get('/tambahpelatihan', [ParPelatihanCtr::class, 'tambah'])->name('ptambahpelatihan');
-        Route::post('/savepelatihan', [ParPelatihanCtr::class, 'save'])->name('psavepelatihan');
-        Route::get('/editpelatihan/{id}', [ParPelatihanCtr::class, 'edit'])->name('peditpelatihan');
-        Route::post('/updatepelatihan/{id}', [ParPelatihanCtr::class, 'update'])->name('pupdatepelatihan');
-        Route::get('/detailpelatihan/{id}', [ParPelatihanCtr::class, 'detail'])->name('pdetailpelatihan');
-        Route::get('/confrimpelatihan/{id}', [ParPelatihanCtr::class, 'confrimDel'])->name('pconfrimpelatihan');
-        Route::get('/deletepelatihan/{id}', [ParPelatihanCtr::class, 'delete'])->name('pdeletepelatihan');
-    });
-
-
-
    
     Route::get('pegawai/getPegawai', [PegawaiController::class, 'getPegawai'])->name('getPegawai');
     // Route::get('m_inventaris/getDataBagian', [BagianController::class, 'getDataBagian'])->name('getDataBagian');
@@ -301,16 +236,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/subBagianUpdate', [SubBagianController::class, 'update'])->name('subBagianUpdate');
         Route::get('/confrimdelsubbag{id}', [SubBagianController::class, 'confrimdelsubbag'])->name('confrimdelsubbag');
         Route::get('/deletebagiansub{id}', [SubBagianController::class, 'delete'])->name('deletebagiansub');
-
-
-        //data_kelompok
-        Route::get('/get_data_kelompok', [DataKelompokController::class, 'get_data_kelompok'])->name('get_data_kelompok');
-        Route::get('/data_kelompok', [DataKelompokController::class, 'index'])->name('dataKelompok');
-        Route::post('/data_kelompok_save', [DataKelompokController::class, 'save'])->name('data_kelompok_save');
-        Route::get('/data_kelompok_edit{id}', [DataKelompokController::class, 'edit'])->name('data_kelompok_edit');
-        Route::post('/data_kelompok_update', [DataKelompokController::class, 'update'])->name('data_kelompok_update');
-        Route::get('/confrimdelkelompok{id}', [DataKelompokController::class, 'confrimDelete'])->name('confrimdelkelompok');
-        Route::get('/deletekelompok{id}', [DataKelompokController::class, 'delete'])->name('deletekelompok');
 
 
         // DataMerkController\
