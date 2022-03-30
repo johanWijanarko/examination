@@ -98,11 +98,7 @@ class MenuController extends Controller
         $role->givePermissionTo($nmpermission);
     }
     
-        $cek = \Log::channel('database')->info($affected);
-        $query = DB::getQueryLog();
-        $query = end($query);
-        $this->save_log('tambah data menu' ,json_encode($query));
-
+      
     Alert::success('Success','Data berhasil di Simpan');
     return redirect('user/menu');
     }
@@ -184,10 +180,6 @@ class MenuController extends Controller
             }
         }
         
-        $cek = \Log::channel('database')->info($affected);
-        $query = DB::getQueryLog();
-        $query = end($query);
-        $this->save_log('update data menu' ,json_encode($query));
 
         Alert::success('Success','Data berhasil di Update');
         return redirect('user/menu');
@@ -205,10 +197,6 @@ class MenuController extends Controller
         $delmenu = DB::table('menu')->where('id', $id)
         ->update(['status'=> 0]);
 
-        $cek = \Log::channel('database')->info($delmenu);
-        $query = DB::getQueryLog();
-        $query = end($query);
-        $this->save_log('delete data menu' ,json_encode($query));
         
         Alert::success('Success','Data berhasil di Dihapus');
         return redirect('user/menu');
@@ -240,10 +228,6 @@ class MenuController extends Controller
         $delmenu = DB::table('menu')->where('id', $id)
         ->delete();
 
-        $cek = \Log::channel('database')->info($delmenu);
-        $query = DB::getQueryLog();
-        $query = end($query);
-        $this->save_log('delete data menu' ,json_encode($query));
         
         Alert::success('Success','Data berhasil di Dihapus');
         return redirect('user/menu/subMenu/'.$parent);
@@ -300,10 +284,7 @@ class MenuController extends Controller
         $role->givePermissionTo($nmpermission);
     }
     
-    $cek = \Log::channel('database')->info($affected);
-    $query = DB::getQueryLog();
-    $query = end($query);
-    $this->save_log('tambah data submenu' ,json_encode($query));
+   
 
     Alert::success('Success','Data berhasil di Simpan');
     return redirect('user/menu/subMenu/'.$id);
@@ -334,10 +315,6 @@ class MenuController extends Controller
         $affected = DB::table('menu')
         ->where('id', $id)->update($save_menu);
 
-        $cek = \Log::channel('database')->info($affected);
-        $query = DB::getQueryLog();
-        $query = end($query);
-        $this->save_log('update data submenu' ,json_encode($query));
     
         Alert::success('Success','Data berhasil di Update');
         return redirect('user/menu/subMenu/'.$request->parent);
