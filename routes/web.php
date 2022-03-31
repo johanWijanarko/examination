@@ -66,7 +66,7 @@ use App\Http\Controllers\TransaksiPerangkatController;
 // });
 
 Auth::routes();
-// clear cache all 
+// clear cache all
 Route::get('/clear_session', function () {
     DB::table('users')->update(['session_id' => null]);
     echo '<script>alert("session clear Success")</script>';
@@ -80,7 +80,7 @@ Route::get('/cc', function () {
     }else{
         Artisan::call('cache:clear');
     }
-    
+
     echo '<script>alert("cache clear Success")</script>';
 });
 
@@ -92,7 +92,7 @@ Route::get('/ccc', function () {
     }else{
         Artisan::call('config:cache');
     }
-    
+
     echo '<script>alert("config cache Success")</script>';
 });
 Route::get('/vc', function () {
@@ -103,7 +103,7 @@ Route::get('/vc', function () {
     }else{
         Artisan::call('view:clear');
     }
-    
+
     echo '<script>alert("view clear Success")</script>';
 });
 Route::get('/cr', function () {
@@ -114,7 +114,7 @@ Route::get('/cr', function () {
     }else{
         Artisan::call('route:cache');
     }
-   
+
     echo '<script>alert("route clear Success")</script>';
 });
 Route::get('/coc', function () {
@@ -178,7 +178,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/menu/delete/{id}/{parent}', [MenuController::class, 'confrimdelete'])->name('deleteMenusub');
     Route::get('/menu/deletesub/{id}/{parent}', [MenuController::class, 'deleteSub'])->name('deleteMenu_');
-    
+
 
     Route::get('user/menu/subMenu/{id}', [MenuController::class, 'submenu'])->name('submenu');
     Route::get('user/menu/sutambah/{id}', [MenuController::class, 'tbh_sub'])->name('tbh_sub');
@@ -189,7 +189,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     // master pegawai
-    
+
     Route::group(['prefix' => 'pegawai/daftarpegawai'], function () {
         Route::get('/', [PegawaiController::class, 'index'])->name('pegawai');
         Route::get('addpegawai', [PegawaiController::class, 'tambah'])->name('addpegawai');
@@ -212,7 +212,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('pelatihan/delete/{id}/{id_pgwai}', [pelatihan::class, 'delete'])->name('delpelatihan');
 
 
-   
+
     Route::get('pegawai/getPegawai', [PegawaiController::class, 'getPegawai'])->name('getPegawai');
     // Route::get('m_inventaris/getDataBagian', [BagianController::class, 'getDataBagian'])->name('getDataBagian');
 
@@ -225,7 +225,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/bagianUpdate', [BagianController::class, 'update'])->name('bagianUpdate');
         Route::get('/confrimdelbag{id}', [BagianController::class, 'confrimDelete'])->name('confrimdelbag');
         Route::get('/deletebagian{id}', [BagianController::class, 'delete'])->name('deletebagian');
-        
+
 
          // sub bagian
         Route::get('/sub_bagian', [SubBagianController::class, 'index'])->name('subbagian');
@@ -291,7 +291,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/get_prov_edit{id}', [LokasiController::class, 'get_prov_edit'])->name('get_prov_edit');
         Route::get('/get_kab_edit{id}', [LokasiController::class, 'get_kab_edit'])->name('get_kab_edit');
 
-        
+
         // pegawai
         Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai');
         Route::get('addpegawai', [PegawaiController::class, 'tambah'])->name('addpegawai');
@@ -370,7 +370,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/confrimdelAplikasi/{id}', [DataAplikasiController::class, 'confrimDelete'])->name('confrimdelAplikasi');
         Route::get('/delete/{id}', [DataAplikasiController::class, 'delete'])->name('delete_Aplikasi');
     });
-    
+
     Route::group(['prefix' => 'm_data/alat_kantor'], function () {
         // alat_kantor
         Route::get('/', [DataAlatKantorController::class, 'index'])->name('aplikasi');
@@ -460,9 +460,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/save', [MutasiController::class, 'save'])->name('saveMutasi');
         Route::get('/edit/{id}', [MutasiController::class, 'edit'])->name('editMutasi');
         Route::post('/update/{id}', [MutasiController::class, 'update'])->name('update_mutasi');
-        
+
     });
-    
+
     Route::group(['prefix' => 'transaksi_data/pengembalian'], function () {
         Route::get('/', [PengembalianController::class, 'index'])->name('mutasi');
         Route::get('/add', [PengembalianController::class, 'tambah'])->name('add_kembali');
@@ -476,7 +476,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/update/{id}', [PengembalianController::class, 'update'])->name('update_kembali');
     });
 
-    
+
     Route::group(['prefix' => 'transaksi_data/perbaikan'], function () {
         Route::get('/', [PerbaikanController::class, 'index'])->name('perbaikan');
         Route::get('/getDataPerbaikan', [PerbaikanController::class, 'getDataPerbaikan'])->name('getDataPerbaikan');
@@ -536,8 +536,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/alatKantorPerRuangan_excel', [LaporanAlatKantor::class, 'alatKantorPerRuangan_excel'])->name('alatKantorPerRuangan_excel');
         Route::get('/lap_alat_kondisi', [LaporanAlatKantor::class, 'alatKantorPerKondisi'])->name('alatKantorPerKondisi');
         Route::get('/alatKantorPerKondisi_excel', [LaporanAlatKantor::class, 'alatKantorPerKondisi_excel'])->name('alatKantorPerKondisi_excel');
-        
-        
+
+
         // LaporanInventaris
 
         Route::get('/lap_inv', [LaporanInventaris::class, 'inventaris'])->name('lap_inv');
@@ -557,7 +557,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/mut_prangkat_gedung_excel', [LaporanMutasi::class, 'mut_prangkat_gedung_excel'])->name('mut_prangkat_gedung_excel');
         Route::get('/mut_prangkat_ruang', [LaporanMutasi::class, 'mut_prangkat_ruangan'])->name('mut_prangkat_ruangan');
         Route::get('/mut_prangkat_ruangan_excel', [LaporanMutasi::class, 'mut_prangkat_ruangan_excel'])->name('mut_prangkat_ruangan_excel');
-        
+
         // aplikasi
         Route::get('/mut_aplikasi', [LaporanMutasi::class, 'aplikasi'])->name('mut_aplikasi');
         Route::get('/mut_aplikasi_excel', [LaporanMutasi::class, 'mut_aplikasi_excel'])->name('mut_aplikasi_excel');
@@ -593,7 +593,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/kem_prangkat_gedung_excel', [LaporanPengembalian::class, 'kem_prangkat_gedung_excel'])->name('kem_prangkat_gedung_excel');
         Route::get('/kem_prangkat_ruang', [LaporanPengembalian::class, 'kem_prangkat_ruang'])->name('kem_prangkat_ruang');
         Route::get('/kem_prangkat_ruang_excel', [LaporanPengembalian::class, 'kem_prangkat_ruang_excel'])->name('kem_prangkat_ruang_excel');
-        
+
         // aplikasi
          Route::get('/kem_aplikasi', [LaporanPengembalian::class, 'aplikasi'])->name('kem_aplikasi');
         Route::get('/kem_aplikasi_excel', [LaporanPengembalian::class, 'kem_aplikasi_excel'])->name('kem_aplikasi_excel');
@@ -611,7 +611,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/kem_atk_ruang', [LaporanPengembalian::class, 'kem_atk_ruang'])->name('kem_atk_ruang');
         Route::get('/kem_atk_ruang_excel', [LaporanPengembalian::class, 'kem_atk_ruang_excel'])->name('kem_atk_ruang_excel');
 
-       
+
         // inv
          Route::get('/kem_inv', [LaporanPengembalian::class, 'inv'])->name('kem_inv');
         Route::get('/kem_inv_excel', [LaporanPengembalian::class, 'kem_inv_excel'])->name('kem_inv_excel');
@@ -623,7 +623,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
     // RekapitulasiData
-    
+
     Route::group(['prefix' => 'lap_rekap/'], function () {
 
          Route::get('/rekap_lap_gedung', [RekapitulasiData::class, 'rekapPerangkatGedung'])->name('rekapPerangkatGedung');
@@ -664,10 +664,10 @@ Route::group(['middleware' => ['auth']], function () {
          Route::get('/rekap_kembali_atk_excel', [RekapitulasiData::class, 'rekap_kem_atkExcel'])->name('rekap_kem_atkExcel');
          Route::get('/rekap_kmbali_inv', [RekapitulasiData::class, 'rekap_kem_inv'])->name('rekap_kem_inv');
          Route::get('/rekap_kmbali_inv_excel', [RekapitulasiData::class, 'rekap_kem_invExcel'])->name('rekap_kem_invExcel');
-         
+
         });
     Route::group(['prefix' => 'lap_grafik/'], function () {
-            
+
         Route::get('/grafik_prkt_gedung', [LaporanGrafik::class, 'grafik_prkt_gedung'])->name('grafik_prkt_gedung');
         Route::get('/grafik_prkt_ruang', [LaporanGrafik::class, 'grafik_prkt_ruang'])->name('grafik_prkt_ruang');
         Route::get('/grafik_apl_gedung', [LaporanGrafik::class, 'grafik_apl_gedung'])->name('grafik_apl_gedung');
@@ -691,7 +691,7 @@ Route::group(['middleware' => ['auth']], function () {
     // ubah password cek
     Route::get('ubah_password/{id}', [HomeController::class, 'ubah_password'])->name('ubah_password');
     Route::post('update_password/{id}', [HomeController::class, 'update_password'])->name('update_password');
-    
+
 
     // Route::get('genreate_id', function () {
     //     // $inspeksiGet = Inspeksi::get();

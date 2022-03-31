@@ -1,5 +1,5 @@
 @extends('layout.app',[
-    
+
 ])
 @section('content')
 <style>
@@ -16,7 +16,7 @@
                     <div class="card-body">
                         {{-- <div class="col-xs-12 col-sm-12 col-md-12"> --}}
                         <h4 class="card-title">Input Transaksi Perangkat</h4>
-                        
+
                         @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
@@ -51,8 +51,8 @@
                                 <div class="col-md-8">
                                     <select class="form-control" id="perangkat" name="perangkat" required>
                                         <option value="{{old('perangkat')}}">Pilih Perangkat</option>
-                                        @foreach ($dataPerangkat as $perangkat)
-                                            <option value="{{ $perangkat->data_manajemen_id }}">{{ $perangkat->data_manajemen_name }}</option>
+                                        @foreach ($dataStok as $stok)
+                                            <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -82,14 +82,6 @@
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Type</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="type" id="type" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
                                             <label class="col-form-label mandatory">Kondisi</label>
                                         </div>
                                         <div class="col-md-8">
@@ -105,10 +97,10 @@
                                             <input type="text" name="kondisi" id="sup" class="form-control" placeholder="" readonly>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
-                            
+
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Nama Pegawai</label>
@@ -166,19 +158,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Kelompok</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="kelompok" name="kelompok" required>
-                                        <option value="{{old('kelompok')}}">Pilih Kelompok</option>
-                                        @foreach ($kelompok as $kel)
-                                            <option value="{{ $kel->data_kelompok_id }}">{{ $kel->nama_data_kelompok }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
+
                             <div class="form-group row">
                                 <div class="col-sm-12">
                                     <a href="{{ url('transaksi_data/perangkat_trans') }}" class="btn btn-info">Kembali</a>
@@ -212,13 +192,12 @@ $(document).ready(function() {
             success: function (response) {
                 console.log(response.kondisi)
                 $('[name="merk"]').val(response.getMerk.nama_data_merk);
-                $('#type').val(response.typeKategory.nama_data_type);
                 $('#kondisi').val(response.kondisi.nama_data_kondisi);
                 $('#kondisi_id').val(response.kondisi.data_kondisi_id);
                 $('#sup').val(response.supplier.supplier_name);
-                $('#jumlah').val(response.getPerangkat.data_manajemen_jumlah+' Unit');
-                
-               
+                $('#jumlah').val(response.dataStok.data_jumlah+' Unit');
+
+
             }
         })
     });
@@ -235,11 +214,11 @@ $(document).ready(function() {
                 $('#subBagian').empty();
 				        $('#subBagian').append(new Option('- Pilih -', ''))
                 $('#subBagian').trigger('change')
-              
+
                 response.forEach(item => {
                     $('#subBagian').append(new Option(item.nama, item.id))
                 });
-               
+
             }
         })
     });
@@ -258,13 +237,13 @@ $(document).ready(function() {
 
                 $('#bagian').val(response.pegawai_has_bagian.nama_bagian)
                 $('#subBagian').val(response.pegawai_has_sub_bagian.sub_bagian_nama)
-                
-               
+
+
             }
         })
     });
 
-    
-    
+
+
 </script>
 @endpush

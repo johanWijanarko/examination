@@ -48,7 +48,7 @@ class MenuController extends Controller
      */
     public function create()
     {
-        
+
         $title_page = "Management Menu";
         $menu = DB::table('menu')->where('master_menu', '0')->get();
         return view('menu.create', compact('menu', 'title_page'));
@@ -68,39 +68,39 @@ class MenuController extends Controller
             'icon' => 'required',
             'permission' => 'required'
         ]);
-    $save_menu = [
-        'nama_menu' =>$request->nama_menu,
-        'master_menu' =>0,
-        'url' =>$request->url,
-        'icon' =>$request->icon,
-        'permission' =>$request->permission,
-        'no_urut' =>$request->nourut,
-        'status' => 1
+        $save_menu = [
+            'nama_menu' =>$request->nama_menu,
+            'master_menu' =>0,
+            'url' =>$request->url,
+            'icon' =>$request->icon,
+            'permission' =>$request->permission,
+            'no_urut' =>$request->nourut,
+            'status' => 1
 
-    ];
-    // dd($save_menu);
-    $permission = [
-        'list',
-        'create',
-        'edit',
-        'delete',
-        'detail'
-    ];
+        ];
+        // dd($save_menu);
+        $permission = [
+            'list',
+            'create',
+            'edit',
+            'delete',
+            'detail'
+        ];
 
-    // dd($save_menu);
-    $affected = DB::table('menu')
-    ->insert($save_menu);
-    
-    $role = Role::where('name', 'Admin')->first();
-    foreach($permission as $permiss){
-        $nmpermission = $request->permission.'-'.$permiss;
-        Permission::create(['name' => $nmpermission]);
-        $role->givePermissionTo($nmpermission);
-    }
-    
-      
-    Alert::success('Success','Data berhasil di Simpan');
-    return redirect('user/menu');
+        // dd($save_menu);
+        $affected = DB::table('menu')
+        ->insert($save_menu);
+
+        $role = Role::where('name', 'Admin')->first();
+        foreach($permission as $permiss){
+            $nmpermission = $request->permission.'-'.$permiss;
+            Permission::create(['name' => $nmpermission]);
+            $role->givePermissionTo($nmpermission);
+        }
+
+
+        Alert::success('Success','Data berhasil di Simpan');
+        return redirect('user/menu');
     }
 
     /**
@@ -153,7 +153,7 @@ class MenuController extends Controller
             'icon' =>$request->icon,
             'permission' =>$request->permission,
             'no_urut' =>$request->nourut
-    
+
         ];
         $permission = [
             'list',
@@ -162,8 +162,8 @@ class MenuController extends Controller
             'delete',
             'detail'
         ];
-    
-        
+
+
         $affected = DB::table('menu')
         ->where('id', $id);
         $data = $affected->first();
@@ -172,14 +172,14 @@ class MenuController extends Controller
         if($data->permission == null){
 
             $role = Role::where('name', 'Admin')->first();
-           
+
             foreach($permission as $permiss){
                 $nmpermission = $request->permission.'-'.$permiss;
                 Permission::create(['name' => $nmpermission]);
                 $role->givePermissionTo($nmpermission);
             }
         }
-        
+
 
         Alert::success('Success','Data berhasil di Update');
         return redirect('user/menu');
@@ -197,7 +197,7 @@ class MenuController extends Controller
         $delmenu = DB::table('menu')->where('id', $id)
         ->update(['status'=> 0]);
 
-        
+
         Alert::success('Success','Data berhasil di Dihapus');
         return redirect('user/menu');
     }
@@ -226,9 +226,11 @@ class MenuController extends Controller
     {
         // dd($parent);
         $delmenu = DB::table('menu')->where('id', $id)
-        ->delete();
+        ->update(['status'=> 0]);
+        // $delmenu = DB::table('menu')->where('id', $id)
+        // ->delete();
 
-        
+
         Alert::success('Success','Data berhasil di Dihapus');
         return redirect('user/menu/subMenu/'.$parent);
     }
@@ -249,7 +251,8 @@ class MenuController extends Controller
     public function tbh_sub(Request $request, $id){
         return view('menu.create_sub', compact('id'));
     }
-    public function save_sub(Request $request, $id){
+    public function save_sub(Request $request, $id)
+    {
         // dd($id);
         $request->validate([
             'nama_menu' => 'required',
@@ -264,30 +267,30 @@ class MenuController extends Controller
             'no_urut' =>$request->nourut,
             'status' => 1
         ];
-    // dd($save_menu);
-    $permission = [
-        'list',
-        'create',
-        'edit',
-        'delete',
-        'detail'
-    ];
+        // dd($save_menu);
+        $permission = [
+            'list',
+            'create',
+            'edit',
+            'delete',
+            'detail'
+        ];
 
-    // dd($save_menu);
-    $affected = DB::table('menu')
-    ->insert($save_menu);
-    
-    $role = Role::where('name', 'Admin')->first();
-    foreach($permission as $permiss){
-        $nmpermission = $request->permission.'-'.$permiss;
-        Permission::create(['name' => $nmpermission]);
-        $role->givePermissionTo($nmpermission);
-    }
-    
-   
+        // dd($save_menu);
+        $affected = DB::table('menu')
+        ->insert($save_menu);
 
-    Alert::success('Success','Data berhasil di Simpan');
-    return redirect('user/menu/subMenu/'.$id);
+        $role = Role::where('name', 'Admin')->first();
+        foreach($permission as $permiss){
+            $nmpermission = $request->permission.'-'.$permiss;
+            Permission::create(['name' => $nmpermission]);
+            $role->givePermissionTo($nmpermission);
+        }
+
+
+
+        Alert::success('Success','Data berhasil di Simpan');
+        return redirect('user/menu/subMenu/'.$id);
     }
     public function edit_sub(Request $request, $id, $parent)
     {
@@ -308,14 +311,14 @@ class MenuController extends Controller
             'nama_menu' =>$request->nama_menu,
             'url' =>$request->url,
             'no_urut' =>$request->nourut
-    
+
         ];
-    // dd($save_menu);
-        
+        // dd($save_menu);
+
         $affected = DB::table('menu')
         ->where('id', $id)->update($save_menu);
 
-    
+
         Alert::success('Success','Data berhasil di Update');
         return redirect('user/menu/subMenu/'.$request->parent);
     }
