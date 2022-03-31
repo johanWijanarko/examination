@@ -3,6 +3,7 @@
 use App\Helpers\SiteHelpers;
 use App\Http\Controllers\BackupDb;
 
+use App\Http\Controllers\Stokdata;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Pelatihan;
@@ -345,6 +346,18 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/update/{id}', [DataPerangkatController::class, 'update'])->name('update_perangkat');
         Route::get('/confrimdelperangkat/{id}', [DataPerangkatController::class, 'confrimDelete'])->name('confrimdelperangkat');
         Route::get('/delete/{id}', [DataPerangkatController::class, 'delete'])->name('delete_perangkat');
+    });
+
+    Route::group(['prefix' => 'm_data/data_stok'], function () {
+        // perangkat
+        Route::get('/', [Stokdata::class, 'index'])->name('stok');
+        // Route::get('/getDataPerangkat', [DataPerangkatController::class, 'getDataPerangkat'])->name('getDataPerangkat');
+        Route::get('/add', [Stokdata::class, 'tambah'])->name('add_stok');
+        Route::post('/save', [Stokdata::class, 'save'])->name('save_stok');
+        // Route::get('/edit/{id}', [Stokdata::class, 'edit'])->name('edit_perangkat');
+        // Route::post('/update/{id}', [Stokdata::class, 'update'])->name('update_perangkat');
+        // Route::get('/confrimdelperangkat/{id}', [Stokdata::class, 'confrimDelete'])->name('confrimdelperangkat');
+        // Route::get('/delete/{id}', [Stokdata::class, 'delete'])->name('delete_perangkat');
     });
 
     Route::group(['prefix' => 'm_data/aplikasi'], function () {
