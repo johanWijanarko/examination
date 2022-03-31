@@ -7,6 +7,10 @@
     content:" *";
     color: red;
   }
+  .disable_section {
+  pointer-events: none;
+  /* opacity: 0.8; */
+}
 </style>
 <div class="card">
     <div class="card-body">
@@ -15,24 +19,32 @@
                 <div class="card card-img-holder">
                     <div class="card-body">
                         {{-- <div class="col-xs-12 col-sm-12 col-md-12"> --}}
-                        <h4 class="card-title">Tambah Stok<Menu></Menu></h4>
-                        <div class="alert alert-danger print-error-msg" style="display:none">
-                            <ul></ul>
+                        <h4 class="card-title">Edit Stok</h4>
+                       
+                        @if (count($errors) > 0)
+                        <div class="alert alert-danger">
+                            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                            <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                            </ul>
                         </div>
-                        <form method="post" action="{{ route('save_stok') }}" class="needs-validation-pegawai" id="save_data" enctype="multipart/form-data">
+                        @endif
+                        <form method="post" action="{{ route('update_stok', $getData->data_stok_id) }}" class="needs-validation-pegawai" id="save_data" enctype="multipart/form-data">
                             {{ csrf_field() }}
-
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Nama Data</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" name="data_name" id="data_name" class="form-control" value="{{old('data_name')}}" placeholder="" required>
+                                    <input type="text" name="data_name" id="data_name" class="form-control" value="{{ $getData->data_name }}" placeholder="" required>
                                     <div class="invalid-feedback">
                                         Masukkan Nama Perangkat
                                     </div>
                                 </div>
                             </div>
+                           
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Type / Kategori</label>
@@ -41,7 +53,7 @@
                                     <select class="form-control" id="type" name="type" required>
                                         <option value="{{old('type')}}">Pilih Type / Kategori</option>
                                         @foreach ($parType as $type)
-                                            <option value="{{ $type->data_type_id }}">{{ $type->nama_data_type }}</option>
+                                            <option {{ ($getData->data_kategory_id == $type->data_type_id ) ? 'selected' : ''}}  value="{{$type->data_type_id}}" >{{$type->nama_data_type}}</option>
                                         @endforeach
                                     </select>
                                     <div class="invalid-feedback">
@@ -51,13 +63,13 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label class="col-form-label">Merk / Jenis</label>
+                                    <label class="col-form-label mandatory">Merk / Jenis</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <select class="form-control" id="merk" name="merk">
+                                    <select class="form-control" id="merk" name="merk" required>
                                         <option value="{{old('merk')}}">Pilih Merk / Jenis</option>
                                         @foreach ($parMerks as $merk)
-                                            <option value="{{ $merk->data_merk_id }}">{{ $merk->nama_data_merk }}</option>
+                                            <option {{ ($getData->data_merk_id == $merk->data_merk_id ) ? 'selected' : ''}}  value="{{$merk->data_merk_id}}" >{{$merk->nama_data_merk}}</option> 
                                         @endforeach
                                     </select>
                                     <div class="invalid-feedback">
@@ -65,7 +77,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Kondisi</label>
@@ -74,7 +85,7 @@
                                     <select class="form-control" id="kondisi" name="kondisi" required>
                                         <option value="{{old('kondisi')}}">Pilih kondisi</option>
                                         @foreach ($parKondisi as $kondisi)
-                                            <option value="{{ $kondisi->data_kondisi_id }}">{{ $kondisi->nama_data_kondisi }}</option>
+                                            <option {{ ($getData->data_kondisi_id == $kondisi->data_kondisi_id ) ? 'selected' : ''}}  value="{{$kondisi->data_kondisi_id}}" >{{$kondisi->nama_data_kondisi}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -90,7 +101,7 @@
                                     <select class="form-control" id="supplier" name="supplier" required>
                                         <option value="{{old('supplier')}}">Pilih Supplier</option>
                                         @foreach ($parSuppliers as $supplier)
-                                            <option value="{{ $supplier->supplier_id }}">{{ $supplier->supplier_name }}</option>
+                                            <option {{ ($getData->data_supplier_id == $supplier->supplier_id ) ? 'selected' : ''}}  value="{{$supplier->supplier_id}}" >{{ $supplier->supplier_name }}</option>
                                         @endforeach
                                     </select>
                                     <div id="validation-errors"></div>
@@ -101,7 +112,7 @@
                                     <label class="col-form-label mandatory">Jumlah</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="number" name="jumlah" id="jumlah" class="form-control" value="{{old('jumlah')}}" placeholder="" required>
+                                    <input type="number" name="jumlah" id="jumlah" class="form-control" value="{{ $getData->data_jumlah }}" placeholder="" >
                                     <div class="invalid-feedback">
                                         Masukkan Jumlah
                                     </div>
@@ -109,10 +120,21 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
+                                    <label class="col-form-label mandatory">Klik update untuk tambah stok</label>
+                                </div>
+                                <div class="col-md-8">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>{!! Form::label('stok_update','Update', [ 'class' => 'form-check-input position-static required']) !!}</strong>
+                                     <input type="checkbox" name="is_user" id="is_user" onclick="enableCreateUser()" />
+                                    
+                                    <input type="number" name="up_jumlah" id="up_jumlah" class="form-control" placeholder="" >
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
                                     <label class="col-form-label">Keterangan</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" name="keterangan" id="keterangan" class="form-control" value="{{old('keterangan')}}" placeholder="" >
+                                    <input type="text" name="keterangan" id="keterangan" class="form-control" value="{{ $getData->data_keterangan }}" placeholder="" >
                                     <div class="invalid-feedback">
                                         Masukkan Jumlah
                                     </div>
@@ -134,22 +156,17 @@
 @endsection
 @push('page-script')
 <script>
-    // function save(){
-
-    //     var formData = $('#save_data').serialize();
-    //      $('#save_data').validate();
-    //     if ($('#save_data').valid()) // check if form is valid
-    //     {
-    //         alert('cek')
-    //     }
-    //     else 
-    //     {
-    //         // just show validation errors, dont post
-    //     }
-       
-    // }
-
-    
-    
+$( document ).ready(function() {
+    $('#up_jumlah').hide();
+});
+function enableCreateUser() {
+  if (document.getElementById("is_user").checked) {
+    $('#up_jumlah').show();
+    $("#jumlah").prop("readonly", true);
+  } else {
+     $("#jumlah").prop("readonly", false);
+     $("#up_jumlah").hide();
+  }
+}
 </script>
 @endpush

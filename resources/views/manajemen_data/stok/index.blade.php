@@ -12,13 +12,13 @@
           {{-- <a class="btn btn-outline-info btn-outline-oke" href="{{ url('parameter/par_audit') }}"><i class="fas fa-arrow-left"></i> Kembali</a> --}}
         </div>
         <div class="table-responsive mt-4">
-            <table class="table table-bordered table-striped table-inka" id="data_perangkat">
+            <table class="table table-bordered table-striped table-inka" id="data_perangkat" width= "100%">
                 <thead>
                     <tr>
                         <th>No</th>
                         <th>Nama</th>
-                        <th>Merk / Jenis</th>
                         <th>Type</th>
+                        <th>Merk / Jenis</th>
                         <th>Kondisi</th>
                         <th>Supplier</th>
                         <th>Jumlah (Unit)</th>
@@ -60,36 +60,29 @@
             processing: true,
             serverSide: true,
             responsive: true,
-            ajax: '{{ url('m_data/perangkat/getDataPerangkat') }}',
+            ajax: '{{ url('m_data/data_stok/getDataStok') }}',
             columns: [
                 { "data": 'DT_RowIndex',orderable: false, searchable: false },
-                { data: 'data_manajemen_name', name: 'data_manajemen_name' },
-                { data: 'merk', name: 'merk' },
+                { data: 'data_name', name: 'data_name' },
                 { data: 'type', name: 'type' },
+                { data: 'merk', name: 'merk' },
                 { data: 'kondisi', name: 'kondisi' },
                 { data: 'supplier', name: 'supplier' },
-                { data: 'data_manajemen_jumlah', name: 'data_manajemen_jumlah' },
-                // { data: 'mutasi', name: 'mutasi' },
-                // { data: 'pinjam', name: 'pinjam' },
-                { data: 'data_manajemen_jumlah_pemakai', name: 'data_manajemen_jumlah_pemakai' },
-                { data: 'data_manajemen_jumlah_rusak', name: 'data_manajemen_jumlah_rusak' },
-                { data: 'data_manajemen_keterangan', name: 'data_manajemen_keterangan' },
-                { data: 'actions', name: 'actions', orderable: false, searchable: false}
+                { data: 'data_jumlah', name: 'data_jumlah' },
+                { data: 'data_dipakai', name: 'data_dipakai' },
+                { data: 'data_rusak', name: 'data_rusak' },
+                { data: 'data_keterangan', name: 'data_keterangan' },
+                {
+                    "className":      'details-control',
+                    "orderable":      false,
+                    "searchable":      false,
+                    "data":           null,
+                    "defaultContent": '',
+                    
+                    data: 'details_url', name: 'details_url',
+                }
             ]
-            ,
-            columnDefs: [
-                { width: 50, targets: 0 },
-                { width: 350, targets: 1 },
-                { width: 250, targets: 2 },
-                { width: 250, targets: 3 },
-                { width: 250, targets: 4 },
-                { width: 250, targets: 5 },
-                { width: 250, targets: 6 },
-                { width: 250, targets: 7 },
-                { width: 250, targets: 8 },
-                { width: 250, targets: 9 },
-                { width: 250, targets: 10 },
-            ]
+           
         });
     });
 
