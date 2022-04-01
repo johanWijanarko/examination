@@ -1,5 +1,5 @@
 @extends('layout.app',[
-    
+
 ])
 @section('content')
 <style>
@@ -43,7 +43,7 @@
                                     <label class="col-form-label mandatory">Keterangan</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" name="keterangan" id="keterangan" value="{{ $trsPerangkat->trs_name }}" class="form-control" placeholder="" required>
+                                    <input type="text" name="keterangan" id="keterangan" value="{{ $trsPerangkat->trs_keterangan }}" class="form-control" placeholder="" required>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -53,8 +53,8 @@
                                 <div class="col-md-8">
                                     <select class="form-control" id="perangkat" name="perangkat" required>
                                         <option value="{{old('perangkat')}}">Pilih Perangkat</option>
-                                        @foreach ($dataPerangkat as $perangkat)
-                                        <option {{ ($trsPerangkat->trs_data_id == $perangkat->data_manajemen_id ) ? 'selected' : ''}}  value="{{$perangkat->data_manajemen_id}}" >{{ $perangkat->data_manajemen_name }}</option>
+                                        @foreach ($dataStok as $perangkat)
+                                        <option {{ ($trsPerangkat->trs_data_stok_id == $perangkat->data_stok_id ) ? 'selected' : ''}}  value="{{$perangkat->data_stok_id}}" >{{ $perangkat->data_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -64,7 +64,7 @@
                                     <label class="col-form-label mandatory">Jumlah Perangkat</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" name="jumlah" id="jumlah" value="{{ $trsPerangkat->trsHasData->data_manajemen_jumlah }}" class="form-control" placeholder="" readonly>
+                                    <input type="text" name="jumlah" id="jumlah" value="{{ $trsPerangkat->trsHasStok->data_jumlah }}" class="form-control" placeholder="" readonly>
                                 </div>
                             </div>
                             <p>
@@ -79,23 +79,16 @@
                                             <label class="col-form-label mandatory">Merk / Jenis</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="text" name="merk" id="merk" value="{{ $trsPerangkat->trsHasData->manajemenHasMerk->nama_data_merk }}" class="form-control" placeholder="" readonly>
+                                            <input type="text" name="merk" id="merk" value="{{ $trsPerangkat->trsHasStok->stokHasMerk->nama_data_merk }}" class="form-control" placeholder="" readonly>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Type</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="type" id="type" value="{{ $trsPerangkat->trsHasData->manajemenHasType->nama_data_type }}" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
+
                                     <div class="form-group row">
                                         <div class="col-md-3">
                                             <label class="col-form-label mandatory">Kondisi</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="text" name="kondisi" id="kondisi" value="{{ $trsPerangkat->trsHasData->manajemenHasKondisi->nama_data_kondisi }}" class="form-control" placeholder="" readonly>
+                                            <input type="text" name="kondisi" id="kondisi" value="{{ $trsPerangkat->trsHasStok->stokHasKondisi->nama_data_kondisi }}" class="form-control" placeholder="" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -103,12 +96,12 @@
                                             <label class="col-form-label mandatory">Supplier</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="text" name="supplier" id="supplier" value="{{ $trsPerangkat->trsHasData->manajemenHasSupplier->supplier_name }}" class="form-control" placeholder="" readonly>
+                                            <input type="text" name="supplier" id="supplier" value="{{ $trsPerangkat->trsHasStok->stokHasSupplier->supplier_name }}" class="form-control" placeholder="" readonly>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Nama Pegawai</label>
@@ -127,8 +120,7 @@
                                     <label class="col-form-label mandatory">Bagian</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="hidden" class="form-control" name="bagian_" id="bagian_"  value="{{ $trsPerangkat->trsHasBagian->bagian_id }}" readonly>
-                                    <input type="text" class="form-control" name="bagian" id="bagian"  value="{{ $trsPerangkat->trsHasBagian->nama_bagian  }}" readonly>
+                                    <input type="text" class="form-control" name="bagian" id="bagian"  value="{{ $trsPerangkat->trsHasPegawai->pegawaiHasBagian->nama_bagian }}" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -136,8 +128,7 @@
                                     <label class="col-form-label mandatory">Sub Bagian</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="hidden" class="form-control" name="subBagian_" id="subBagian_" value="{{ $trsPerangkat->trsHasSubBagian->sub_bagian_id }}" readonly>
-                                    <input type="text" class="form-control" name="subBagian" id="subBagian"  value="{{ $trsPerangkat->trsHasSubBagian->sub_bagian_nama }}" readonly>
+                                    <input type="text" class="form-control" name="subBagian" id="subBagian"  value="{{ $trsPerangkat->trsHasPegawai->pegawaiHasSubBagian->sub_bagian_nama }}" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -161,12 +152,12 @@
                                     <select class="form-control" id="ruangan" name="ruangan" required>
                                         <option value="{{old('ruangan')}}">Pilih Ruangan</option>
                                         @foreach ($ruangan as $ru)
-                                            <option {{ ($trsPerangkat->trs_ruangan_id ==  $ru->data_ruangan_id) ? 'selected' : '' }} value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
+                                            <option {{ ($trsPerangkat->trs_ruang_id ==  $ru->data_ruangan_id) ? 'selected' : '' }} value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group row">
+                            {{-- <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Kelompok</label>
                                 </div>
@@ -178,7 +169,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="form-group row">
                                 <div class="col-sm-12">
                                     <a href="{{ url('transaksi_data/perangkat_trans') }}" class="btn btn-info">Kembali</a>
@@ -220,7 +211,7 @@ $(document).ready(function() {
                 $('#gedung').val(response.gedung.nama_data_gedung);
                 $('#ruangan').val(response.ruangan.nama_data_ruangan);
                 $('#supplier').val(response.supplier.supplier_name);
-               
+
             }
         })
     });
@@ -236,11 +227,11 @@ $('#bagian').on('change', function () {
             $('#subBagian').empty();
                     $('#subBagian').append(new Option('- Pilih -', ''))
             $('#subBagian').trigger('change')
-            
+
             response.forEach(item => {
                 $('#subBagian').append(new Option(item.nama, item.id))
             });
-            
+
         }
     })
 });
@@ -259,8 +250,8 @@ $('#pegawai').on('change', function () {
 
             $('#bagian').val(response.pegawai_has_bagian.nama_bagian)
             $('#subBagian').val(response.pegawai_has_sub_bagian.sub_bagian_nama)
-            
-            
+
+
         }
     })
 });
@@ -273,14 +264,14 @@ $('#pegawai').on('change', function () {
     //     {
     //         alert('cek')
     //     }
-    //     else 
+    //     else
     //     {
     //         // just show validation errors, dont post
     //     }
-       
+
     // }
 
-    
-    
+
+
 </script>
 @endpush

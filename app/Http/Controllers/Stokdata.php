@@ -17,13 +17,13 @@ class Stokdata extends Controller
 {
     public function index(Request $request)
     {
-        
+
         return \view('manajemen_data/stok.index');
     }
 
     public function getDataStok(Request $request)
     {
-    
+
         $DataPerangkat = StokModels::with(['stokHasMerk','stokHasType','stokHasKondisi','stokHasSupplier'])
         ->orderBy('data_stok_id', 'asc')->where('data_status_id',1)->get();
 
@@ -31,8 +31,8 @@ class Stokdata extends Controller
             ->addColumn('details_url', function(StokModels $dp) {
                 if ($dp->data_stok_id) {
                     $btn ='<a href="'.route("edit_stok",['id'=>$dp->data_stok_id]).'" data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-sm btn-success rounded-circle " ><i class="fas fa-edit"></i></i></a>';
-                    $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("confrimdelstok",['id'=>$dp->data_stok_id]).'" data-placement="top" title="delete" class="btn btn-sm btn-danger rounded-circle " ><i class="fas fa-trash"></i></i></a>';
-                    // $btn = $btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" title="Delete"  data-attr="'.route("confrimdelstok",['id'=>$dp->data_stok_id]).'" class="btn btn-sm btn-icon btn-danger"><i class="fas fa-trash"></i></a>';
+                    $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("confrimdelstok",['id'=>$dp->data_stok_id]).'" data-placement="top" title="delete" class="btn btn-sm btn-danger rounded-circle " ><i class="fas fa-trash"></i></a>';
+
                     return $btn;
                 }
                 return '';
@@ -86,7 +86,7 @@ class Stokdata extends Controller
             'kondisi' => 'required',
             'jumlah' => 'required',
             'supplier' => 'required',
-            
+
         ],
         [
             'data_name.required' => 'Nama Perangkat tidak boleh kosong!',
@@ -96,7 +96,7 @@ class Stokdata extends Controller
             'jumlah.required' => 'Jumlah tidak boleh kosong!',
             'supplier.required' => 'Supplier tidak boleh kosong!',
         ]);
-        
+
         $save = [
             'data_name' => $request->data_name,
             'data_merk_id' => $request->merk,
@@ -113,7 +113,7 @@ class Stokdata extends Controller
         $query = end($query);
         $this->save_log('tambah data perangkat' ,json_encode($query ));
 
-        
+
         Alert::success('Success', 'Data berhasil di Simpan');
         return redirect('m_data/data_stok');
     }
@@ -124,7 +124,7 @@ class Stokdata extends Controller
         $parMerks = DataMerkModels::orderBy('data_merk_id', 'ASC')->get();
         $parType = TypeKtegoryModels::orderBy('data_type_id', 'ASC')->get();
         $parKondisi = KondisiModels::orderBy('data_kondisi_id', 'ASC')->get();
-       
+
         $parSuppliers = SupplierModels::orderBy('supplier_id', 'ASC')->get();
 
         return \view('manajemen_data/stok.edit',compact('getData', 'parMerks', 'parType', 'parKondisi', 'parSuppliers'));
@@ -139,7 +139,7 @@ class Stokdata extends Controller
             'kondisi' => 'required',
             'jumlah' => 'required',
             'supplier' => 'required',
-            
+
         ],
         [
             'data_name.required' => 'Nama Perangkat tidak boleh kosong!',
@@ -185,7 +185,7 @@ class Stokdata extends Controller
             $query = end($query);
             $this->save_log('update data perangkat' ,json_encode($query));
         }
-        
+
 
         Alert::success('Success', 'Data berhasil di Update');
         return redirect('m_data/data_stok');

@@ -22,7 +22,7 @@ class TransaksiDataModel extends Model
     protected $fillable = ['trs_id', 'trs_kode', 'trs_jenis_id','trs_data_id', 'trs_name', 'trs_pegawai_id', 'trs_bagian_id', 'trs_sub_bagian_id', 'trs_kelompok_id', 'trs_gedung_id', 'trs_ruangan_id','trs_pic_id','trs_kondisi_id','trs_status_id','trs_date','created_at', 'updated_at'];
 
     public function trsHasData(){
-        return $this->belongsTo(DataManajemenModels::class, 'trs_data_id', 'data_manajemen_id');
+        return $this->belongsTo(DataManajemenModels::class, 'trs_data_id', 'trs_data_stok_id');
     }
 
     public function trsHasPegawai(){
@@ -30,7 +30,7 @@ class TransaksiDataModel extends Model
     }
 
     public function trsHasSubBagian(){
-        return $this->belongsTo(SubBagianModels::class, 'trs_sub_bagian_id', 'sub_bagian_id');   
+        return $this->belongsTo(SubBagianModels::class, 'trs_sub_bagian_id', 'sub_bagian_id');
     }
 
     public function trsHasBagian(){
@@ -54,5 +54,5 @@ class TransaksiDataModel extends Model
     public function trsHasKondisi(){
         return $this->belongsTo(KondisiModels::class, 'trs_kondisi_id', 'data_kondisi_id');
     }
-    
+
 }

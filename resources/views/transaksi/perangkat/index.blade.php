@@ -1,5 +1,5 @@
 @extends('layout.app',[
-    
+
 ])
 @section('content')
 <style>
@@ -14,7 +14,7 @@
         <div>
             <h5>Transaksi Perangkat</h5>
         </div><br>
-        <div class="input-group-append" style="float: right; margin-bottom: 10px; " > 
+        <div class="input-group-append" style="float: right; margin-bottom: 10px; " >
             <a class="btn btn-outline-success btn-outline-oke" href="{{ route('add_trs_prangkat') }}">Tambah</a>
           {{-- <a class="btn btn-outline-info btn-outline-oke" href="{{ url('parameter/par_audit') }}"><i class="fas fa-arrow-left"></i> Kembali</a> --}}
         </div>
@@ -30,7 +30,7 @@
                         <th>Sub Bagian</th>
                         <th>Status</th>
                         <th>Keterangan</th>
-                       
+
                     </tr>
                 </thead>
                 <tbody>
@@ -58,7 +58,7 @@
         </div>
     </div>
 </div>
-<script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script> 
+<script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
 
 <script type="text/javascript">
 
@@ -70,14 +70,14 @@ $(function() {
             responsive: true,
             ajax: '{{ url('transaksi_data/perangkat_trans/getTrsPerangkat') }}',
             columns: [
-                  
+
                  {
                 "className":      'details-control',
                 "orderable":      false,
                 "searchable":      false,
                 "data":           null,
                 "defaultContent": '',
-                
+
                 data: 'details_url', name: 'details_url',
             },
                 { "data": 'DT_RowIndex',orderable: false, searchable: false },
@@ -86,7 +86,7 @@ $(function() {
                 { data: 'bagian', name: 'bagian' },
                 { data: 'sub', name: 'sub' },
                 { data: 'status', name: 'status' },
-                { data: 'trs_name', name: 'trs_name' },
+                { data: 'trs_keterangan', name: 'trs_keterangan' },
             ]
         });
 
@@ -131,7 +131,7 @@ $(function() {
     }
 
    // Add event listener for opening and closing details
-    
+
 
    // display a modal (small modal)
    $(document).on('click', '#smallButton', function(event) {

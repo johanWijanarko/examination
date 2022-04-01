@@ -11,14 +11,10 @@ use App\Models\PegawaiModels;
 use App\Models\RuanganModels;
 use App\Models\DataMerkModels;
 use App\Models\SupplierModels;
-use App\Models\ParBagianModels;
 use App\Models\SubBagianModels;
 use App\Models\TransaksiModels;
-use App\Models\TypeKtegoryModels;
-use App\Models\DataKelompokModels;
 use App\Models\TransaksiDataModel;
 use Illuminate\Support\Facades\DB;
-use App\Models\DataManajemenModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -33,45 +29,50 @@ class TransaksiPerangkatController extends Controller
 
     public function getTrsPerangkat()
     {
-        $trsPerangkat = TransaksiDataModel::with(['trsHasData','trsHasPegawai','trsHasSubBagian','trsHasBagian','trsHasPic'])
-        ->orderBy('trs_id', 'desc')->where('trs_jenis_id',1)->get();
+        $trsPerangkat = TransaksiModels::with(['trsHasStok'=> function ($q){
+            $q->with(['stokHasMerk','stokHasType','stokHasKondisi','stokHasSupplier']);
+            $q->where('data_kategory_id',3);
+        },'trsHasPegawai'=> function ($q){
+            $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+        },'trsHasGedung','trsHasRuangan','trsHasPic'])
+        ->orderBy('trs_id', 'asc')->where('trs_status_id',1)->get();
 
         // dd($trsPerangkat);
         return DataTables::of($trsPerangkat)
             // ->addColumn('actions', 'transaksi/perangkat.actions')
-            ->addColumn('details_url', function(TransaksiDataModel $dp) {
-               if ($dp->trsHasData) {
-                   $btn = '<button data-url="'.route("detail_trs",['id'=>$dp->trsHasData->data_manajemen_id,'id_trs'=>$dp->trs_id ]).' " data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek">Detail</button>';
-                    $btn = $btn.'<a href="'.route("edit_trs",['id'=>$dp->trs_id]).'" class="edit btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
-                   return $btn;
+            ->addColumn('details_url', function(TransaksiModels $dp) {
+               if ($dp->trs_id) {
+                $btn ='<a href="'.route("edit_trs",['id'=>$dp->trs_id]).'" data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-sm btn-warning rounded-circle " ><i class="fas fa-edit"></i></i></a>';
+                $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="" data-placement="top" title="Edit" class="btn btn-sm btn-success rounded-circle " ><i class="fas fa-eye"></i></a>';
+                return $btn;
                 }
                 return '';
             })
-            ->addColumn('perangkat', function (TransaksiDataModel $dp) {
-                if ($dp->trsHasData) {
-                    return $dp->trsHasData->data_manajemen_name;
+            ->addColumn('perangkat', function (TransaksiModels $dp) {
+                if ($dp->trsHasStok) {
+                    return $dp->trsHasStok->data_name;
                 }
                 return '';
             })
-            ->addColumn('pegawai', function (TransaksiDataModel $dt) {
+            ->addColumn('pegawai', function (TransaksiModels $dt) {
                 if ($dt->trsHasPegawai) {
                     return $dt->trsHasPegawai->pegawai_name;
                 }
                 return '';
             })
-            ->addColumn('sub', function (TransaksiDataModel $dk) {
-                if ($dk->trsHasSubBagian) {
-                    return $dk->trsHasSubBagian->sub_bagian_nama;
+            ->addColumn('bagian', function (TransaksiModels $dk) {
+                if ($dk->trsHasPegawai->pegawaiHasBagian) {
+                    return $dk->trsHasPegawai->pegawaiHasBagian->nama_bagian;
                 }
                 return '';
             })
-            ->addColumn('bagian', function (TransaksiDataModel $dg) {
-                if ($dg->trsHasBagian) {
-                    return $dg->trsHasBagian->nama_bagian;
+            ->addColumn('sub', function (TransaksiModels $dg) {
+                if ($dg->trsHasPegawai->pegawaiHasSubBagian) {
+                    return $dg->trsHasPegawai->pegawaiHasSubBagian->sub_bagian_nama;
                 }
                 return '';
             })
-            ->addColumn('status', function (TransaksiDataModel $dp) {
+            ->addColumn('status', function (TransaksiModels $dp) {
                 $status = [
                     '1' => 'Dipakai',
                     '2' => 'Dipinjam',
@@ -93,59 +94,14 @@ class TransaksiPerangkatController extends Controller
     public function detail($id, $id_trs)
     {
 
-        $DataPerangkat = TransaksiDataModel::with(['trsHasData' => function($q) use ($id){
-            $q->with(['manajemenHasMerk','manajemenHasType','manajemenHasKondisi', 'manajemenHasSupplier']);
-            $q->where('data_manajemen_id', $id);
-        }, 'trsHasGedung', 'trsHasRuangan', 'trsHasKondisi'])
-        ->where('trs_id', $id_trs)
-        ->get();
-        return DataTables::of($DataPerangkat)
-            ->addColumn('merk', function (TransaksiDataModel $dp) {
-                if ($dp->trsHasData->manajemenHasMerk) {
-                    return $dp->trsHasData->manajemenHasMerk->nama_data_merk;
-                }
-                return '';
-            })
-            ->addColumn('type', function (TransaksiDataModel $dt) {
-                if ($dt->trsHasData->manajemenHasType) {
-                    return $dt->trsHasData->manajemenHasType->nama_data_type;
-                }
-                return '';
-            })
-            ->addColumn('kondisi', function (TransaksiDataModel $dk) {
-                if ($dk->trsHasKondisi) {
-                    return $dk->trsHasKondisi->nama_data_kondisi;
-                }
-                return '';
-            })
-            ->addColumn('gedung', function (TransaksiDataModel $dg) {
-                if ($dg->trsHasGedung) {
-                    return $dg->trsHasGedung->nama_data_gedung;
-                }
-                return '';
-            })
-            ->addColumn('ruangan', function (TransaksiDataModel $dr) {
-                if ($dr->trsHasRuangan) {
-                    return $dr->trsHasRuangan->nama_data_ruangan;
-                }
-                return '';
-            })
-            ->addColumn('supplier', function (TransaksiDataModel $ds) {
-                if ($ds->trsHasData->manajemenHasSupplier) {
-                    return $ds->trsHasData->manajemenHasSupplier->supplier_name;
-                }
-                return '';
-            })
-            ->addColumn('kelompok', function (TransaksiDataModel $ds) {
-                if ($ds->trsHasKelompok) {
-                    return $ds->trsHasKelompok->nama_data_kelompok;
-                }
-                return '';
-            })
-            ->rawColumns(['merk', 'type', 'kondisi', 'gedung', 'ruangan', 'supplier', 'kelompok'])
-            ->addIndexColumn()
-            ->make(true);
-        return Datatables::of($DataPerangkat)->make(true);
+        $trsPerangkat = TransaksiModels::with(['trsHasStok'=> function ($q){
+            $q->with(['stokHasMerk','stokHasType','stokHasKondisi','stokHasSupplier']);
+            $q->where('data_kategory_id',3);
+        },'trsHasPegawai'=> function ($q){
+            $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+        },'trsHasGedung','trsHasRuangan','trsHasPic'])
+        ->orderBy('trs_id', 'asc')->where('trs_status_id',1)->get();
+
         // dd($DataPerangkat);
     }
     public function tambah(Request $request)
@@ -195,7 +151,8 @@ class TransaksiPerangkatController extends Controller
         return response()->json($detailPegawai);
     }
 
-    public function save(Request $request){
+    public function save(Request $request)
+    {
         // dd($request->all());
         $request->validate([
             'keterangan' => 'required',
@@ -223,7 +180,7 @@ class TransaksiPerangkatController extends Controller
             'trs_date'=> Carbon::today(),
             'trs_keterangan'=> $request->keterangan,
             'trs_pegawai_id'=> $request->pegawai,
-            'trs_status_id' => 1,
+            // 'trs_status_id' => 1,
         ];
 
         $stok = StokModels::find($request->perangkat);
@@ -245,19 +202,19 @@ class TransaksiPerangkatController extends Controller
 
     public function edit($id){
 
-        $trsPerangkat = TransaksiDataModel::with(['trsHasData'=> function ($q){
-            $q->with(['manajemenHasMerk','manajemenHasType','manajemenHasKondisi','manajemenHasSupplier']);
-        },'trsHasPegawai','trsHasSubBagian','trsHasBagian','trsHasPic'])
-        ->orderBy('trs_id', 'asc')->where('trs_jenis_id',1)->where('trs_id', $id)->first();
-        //  dd($trsPerangkat);
-        $dataPerangkat = DataManajemenModels::where('data_manajemen_kode_id',1)->get();
+        $trsPerangkat = TransaksiModels::with(['trsHasStok'=> function ($q){
+            $q->with(['stokHasMerk','stokHasType','stokHasKondisi','stokHasSupplier']);
+        },'trsHasPegawai'=> function ($q){
+            $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+        },'trsHasGedung','trsHasRuangan','trsHasPic'])
+        ->orderBy('trs_id', 'asc')->where('trs_status_id',1)->where('trs_id', $id)->first();
 
+        $dataStok = StokModels::where('data_status_id',1)->where('data_jumlah', '>', 0)->where('data_kategory_id',3)->get();
         $dataPegawai = PegawaiModels::get();
-        $kelompok = DataKelompokModels::get();
         $gedung = GedungModels::get();
         $ruangan = RuanganModels::get();
 
-        return \view('transaksi/perangkat.edit', \compact('ruangan','gedung','trsPerangkat', 'dataPegawai', 'kelompok', 'dataPerangkat'));
+        return \view('transaksi/perangkat.edit', \compact('ruangan','gedung','trsPerangkat', 'dataPegawai','dataStok'));
     }
 
     public function update(Request $request , $id){
