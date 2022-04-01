@@ -8,6 +8,10 @@
         cursor:pointer;
         width:18px;
     }
+    .cek {
+           background-color:#6777ef;
+           height:100px;
+         }
 </style>
 <div class="card">
     <div class="card-body">
@@ -19,7 +23,7 @@
           {{-- <a class="btn btn-outline-info btn-outline-oke" href="{{ url('parameter/par_audit') }}"><i class="fas fa-arrow-left"></i> Kembali</a> --}}
         </div>
         <div class="table-responsive mt-4">
-            <table class="table table-bordered table-striped table-inka" id="data_perangkat">
+            <table class="table table-bordered table-striped table-inka" id="data_perangkat" width="100%">
                 <thead>
                     <tr>
                         <th>Action</th>
@@ -41,23 +45,24 @@
 </div>
 @endsection
 @push('page-script')
-<!-- small modal -->
-<div class="modal fade" id="smallModal" tabindex="-1" role="dialog" aria-labelledby="smallModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="smallBody">
-                <div>
-                    <!-- the result to be displayed apply here -->
-                </div>
-            </div>
+
+<div class="modal fade" id="smallModal" tabindex="-1" role="dialog" aria-labelledby="contohModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header cek">
+          <h5 class="modal-title" id="contohModalScrollableTitle" style="color: azure">Detail Transaksi</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+          <div class="modal-body" id="smallBody">
+          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 <script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
 
 <script type="text/javascript">

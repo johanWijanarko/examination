@@ -1,5 +1,5 @@
 @extends('layout.app',[
-    
+
 ])
 @section('content')
 <style>
@@ -28,14 +28,14 @@
                                 </ul>
                             </div>
                         @endif
-                        <form method="post" action="{{ url('transaksi_data/p_kantor_trans/update', $trsAtk->trs_id) }}" class="needs-validation-pegawai" id="save_data" enctype="multipart/form-data">
+                        <form method="post" action="{{ route('update_trs_aplikasi', $trsPerangkat->trs_id) }}" class="needs-validation-pegawai" id="save_data" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Id Transaksi</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $trsAtk->trs_kode }}" placeholder="" readonly>
+                                    <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $trsPerangkat->trs_kode }}" placeholder="" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -43,28 +43,28 @@
                                     <label class="col-form-label mandatory">Keterangan</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" name="keterangan" id="keterangan" value="{{ $trsAtk->trs_name }}" class="form-control" placeholder="" required>
+                                    <input type="text" name="keterangan" id="keterangan" value="{{ $trsPerangkat->trs_keterangan }}" class="form-control" placeholder="" required>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Nama Alat Kantor</label>
+                                    <label class="col-form-label mandatory">Nama Perangkat</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <select class="form-control" id="atk" name="atk" required>
-                                        <option value="{{old('atk')}}">Pilih Alat Kantor</option>
-                                        @foreach ($dataAtk as $atk)
-                                        <option {{ ($trsAtk->trs_data_id == $atk->data_manajemen_id ) ? 'selected' : ''}}  value="{{$atk->data_manajemen_id}}" >{{ $atk->data_manajemen_name }}</option>
+                                    <select class="form-control" id="perangkat" name="perangkat" required>
+                                        <option value="{{old('perangkat')}}">Pilih Perangkat</option>
+                                        @foreach ($dataStok as $perangkat)
+                                        <option {{ ($trsPerangkat->trs_data_stok_id == $perangkat->data_stok_id ) ? 'selected' : ''}}  value="{{$perangkat->data_stok_id}}" >{{ $perangkat->data_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Jumlah Aplikasi</label>
+                                    <label class="col-form-label mandatory">Jumlah Perangkat</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" name="jumlah" id="jumlah" value="{{ $trsAtk->trsHasData->data_manajemen_jumlah }}" class="form-control" placeholder="" readonly>
+                                    <input type="text" name="jumlah" id="jumlah" value="{{ $trsPerangkat->trsHasStok->data_jumlah }}" class="form-control" placeholder="" readonly>
                                 </div>
                             </div>
                             <p>
@@ -76,26 +76,19 @@
                                 <div class="card card-body" style="background-color: #F4F7FA">
                                     <div class="form-group row">
                                         <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Merk</label>
+                                            <label class="col-form-label mandatory">Merk / Jenis</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="text" name="merk" id="merk" value="{{ $trsAtk->trsHasData->manajemenHasMerk->nama_data_merk }}" class="form-control" placeholder="" readonly>
+                                            <input type="text" name="merk" id="merk" value="{{ $trsPerangkat->trsHasStok->stokHasMerk->nama_data_merk }}" class="form-control" placeholder="" readonly>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Type</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="type" id="type" value="{{ $trsAtk->trsHasData->manajemenHasType->nama_data_type }}" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
+
                                     <div class="form-group row">
                                         <div class="col-md-3">
                                             <label class="col-form-label mandatory">Kondisi</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="text" name="kondisi" id="kondisi" value="{{ $trsAtk->trsHasData->manajemenHasKondisi->nama_data_kondisi }}" class="form-control" placeholder="" readonly>
+                                            <input type="text" name="kondisi" id="kondisi" value="{{ $trsPerangkat->trsHasStok->stokHasKondisi->nama_data_kondisi }}" class="form-control" placeholder="" readonly>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -103,12 +96,12 @@
                                             <label class="col-form-label mandatory">Supplier</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="text" name="supplier" id="supplier" value="{{ $trsAtk->trsHasData->manajemenHasSupplier->supplier_name }}" class="form-control" placeholder="" readonly>
+                                            <input type="text" name="supplier" id="supplier" value="{{ $trsPerangkat->trsHasStok->stokHasSupplier->supplier_name }}" class="form-control" placeholder="" readonly>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Nama Pegawai</label>
@@ -117,7 +110,7 @@
                                    <select class="form-control" id="pegawai" name="pegawai" required>
                                         <option value="{{old('pegawai')}}">Pilih Pegawai</option>
                                         @foreach ($dataPegawai as $pegawai)
-                                            <option {{ ($trsAtk->trs_pegawai_id ==  $pegawai->pegawai_id) ? 'selected' : '' }} value="{{ $pegawai->pegawai_id }}">{{ $pegawai->pegawai_name }}</option>
+                                            <option {{ ($trsPerangkat->trs_pegawai_id ==  $pegawai->pegawai_id) ? 'selected' : '' }} value="{{ $pegawai->pegawai_id }}">{{ $pegawai->pegawai_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -127,8 +120,7 @@
                                     <label class="col-form-label mandatory">Bagian</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="hidden" class="form-control" name="bagian_" id="bagian_"  value="{{ $trsAtk->trsHasBagian->bagian_id }}" readonly>
-                                    <input type="text" class="form-control" name="bagian" id="bagian"  value="{{ $trsAtk->trsHasBagian->nama_bagian  }}" readonly>
+                                    <input type="text" class="form-control" name="bagian" id="bagian"  value="{{ $trsPerangkat->trsHasPegawai->pegawaiHasBagian->nama_bagian }}" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -136,8 +128,7 @@
                                     <label class="col-form-label mandatory">Sub Bagian</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="hidden" class="form-control" name="subBagian_" id="subBagian_" value="{{ $trsAtk->trsHasSubBagian->sub_bagian_id }}" readonly>
-                                    <input type="text" class="form-control" name="subBagian" id="subBagian"  value="{{ $trsAtk->trsHasSubBagian->sub_bagian_nama }}" readonly>
+                                    <input type="text" class="form-control" name="subBagian" id="subBagian"  value="{{ $trsPerangkat->trsHasPegawai->pegawaiHasSubBagian->sub_bagian_nama }}" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -148,7 +139,7 @@
                                     <select class="form-control" id="gedung" name="gedung" required>
                                         <option value="{{old('gedung')}}">Pilih Gedung</option>
                                         @foreach ($gedung as $gdg)
-                                            <option {{ ($trsAtk->trs_gedung_id ==  $gdg->data_gedung_id) ? 'selected' : '' }} value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
+                                            <option {{ ($trsPerangkat->trs_gedung_id ==  $gdg->data_gedung_id) ? 'selected' : '' }} value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -161,12 +152,12 @@
                                     <select class="form-control" id="ruangan" name="ruangan" required>
                                         <option value="{{old('ruangan')}}">Pilih Ruangan</option>
                                         @foreach ($ruangan as $ru)
-                                            <option {{ ($trsAtk->trs_ruangan_id ==  $ru->data_ruangan_id) ? 'selected' : '' }} value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
+                                            <option {{ ($trsPerangkat->trs_ruang_id ==  $ru->data_ruangan_id) ? 'selected' : '' }} value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group row">
+                            {{-- <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Kelompok</label>
                                 </div>
@@ -174,14 +165,14 @@
                                     <select class="form-control" id="kelompok" name="kelompok" required>
                                         <option value="{{old('kelompok')}}">Pilih Kelompok</option>
                                         @foreach ($kelompok as $kel)
-                                            <option {{ ($trsAtk->trs_kelompok_id == $kel->data_kelompok_id ) ? 'selected' : '' }} value="{{ $kel->data_kelompok_id }}">{{ $kel->nama_data_kelompok }}</option>
+                                            <option {{ ($trsPerangkat->trs_kelompok_id == $kel->data_kelompok_id ) ? 'selected' : '' }} value="{{ $kel->data_kelompok_id }}">{{ $kel->nama_data_kelompok }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="form-group row">
                                 <div class="col-sm-12">
-                                    <a href="{{ url('transaksi_data/p_kantor_trans') }}" class="btn btn-info">Kembali</a>
+                                    <a href="{{ url('transaksi_data/aplikasi_trans') }}" class="btn btn-info">Kembali</a>
                                     <button type="submit" id="disabled" class="btn btn-success">Simpan</button>
                                 </div>
                             </div>
@@ -196,11 +187,14 @@
 @push('page-script')
 <script>
 $(document).ready(function() {
-    $('#atk').select2({
+
+    $('#perangkat').select2({
         allowClear: true,
         disabled:true
     });
-    $('#pegawai,#kelompok ,#ruangan,#gedung').select2();
+    $('#pegawai').select2();
+    $('#kelompok').select2();
+    $("#perangkat option:selected").prop('disabled','true')
 });
 
  $('#perangkat').on('change', function () {
@@ -217,52 +211,67 @@ $(document).ready(function() {
                 $('#gedung').val(response.gedung.nama_data_gedung);
                 $('#ruangan').val(response.ruangan.nama_data_ruangan);
                 $('#supplier').val(response.supplier.supplier_name);
-               
+
             }
         })
     });
-
-    $('#bagian').on('change', function () {
+$('#bagian').on('change', function () {
     //  console.log($(this).val());
-        $.ajax({
-            url: '{{ url('transaksi_data/aplikasi_trans/getSubBagian') }}',
-            method: 'get',
-            data: {id: $(this).val()},
-            dataType : 'json',
-            success: function (response) {
-                // console.log(response)
-                $('#subBagian').empty();
-				        $('#subBagian').append(new Option('- Pilih -', ''))
-                $('#subBagian').trigger('change')
-              
-                response.forEach(item => {
-                    $('#subBagian').append(new Option(item.nama, item.id))
-                });
-               
-            }
-        })
-    });
-    
+    $.ajax({
+        url: '{{ url('transaksi_data/perangkat_trans/getSubBagian') }}',
+        method: 'get',
+        data: {id: $(this).val()},
+        dataType : 'json',
+        success: function (response) {
+            // console.log(response)
+            $('#subBagian').empty();
+                    $('#subBagian').append(new Option('- Pilih -', ''))
+            $('#subBagian').trigger('change')
 
-    $('#pegawai').on('change', function () {
+            response.forEach(item => {
+                $('#subBagian').append(new Option(item.nama, item.id))
+            });
+
+        }
+    })
+});
+
+$('#pegawai').on('change', function () {
         //  console.log($(this).val());
-        $.ajax({
-            url: '{{ url('transaksi_data/perangkat_trans/getPegawai') }}',
-            method: 'get',
-            data: {id: $(this).val()},
-            dataType : 'json',
-            success: function (response) {
-                console.log(response)
-                $('#bagian_').val(response.pegawai_has_bagian.bagian_id)
-                $('#subBagian_').val(response.pegawai_has_sub_bagian.sub_bagian_id)
+    $.ajax({
+        url: '{{ url('transaksi_data/perangkat_trans/getPegawai') }}',
+        method: 'get',
+        data: {id: $(this).val()},
+        dataType : 'json',
+        success: function (response) {
+            console.log(response)
+            $('#bagian_').val(response.pegawai_has_bagian.bagian_id)
+            $('#subBagian_').val(response.pegawai_has_sub_bagian.sub_bagian_id)
 
-                $('#bagian').val(response.pegawai_has_bagian.nama_bagian)
-                $('#subBagian').val(response.pegawai_has_sub_bagian.sub_bagian_nama)
-                
-                
-            }
-        })
-    });
-    
+            $('#bagian').val(response.pegawai_has_bagian.nama_bagian)
+            $('#subBagian').val(response.pegawai_has_sub_bagian.sub_bagian_nama)
+
+
+        }
+    })
+});
+
+    // function save(){
+
+    //     var formData = $('#save_data').serialize();
+    //      $('#save_data').validate();
+    //     if ($('#save_data').valid()) // check if form is valid
+    //     {
+    //         alert('cek')
+    //     }
+    //     else
+    //     {
+    //         // just show validation errors, dont post
+    //     }
+
+    // }
+
+
+
 </script>
 @endpush

@@ -35,6 +35,9 @@ class TransaksiPerangkatController extends Controller
         },'trsHasPegawai'=> function ($q){
             $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
         },'trsHasGedung','trsHasRuangan','trsHasPic'])
+        ->whereHas('trsHasStok', function ($q){
+            $q->where('data_kategory_id',3);
+        })
         ->orderBy('trs_id', 'asc')->where('trs_status_id',1)->get();
 
         // dd($trsPerangkat);
@@ -43,7 +46,7 @@ class TransaksiPerangkatController extends Controller
             ->addColumn('details_url', function(TransaksiModels $dp) {
                if ($dp->trs_id) {
                 $btn ='<a href="'.route("edit_trs",['id'=>$dp->trs_id]).'" data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-sm btn-warning rounded-circle " ><i class="fas fa-edit"></i></i></a>';
-                $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="" data-placement="top" title="Edit" class="btn btn-sm btn-success rounded-circle " ><i class="fas fa-eye"></i></a>';
+                $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("detail_trs_prkt",['id'=>$dp->trs_id]).'" data-placement="top" title="Edit" class="btn btn-sm btn-success rounded-circle " ><i class="fas fa-eye"></i></a>';
                 return $btn;
                 }
                 return '';
@@ -91,19 +94,22 @@ class TransaksiPerangkatController extends Controller
             ->make(true);
 
     }
-    public function detail($id, $id_trs)
-    {
+ 
 
+    public function detail($id){
+        // $getData = DataManajemenModels::find($id);
         $trsPerangkat = TransaksiModels::with(['trsHasStok'=> function ($q){
             $q->with(['stokHasMerk','stokHasType','stokHasKondisi','stokHasSupplier']);
             $q->where('data_kategory_id',3);
         },'trsHasPegawai'=> function ($q){
             $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
         },'trsHasGedung','trsHasRuangan','trsHasPic'])
-        ->orderBy('trs_id', 'asc')->where('trs_status_id',1)->get();
+        ->orderBy('trs_id', 'asc')->where('trs_status_id',1)->where('trs_id',$id)->first();
+        // dd($trsPerangkat);
 
-        // dd($DataPerangkat);
+        return view('transaksi/perangkat.detail',compact('trsPerangkat'));
     }
+
     public function tambah(Request $request)
     {
         $dataStok = StokModels::where('data_status_id',1)->where('data_jumlah', '>', 0)->where('data_kategory_id',3)->get();
@@ -114,7 +120,6 @@ class TransaksiPerangkatController extends Controller
         $countTrs = TransaksiModels::all()->count()+1;
         $getKodeTrs = 'TRS-PRK-' . $countTrs .'';
 
-        // dd($dataStok);
         return \view('transaksi/perangkat.tambah', \compact('ruangan' ,'gedung' ,'dataPegawai','dataStok', 'getKodeTrs'));
     }
 
@@ -180,7 +185,6 @@ class TransaksiPerangkatController extends Controller
             'trs_date'=> Carbon::today(),
             'trs_keterangan'=> $request->keterangan,
             'trs_pegawai_id'=> $request->pegawai,
-            // 'trs_status_id' => 1,
         ];
 
         $stok = StokModels::find($request->perangkat);
@@ -218,45 +222,33 @@ class TransaksiPerangkatController extends Controller
     }
 
     public function update(Request $request , $id){
-
+        // dd($request->all());
         $request->validate([
             'keterangan' => 'required',
-            // 'perangkat' => 'required',
             'pegawai' => 'required',
-            'bagian' => 'required',
-            'subBagian' => 'required',
-            'kelompok' => 'required',
             'gedung' => 'required',
             'ruangan' => 'required',
 
         ],
         [
             'keterangan.required' => 'Keterangan tidak boleh kosong!',
-            // 'perangkat.required' => ' Perangkat tidak boleh kosong!',
             'pegawai.required' => 'Pegawai tidak boleh kosong!',
-            'bagian.required' => 'Bagian tidak boleh kosong!',
-            'subBagian.required' => 'Sub Bagian tidak boleh kosong!',
-            'kelompok.required' => 'Kelompok tidak boleh kosong!',
             'gedung.required' => 'Gedung tidak boleh kosong!',
             'ruangan.required' => 'Ruangan tidak boleh kosong!',
         ]);
 
         $save = [
-            'trs_name'=> $request->keterangan,
-            // 'trs_data_id'=> $request->perangkat,
-            'trs_pegawai_id'=> $request->pegawai,
-            'trs_bagian_id'=> $request->bagian_,
-            'trs_sub_bagian_id'=> $request->subBagian_,
-            'trs_kelompok_id'=> $request->kelompok,
-            'trs_ruangan_id'=> $request->ruangan,
             'trs_gedung_id'=> $request->gedung,
+            'trs_ruang_id'=> $request->ruangan,
             'trs_pic_id'=> Auth::user()->id,
             'trs_date'=> Carbon::today(),
+            'trs_keterangan'=> $request->keterangan,
+            'trs_pegawai_id'=> $request->pegawai,
         ];
 
-        $updatedata = TransaksiDataModel::where('trs_id', $id)->update($save);
+        $updatedata = TransaksiModels::where('trs_id', $id)->update($save);
 
-        $cek = \Log::channel('database')->info($updatedata);
+        $cek = Log::channel('database')->info($updatedata);
         $query = DB::getQueryLog();
         $query = end($query);
         $this->save_log('update data transaksi perangkat' ,json_encode($query));

@@ -1,5 +1,5 @@
 @extends('layout.app',[
-    
+
 ])
 @section('content')
 <style>
@@ -8,28 +8,33 @@
         cursor:pointer;
         width:18px;
     }
+    .cek {
+           background-color:#6777ef;
+           height:100px;
+         }
 </style>
 <div class="card">
     <div class="card-body">
         <div>
-            <h5>Transaksi Peralatan Kantor</h5>
+            <h5>Transaksi Aplikasi</h5>
         </div><br>
-        <div class="input-group-append" style="float: right; margin-bottom: 10px; " > 
-            <a class="btn btn-outline-success btn-outline-oke" href="{{ route('add_trs_alat_kantor') }}">Tambah</a>
+        <div class="input-group-append" style="float: right; margin-bottom: 10px; " >
+            <a class="btn btn-outline-success btn-outline-oke" href="{{ route('add_trs_aplikasi') }}">Tambah</a>
           {{-- <a class="btn btn-outline-info btn-outline-oke" href="{{ url('parameter/par_audit') }}"><i class="fas fa-arrow-left"></i> Kembali</a> --}}
         </div>
         <div class="table-responsive mt-4">
-            <table class="table table-bordered table-striped table-inka" id="data_perangkat">
+            <table class="table table-bordered table-striped table-inka" id="data_perangkat" width="100%">
                 <thead>
                     <tr>
                         <th>Action</th>
                         <th>No</th>
-                        <th>Nama Alat Kantor</th>
+                        <th>Nama Aplikasi</th>
                         <th>Nama Pegawai</th>
                         <th>Bagian</th>
                         <th>Sub Bagian</th>
                         <th>Status</th>
                         <th>Keterangan</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -40,24 +45,25 @@
 </div>
 @endsection
 @push('page-script')
-<!-- small modal -->
-<div class="modal fade" id="smallModal" tabindex="-1" role="dialog" aria-labelledby="smallModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="smallBody">
-                <div>
-                    <!-- the result to be displayed apply here -->
-                </div>
-            </div>
+
+<div class="modal fade" id="smallModal" tabindex="-1" role="dialog" aria-labelledby="contohModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header cek">
+          <h5 class="modal-title" id="contohModalScrollableTitle" style="color: azure">Detail Transaksi</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+          <div class="modal-body" id="smallBody">
+          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
-</div>
-<script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script> 
+  </div>
+<script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
 
 <script type="text/javascript">
 
@@ -67,16 +73,16 @@ $(function() {
             processing: true,
             serverSide: true,
             responsive: true,
-            ajax: '{{ url('transaksi_data/p_kantor_trans/getTrsAtk') }}',
+            ajax: '{{ url('transaksi_data/aplikasi_trans/getTrsaplikasi') }}',
             columns: [
-                  
+
                  {
                 "className":      'details-control',
                 "orderable":      false,
                 "searchable":      false,
                 "data":           null,
                 "defaultContent": '',
-                
+
                 data: 'details_url', name: 'details_url',
             },
                 { "data": 'DT_RowIndex',orderable: false, searchable: false },
@@ -85,15 +91,8 @@ $(function() {
                 { data: 'bagian', name: 'bagian' },
                 { data: 'sub', name: 'sub' },
                 { data: 'status', name: 'status' },
-                { data: 'trs_name', name: 'trs_name' },
+                { data: 'trs_keterangan', name: 'trs_keterangan' },
             ]
-            // ,
-            // columnDefs: [
-            //     { width: 50, targets: 0 },
-            //     { width: 250, targets: 1 },
-            //     { width: 350, targets: 2 },
-            //     { width: 100, targets: 3 },
-            // ]
         });
 
         $('#data_perangkat tbody').on('click', '.cek', function (event) {
@@ -109,7 +108,6 @@ $(function() {
             tr.removeClass('shown');
         } else {
         //     // Open this row
-            console.log(row.data())
             row.child(template(row.data())).show();
             initTable(tableId, $(this).data('url'));
             tr.addClass('shown');
@@ -118,7 +116,7 @@ $(function() {
         });
     });
     function initTable(tableId, data) {
-        // console.log(tableId)
+        console.log(data)
         $('#' + tableId).DataTable({
             processing: true,
             serverSide: true,
@@ -138,7 +136,7 @@ $(function() {
     }
 
    // Add event listener for opening and closing details
-    
+
 
    // display a modal (small modal)
    $(document).on('click', '#smallButton', function(event) {
@@ -170,7 +168,7 @@ $(function() {
 <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 <script id="details-template" type="text/x-handlebars-template">
     <div style="text-align: center;">
-        <h5>Detail Peralatan Kantor</h5>
+        <h5>Detail Perangkat</h5>
     </div><br>
     <table class="table">
         <table class="table details-table" id="posts-@{{trs_id}}">

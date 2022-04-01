@@ -403,7 +403,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/getTrsPerangkat', [TransaksiPerangkatController::class, 'getTrsPerangkat'])->name('getTrsPerangkat');
         Route::get('/getperangkat', [TransaksiPerangkatController::class, 'getperangkat'])->name('getperangkat');
         Route::post('/save', [TransaksiPerangkatController::class, 'save'])->name('save_trs');
-        Route::get('/detail/{id}/{id_trs}', [TransaksiPerangkatController::class, 'detail'])->name('detail_trs');
+        Route::get('/detail/{id}', [TransaksiPerangkatController::class, 'detail'])->name('detail_trs_prkt');
         Route::get('/edit/{id}', [TransaksiPerangkatController::class, 'edit'])->name('edit_trs');
         Route::post('/update/{id}', [TransaksiPerangkatController::class, 'update'])->name('update_trs');
         Route::get('/getSubBagian', [TransaksiPerangkatController::class, 'getSubBagian'])->name('getSubBagian');
@@ -417,10 +417,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/getTrsaplikasi', [TransaksiAplikasiController::class, 'getTrsaplikasi'])->name('getTrsaplikasi');
         Route::get('/gatAplikasi', [TransaksiAplikasiController::class, 'gatAplikasi'])->name('gatAplikasi');
         Route::post('/save', [TransaksiAplikasiController::class, 'save'])->name('save_trs_aplikasi');
-        Route::get('/detail/{id}/{id_trs}', [TransaksiAplikasiController::class, 'detail'])->name('detail_trs_aplikasi');
+        Route::get('/detail/{id}', [TransaksiAplikasiController::class, 'detail'])->name('detail_trs_aplikasi');
         Route::get('/edit/{id}', [TransaksiAplikasiController::class, 'edit'])->name('edit_trs_aplikasi');
         Route::post('/update/{id}', [TransaksiAplikasiController::class, 'update'])->name('update_trs_aplikasi');
         Route::get('/getSubBagian', [TransaksiAplikasiController::class, 'getSubBagian'])->name('getSubBagian');
+        Route::get('/getPegawai', [TransaksiAplikasiController::class, 'getPegawai'])->name('getPegawai');
     });
 
 // trs aplikasi

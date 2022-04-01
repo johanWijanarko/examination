@@ -1,5 +1,5 @@
 @extends('layout.app',[
-    
+
 ])
 @section('content')
 <style>
@@ -15,10 +15,8 @@
                 <div class="card card-img-holder">
                     <div class="card-body">
                         {{-- <div class="col-xs-12 col-sm-12 col-md-12"> --}}
-                        <h4 class="card-title">Input Transaksi Alat Kator<Menu></Menu></h4>
-                        <div class="alert alert-danger print-error-msg" style="display:none">
-                            <ul></ul>
-                        </div>
+                        <h4 class="card-title">Input Transaksi Aplikasi</h4>
+
                         @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
@@ -28,7 +26,7 @@
                                 </ul>
                             </div>
                         @endif
-                        <form method="post" action="{{ route('save_trs_atk') }}" class="needs-validation-pegawai" id="save_data" enctype="multipart/form-data">
+                        <form method="post" action="{{ route('save_trs_aplikasi') }}" class="needs-validation-pegawai" id="save_data" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group row">
                                 <div class="col-md-3">
@@ -48,13 +46,13 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Nama Alat Kantor</label>
+                                    <label class="col-form-label mandatory">Nama Aplikasi</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <select class="form-control" id="atk" name="atk" required>
-                                        <option value="{{old('aplikasi')}}">Pilih Alat Kantor</option>
-                                        @foreach ($dataTrsAtk as $aplikasi)
-                                            <option value="{{ $aplikasi->data_manajemen_id }}">{{ $aplikasi->data_manajemen_name }}</option>
+                                    <select class="form-control" id="aplikasi" name="aplikasi" required>
+                                        <option value="{{old('aplikasi')}}">Pilih Aplikasi</option>
+                                        @foreach ($dataStok as $stok)
+                                            <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -84,14 +82,6 @@
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Type</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="type" id="type" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
                                             <label class="col-form-label mandatory">Kondisi</label>
                                         </div>
                                         <div class="col-md-8">
@@ -104,12 +94,13 @@
                                             <label class="col-form-label mandatory">Supplier</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="text" name="supp" id="supp" class="form-control" placeholder="" readonly>
+                                            <input type="text" name="kondisi" id="sup" class="form-control" placeholder="" readonly>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
-                            
+
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Nama Pegawai</label>
@@ -167,22 +158,10 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Kelompok</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="kelompok" name="kelompok" required>
-                                        <option value="{{old('kelompok')}}">Pilih Kelompok</option>
-                                        @foreach ($kelompok as $kel)
-                                            <option value="{{ $kel->data_kelompok_id }}">{{ $kel->nama_data_kelompok }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
+
                             <div class="form-group row">
                                 <div class="col-sm-12">
-                                    <a href="{{ url('transaksi_data/p_kantor_trans') }}" class="btn btn-info">Kembali</a>
+                                    <a href="{{ url('transaksi_data/aplikasi_trans') }}" class="btn btn-info">Kembali</a>
                                     <button type="submit" id="disabled" class="btn btn-success">Simpan</button>
                                 </div>
                             </div>
@@ -197,25 +176,28 @@
 @push('page-script')
 <script>
 $(document).ready(function() {
-    $('#atk, #pegawai , #kelompok, #gedung, #ruangan' ).select2();
+    $('#aplikasi').select2();
+    $('#pegawai').select2();
+    // $('#subBagian').select2();
+    $('#kelompok').select2();
 });
 
-    $('#atk').on('change', function () {
-    //  console.log($(this).val());
+    $('#aplikasi').on('change', function () {
+        //  console.log($(this).val());
         $.ajax({
-            url: '{{ url('transaksi_data/p_kantor_trans/gatAtk') }}',
+            url: '{{ url('transaksi_data/aplikasi_trans/gatAplikasi') }}',
             method: 'get',
             data: {id: $(this).val()},
             dataType : 'json',
             success: function (response) {
-                console.log(response);
+                console.log(response.kondisi)
                 $('[name="merk"]').val(response.getMerk.nama_data_merk);
-                $('#type').val(response.typeKategory.nama_data_type);
                 $('#kondisi').val(response.kondisi.nama_data_kondisi);
                 $('#kondisi_id').val(response.kondisi.data_kondisi_id);
-                $('#supp').val(response.supplier.supplier_name);
-                $('#jumlah').val(response.gatAtk.data_manajemen_jumlah+' Unit');
-               
+                $('#sup').val(response.supplier.supplier_name);
+                $('#jumlah').val(response.dataStok.data_jumlah+' Unit');
+
+
             }
         })
     });
@@ -223,24 +205,23 @@ $(document).ready(function() {
     $('#bagian').on('change', function () {
         //  console.log($(this).val());
         $.ajax({
-            url: '{{ url('transaksi_data/p_kantor_trans/getSubBagian') }}',
+            url: '{{ url('transaksi_data/perangkat_trans/getSubBagian') }}',
             method: 'get',
             data: {id: $(this).val()},
             dataType : 'json',
             success: function (response) {
                 // console.log(response)
                 $('#subBagian').empty();
-                        $('#subBagian').append(new Option('- Pilih -', ''))
+				        $('#subBagian').append(new Option('- Pilih -', ''))
                 $('#subBagian').trigger('change')
-                
+
                 response.forEach(item => {
                     $('#subBagian').append(new Option(item.nama, item.id))
                 });
-                
+
             }
         })
     });
-
 
     $('#pegawai').on('change', function () {
         //  console.log($(this).val());
@@ -256,10 +237,13 @@ $(document).ready(function() {
 
                 $('#bagian').val(response.pegawai_has_bagian.nama_bagian)
                 $('#subBagian').val(response.pegawai_has_sub_bagian.sub_bagian_nama)
-                
-               
+
+
             }
         })
     });
+
+
+
 </script>
 @endpush
