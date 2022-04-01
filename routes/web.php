@@ -431,10 +431,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/getTrsAtk', [TransaksiAlatKantor::class, 'getTrsAtk'])->name('getTrsAtk');
         Route::get('/gatAtk', [TransaksiAlatKantor::class, 'gatAtk'])->name('gatAtk');
         Route::post('/save', [TransaksiAlatKantor::class, 'save'])->name('save_trs_atk');
-        Route::get('/detail/{id}/{id_trs}', [TransaksiAlatKantor::class, 'detail'])->name('detail_trs_atk');
+        Route::get('/detail/{id}', [TransaksiAlatKantor::class, 'detail'])->name('detail_trs_atk');
         Route::get('/edit/{id}', [TransaksiAlatKantor::class, 'edit'])->name('edit_trs_atk');
         Route::post('/update/{id}', [TransaksiAlatKantor::class, 'update'])->name('update_trs_atk');
         Route::get('/getSubBagian', [TransaksiAlatKantor::class, 'getSubBagian'])->name('getSubBagian');
+        Route::get('/getPegawai', [TransaksiAplikasiController::class, 'getPegawai'])->name('getPegawai');
     });
 
 

@@ -212,7 +212,7 @@ class TransaksiAplikasiController extends Controller
             $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
         },'trsHasGedung','trsHasRuangan','trsHasPic'])
         ->orderBy('trs_id', 'asc')->where('trs_status_id',1)->where('trs_id', $id)
-        ->whereHas('trsHasStok', function ($q){
+         ->whereHas('trsHasStok', function ($q){
             $q->where('data_kategory_id',13);
         })->first();
 

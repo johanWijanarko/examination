@@ -16,10 +16,10 @@
 <div class="card">
     <div class="card-body">
         <div>
-            <h5>Transaksi Aplikasi</h5>
+            <h5>Transaksi Alat Kantor</h5>
         </div><br>
         <div class="input-group-append" style="float: right; margin-bottom: 10px; " >
-            <a class="btn btn-outline-success btn-outline-oke" href="{{ route('add_trs_aplikasi') }}">Tambah</a>
+            <a class="btn btn-outline-success btn-outline-oke" href="{{ route('add_trs_alat_kantor') }}">Tambah</a>
           {{-- <a class="btn btn-outline-info btn-outline-oke" href="{{ url('parameter/par_audit') }}"><i class="fas fa-arrow-left"></i> Kembali</a> --}}
         </div>
         <div class="table-responsive mt-4">
@@ -28,7 +28,7 @@
                     <tr>
                         <th>Action</th>
                         <th>No</th>
-                        <th>Nama Aplikasi</th>
+                        <th>Nama Alat Kantor</th>
                         <th>Nama Pegawai</th>
                         <th>Bagian</th>
                         <th>Sub Bagian</th>
@@ -73,7 +73,7 @@ $(function() {
             processing: true,
             serverSide: true,
             responsive: true,
-            ajax: '{{ url('transaksi_data/aplikasi_trans/getTrsaplikasi') }}',
+            ajax: '{{ url('transaksi_data/p_kantor_trans/getTrsAtk') }}',
             columns: [
 
                  {
@@ -95,45 +95,45 @@ $(function() {
             ]
         });
 
-        $('#data_perangkat tbody').on('click', '.cek', function (event) {
-            event.preventDefault()
-            var tr = $(this).closest('tr');
-            var row = table.row( tr );
-            var tableId = 'posts-' + row.data().trs_id;
-            // console.log($(this).data('url'))
-            // console.log(tableId)
-            if (row.child.isShown()) {
-        //     // This row is already open - close it
-            row.child.hide();
-            tr.removeClass('shown');
-        } else {
-        //     // Open this row
-            row.child(template(row.data())).show();
-            initTable(tableId, $(this).data('url'));
-            tr.addClass('shown');
-            tr.next().find('td').addClass('no-padding bg-gray');
-        }
-        });
+        // $('#data_perangkat tbody').on('click', '.cek', function (event) {
+        //     event.preventDefault()
+        //     var tr = $(this).closest('tr');
+        //     var row = table.row( tr );
+        //     var tableId = 'posts-' + row.data().trs_id;
+        //     // console.log($(this).data('url'))
+        //     // console.log(tableId)
+        //     if (row.child.isShown()) {
+        // //     // This row is already open - close it
+        //     row.child.hide();
+        //     tr.removeClass('shown');
+        // } else {
+        // //     // Open this row
+        //     row.child(template(row.data())).show();
+        //     initTable(tableId, $(this).data('url'));
+        //     tr.addClass('shown');
+        //     tr.next().find('td').addClass('no-padding bg-gray');
+        // }
+        // });
     });
-    function initTable(tableId, data) {
-        console.log(data)
-        $('#' + tableId).DataTable({
-            processing: true,
-            serverSide: true,
-            responsive: true,
-            ajax: data,
-            columns: [
-                { "data": 'DT_RowIndex',orderable: false, searchable: false },
-                { data: 'merk', name: 'merk' },
-                { data: 'type', name: 'type' },
-                { data: 'kondisi', name: 'kondisi' },
-                { data: 'gedung', name: 'gedung' },
-                { data: 'ruangan', name: 'ruangan' },
-                { data: 'supplier', name: 'supplier' },
-                { data: 'kelompok', name: 'kelompok' },
-            ]
-        })
-    }
+    // function initTable(tableId, data) {
+    //     console.log(data)
+    //     $('#' + tableId).DataTable({
+    //         processing: true,
+    //         serverSide: true,
+    //         responsive: true,
+    //         ajax: data,
+    //         columns: [
+    //             { "data": 'DT_RowIndex',orderable: false, searchable: false },
+    //             { data: 'merk', name: 'merk' },
+    //             { data: 'type', name: 'type' },
+    //             { data: 'kondisi', name: 'kondisi' },
+    //             { data: 'gedung', name: 'gedung' },
+    //             { data: 'ruangan', name: 'ruangan' },
+    //             { data: 'supplier', name: 'supplier' },
+    //             { data: 'kelompok', name: 'kelompok' },
+    //         ]
+    //     })
+    // }
 
    // Add event listener for opening and closing details
 
@@ -166,7 +166,7 @@ $(function() {
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
-<script id="details-template" type="text/x-handlebars-template">
+{{-- <script id="details-template" type="text/x-handlebars-template">
     <div style="text-align: center;">
         <h5>Detail Perangkat</h5>
     </div><br>
@@ -186,5 +186,5 @@ $(function() {
             </thead>
         </table>
     </table>
-</script>
+</script> --}}
 @endpush
