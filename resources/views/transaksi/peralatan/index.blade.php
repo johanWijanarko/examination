@@ -88,7 +88,7 @@ $(function() {
             { data: 'bagian', name: 'bagian' },
             { data: 'sub', name: 'sub' },
             { data: 'status', name: 'status' },
-            { data: 'trs_keterangan', name: 'trs_keterangan' },
+            { data: 'keterangan', name: 'keterangan' },
         ]
     });
 

@@ -13,12 +13,16 @@ class DetailTransaksi extends Model
     protected $table = 'trs_detail';
     protected $primaryKey = 'trs_detail_id';
 
-    protected $fillable = ['trs_detail_id','trs_id', 'trs_detail_pegawai_id', 'trs_detail_data_stok_id', 'trs_detail_gedung_id', 'trs_detail_ruangan', 'trs_detail_jumlah'];
+    protected $fillable = ['trs_detail_id','trs_id', 'trs_detail_pegawai_id', 'trs_detail_data_stok_id', 'trs_detail_gedung_id', 'trs_detail_ruangan_id', 'trs_detail_jumlah'];
 
     public function trsHasStok2(){
         return $this->belongsTo(StokModels::class, 'trs_detail_data_stok_id', 'data_stok_id');
     }
     public function trsHasPegawai2(){
         return $this->belongsTo(PegawaiModels::class, 'trs_detail_pegawai_id', 'pegawai_id');
+    }
+
+    public function mainTransaksi(){
+        return $this->belongsTo(TransaksiModels::class, 'trs_id', 'trs_id');
     }
 }

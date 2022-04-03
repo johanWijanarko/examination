@@ -11,6 +11,7 @@ use App\Models\PegawaiModels;
 use App\Models\RuanganModels;
 use App\Models\DataMerkModels;
 use App\Models\SupplierModels;
+use App\Models\DetailTransaksi;
 use App\Models\SubBagianModels;
 use App\Models\TransaksiModels;
 use Illuminate\Support\Facades\DB;
@@ -23,94 +24,75 @@ class TransaksiAlatKantor extends Controller
 {
     public function index()
     {
-        $trsPerangkat = TransaksiModels::with(['trsHasStok'=> function ($q){
-            $q->with(['stokHasMerk','stokHasType','stokHasKondisi','stokHasSupplier']);
-            // $q->where('data_kategory_id',4);
-        },'trsHasPegawai'=> function ($q){
+        $trsDetail = DetailTransaksi::with(['trsHasStok2', 'trsHasPegawai2'=> function($q){
             $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
-        },'trsHasGedung','trsHasRuangan','trsHasPic', 'trsDetail'  => function ($q){
-            $q->with(['trsHasStok2', 'trsHasPegawai2']);
-        }])
-        ->whereHas('trsDetail', function ($q){
-            $q->whereHas('trsHasStok2', function($q){
-                $q->where('data_kategory_id',4);
-            });
-
+        }, 'mainTransaksi'])
+        ->whereHas('trsHasStok2', function($q){
+            $q->where('data_kategory_id',4);
         })
-        ->orderBy('trs_id', 'asc')->where('trs_status_id',1)->get();
+        ->whereHas('mainTransaksi', function($q){
+            $q->orderBy('trs_id', 'asc')->where('trs_status_id',1);
+        })
+        ->get();
 
-        dd($trsPerangkat);
+        // dd($trsDetail);
         return \view('transaksi/peralatan.index');
     }
 
     public function getTrsAtk()
     {
-        $trsPerangkat = TransaksiModels::with(['trsHasStok'=> function ($q){
-            $q->with(['stokHasMerk','stokHasType','stokHasKondisi','stokHasSupplier']);
-            // $q->where('data_kategory_id',4);
-        },'trsHasPegawai'=> function ($q){
+        $trsDetail = DetailTransaksi::with(['trsHasStok2', 'trsHasPegawai2'=> function($q){
             $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
-        },'trsHasGedung','trsHasRuangan','trsHasPic', 'trsDetail'  => function ($q){
-            $q->with(['trsHasStok2', 'trsHasPegawai2']);
-        }])
-        ->whereHas('trsDetail', function ($q){
-            $q->whereHas('trsHasStok2', function($q){
-                $q->where('data_kategory_id',4);
-            });
-
+        }, 'mainTransaksi'])
+        ->whereHas('trsHasStok2', function($q){
+            $q->where('data_kategory_id',4);
         })
-        ->orderBy('trs_id', 'asc')->where('trs_status_id',1)->get();
+        ->whereHas('mainTransaksi', function($q){
+            $q->orderBy('trs_id', 'asc')->where('trs_status_id',1);
+        })
+        ->get();
 
         // dd($trsPerangkat);
-        return DataTables::of($trsPerangkat)
+        return DataTables::of($trsDetail)
             // ->addColumn('actions', 'transaksi/perangkat.actions')
-            ->addColumn('details_url', function(TransaksiModels $dp) {
-               if ($dp->trs_id) {
-                $btn ='<a href="'.route("edit_trs_atk",['id'=>$dp->trs_id]).'" data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-sm btn-warning rounded-circle " ><i class="fas fa-edit"></i></i></a>';
-                $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("detail_trs_atk",['id'=>$dp->trs_id]).'" data-placement="top" title="Edit" class="btn btn-sm btn-success rounded-circle " ><i class="fas fa-eye"></i></a>';
+            ->addColumn('details_url', function(DetailTransaksi $dp) {
+               if ($dp->mainTransaksi->trs_id) {
+                $btn ='<a href="'.route("edit_trs_atk",['id'=>$dp->mainTransaksi->trs_id]).'" data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-sm btn-warning rounded-circle " ><i class="fas fa-edit"></i></i></a>';
+                $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("detail_trs_atk",['id'=>$dp->mainTransaksi->trs_id]).'" data-placement="top" title="Edit" class="btn btn-sm btn-success rounded-circle " ><i class="fas fa-eye"></i></a>';
                 return $btn;
                 }
                 return '';
             })
-            ->addColumn('perangkat', function (TransaksiModels $dp) {
-                if ($dp->trsDetail) {
-                    foreach ($dp->trsDetail as $key => $detail) {
-                        # code...
-                        return $detail->trsHasStok2->data_name;
-                    }
+            ->addColumn('perangkat', function (DetailTransaksi $dp) {
+                if ($dp->trsHasStok2) {
+                    return $dp->trsHasStok2->data_name;
                 }
                 return '';
             })
-            ->addColumn('pegawai', function (TransaksiModels $dt) {
-                if ($dt->trsDetail) {
-                    foreach ($dt->trsDetail as $key => $detail) {
-                        return $detail;
-                    }
+            ->addColumn('pegawai', function (DetailTransaksi $dt) {
+                if ($dt->trsHasPegawai2) {
+                    return $dt->trsHasPegawai2->pegawai_name;
                 }
                 return '';
             })
-            ->addColumn('bagian', function (TransaksiModels $dk) {
-                if ($dk->trsDetail) {
-                    foreach ($dk->trsDetail as $key => $detail) {
-                        if ($dk->detail) {
-                            return $dk->detail;
-                        }
+            ->addColumn('bagian', function (DetailTransaksi $dk) {
+                if ($dk->trsHasPegawai2) {
+                    if ($dk->trsHasPegawai2->pegawaiHasBagian) {
+                        return $dk->trsHasPegawai2->pegawaiHasBagian->nama_bagian;
                     }
                 }
 
                 return '';
             })
-            ->addColumn('sub', function (TransaksiModels $dg) {
-                if ($dg->trsDetail) {
-                    foreach ($dg->trsDetail as $key => $detail) {
-                        if ($dg->detail) {
-                            return $dg->detail;
-                        }
+            ->addColumn('sub', function (DetailTransaksi $dg) {
+                if ($dg->trsHasPegawai2) {
+                    if ($dg->trsHasPegawai2->pegawaiHasSubBagian) {
+                        return $dg->trsHasPegawai2->pegawaiHasSubBagian->sub_bagian_nama;
                     }
                 }
-
+                return '';
             })
-            ->addColumn('status', function (TransaksiModels $dp) {
+            ->addColumn('status', function (DetailTransaksi $dp) {
                 $status = [
                     '1' => 'Dipakai',
                     '2' => 'Dipinjam',
@@ -119,8 +101,14 @@ class TransaksiAlatKantor extends Controller
                     '5' => 'Dimutasi',
                 ];
 
-                if ($dp->trs_status_id) {
-                    return $status[$dp->trs_status_id];
+                if ($dp->mainTransaksi->trs_status_id) {
+                    return $status[$dp->mainTransaksi->trs_status_id];
+                }
+                return '';
+            })
+            ->addColumn('keterangan', function (DetailTransaksi $dp) {
+                if ($dp->mainTransaksi) {
+                    return $dp->mainTransaksi->trs_keterangan;
                 }
                 return '';
             })
