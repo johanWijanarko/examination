@@ -23,6 +23,23 @@ class TransaksiAlatKantor extends Controller
 {
     public function index()
     {
+        $trsPerangkat = TransaksiModels::with(['trsHasStok'=> function ($q){
+            $q->with(['stokHasMerk','stokHasType','stokHasKondisi','stokHasSupplier']);
+            // $q->where('data_kategory_id',4);
+        },'trsHasPegawai'=> function ($q){
+            $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+        },'trsHasGedung','trsHasRuangan','trsHasPic', 'trsDetail'  => function ($q){
+            $q->with(['trsHasStok2', 'trsHasPegawai2']);
+        }])
+        ->whereHas('trsDetail', function ($q){
+            $q->whereHas('trsHasStok2', function($q){
+                $q->where('data_kategory_id',4);
+            });
+
+        })
+        ->orderBy('trs_id', 'asc')->where('trs_status_id',1)->get();
+
+        dd($trsPerangkat);
         return \view('transaksi/peralatan.index');
     }
 
@@ -30,12 +47,17 @@ class TransaksiAlatKantor extends Controller
     {
         $trsPerangkat = TransaksiModels::with(['trsHasStok'=> function ($q){
             $q->with(['stokHasMerk','stokHasType','stokHasKondisi','stokHasSupplier']);
-            $q->where('data_kategory_id',4);
+            // $q->where('data_kategory_id',4);
         },'trsHasPegawai'=> function ($q){
             $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
-        },'trsHasGedung','trsHasRuangan','trsHasPic'])
-        ->whereHas('trsHasStok', function ($q){
-            $q->where('data_kategory_id',4);
+        },'trsHasGedung','trsHasRuangan','trsHasPic', 'trsDetail'  => function ($q){
+            $q->with(['trsHasStok2', 'trsHasPegawai2']);
+        }])
+        ->whereHas('trsDetail', function ($q){
+            $q->whereHas('trsHasStok2', function($q){
+                $q->where('data_kategory_id',4);
+            });
+
         })
         ->orderBy('trs_id', 'asc')->where('trs_status_id',1)->get();
 
@@ -51,28 +73,42 @@ class TransaksiAlatKantor extends Controller
                 return '';
             })
             ->addColumn('perangkat', function (TransaksiModels $dp) {
-                if ($dp->trsHasStok) {
-                    return $dp->trsHasStok->data_name;
+                if ($dp->trsDetail) {
+                    foreach ($dp->trsDetail as $key => $detail) {
+                        # code...
+                        return $detail->trsHasStok2->data_name;
+                    }
                 }
                 return '';
             })
             ->addColumn('pegawai', function (TransaksiModels $dt) {
-                if ($dt->trsHasPegawai) {
-                    return $dt->trsHasPegawai->pegawai_name;
+                if ($dt->trsDetail) {
+                    foreach ($dt->trsDetail as $key => $detail) {
+                        return $detail;
+                    }
                 }
                 return '';
             })
             ->addColumn('bagian', function (TransaksiModels $dk) {
-                if ($dk->trsHasPegawai->pegawaiHasBagian) {
-                    return $dk->trsHasPegawai->pegawaiHasBagian->nama_bagian;
+                if ($dk->trsDetail) {
+                    foreach ($dk->trsDetail as $key => $detail) {
+                        if ($dk->detail) {
+                            return $dk->detail;
+                        }
+                    }
                 }
+
                 return '';
             })
             ->addColumn('sub', function (TransaksiModels $dg) {
-                if ($dg->trsHasPegawai->pegawaiHasSubBagian) {
-                    return $dg->trsHasPegawai->pegawaiHasSubBagian->sub_bagian_nama;
+                if ($dg->trsDetail) {
+                    foreach ($dg->trsDetail as $key => $detail) {
+                        if ($dg->detail) {
+                            return $dg->detail;
+                        }
+                    }
                 }
-                return '';
+
             })
             ->addColumn('status', function (TransaksiModels $dp) {
                 $status = [
@@ -93,7 +129,7 @@ class TransaksiAlatKantor extends Controller
             ->make(true);
 
     }
- 
+
 
     public function detail($id){
         // $getData = DataManajemenModels::find($id);
@@ -157,47 +193,50 @@ class TransaksiAlatKantor extends Controller
 
     public function save(Request $request)
     {
-        // dd($request->all());
+        $tgl = date("Y-m-d", strtotime($request->tgl) );
+
         $request->validate([
             'keterangan' => 'required',
-            'aplikasi' => 'required',
-            'pegawai' => 'required',
-            'gedung' => 'required',
-            'ruangan' => 'required',
+            'tgl' => 'required',
 
         ],
         [
             'keterangan.required' => 'Keterangan tidak boleh kosong!',
-            'aplikasi.required' => ' aplikasi tidak boleh kosong!',
-            'pegawai.required' => 'Pegawai tidak boleh kosong!',
-            'gedung.required' => 'Gedung tidak boleh kosong!',
-            'ruangan.required' => 'Ruangan tidak boleh kosong!',
+            'tgl.required' => ' Tanggal tidak boleh kosong!',
         ]);
 
         $save = [
-
             'trs_kode'=> $request->id_trs_prkt,
-            'trs_data_stok_id'=> $request->aplikasi,
-            'trs_gedung_id'=> $request->gedung,
-            'trs_ruang_id'=> $request->ruangan,
-            'trs_pic_id'=> Auth::user()->id,
-            'trs_date'=> Carbon::today(),
             'trs_keterangan'=> $request->keterangan,
-            'trs_pegawai_id'=> $request->pegawai,
+            'trs_date'=> $tgl,
         ];
+        $trsAtk =TransaksiModels::create($save);
+        // dd($trsAtk->trs_id);
+        $trsId = $trsAtk->trs_id;
+        $data2 = array();
+        if ($request->perangkat) {
+            foreach ($request->perangkat as $key => $data) {
+                $data2[$key]['trs_id'] = $trsId;
+                $data2[$key]['trs_detail_pegawai_id'] = $request->pegawai[$key];
+                $data2[$key]['trs_detail_data_stok_id'] = $request->perangkat[$key];
+                $data2[$key]['trs_detail_gedung_id'] = $request->gedung[$key];
+                $data2[$key]['trs_detail_ruangan'] = $request->ruangan[$key];
+                $data2[$key]['trs_detail_jumlah'] = $request->jml[$key];
 
-        // $stok = StokModels::find($request->perangkat);
-        // $stok->decrement('data_jumlah', 1);
+                $stok = StokModels::whereIn('data_stok_id',[$request->perangkat[$key]]);
+                $stok->decrement('data_jumlah', $request->jml[$key]);
 
-        // $stok = StokModels::find($request->perangkat);
-        // $stok->increment('data_dipakai', 1);
+                $stok = StokModels::whereIn('data_stok_id',[$request->perangkat[$key]]);
+                $stok->increment('data_dipakai', $request->jml[$key]);
+            }
 
-        $saveTrsPerangkat =TransaksiModels::create($save);
+            $save_detail = DB::table('trs_detail')->insert($data2);
+        }
 
-        $cek = Log::channel('database')->info($saveTrsPerangkat);
+        $cek = Log::channel('database')->info($save_detail);
         $query = DB::getQueryLog();
         $query = end($query);
-        $this->save_log('tambah data transaksi perangkat' ,json_encode($query));
+        $this->save_log('tambah data transaksi atk' ,json_encode($query));
 
         Alert::success('Success', 'Data berhasil di Simpan');
         return redirect('transaksi_data/p_kantor_trans');

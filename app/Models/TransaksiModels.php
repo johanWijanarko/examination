@@ -32,4 +32,8 @@ class TransaksiModels extends Model
     public function trsHasPic(){
         return $this->belongsTo(User::class, 'trs_pic_id', 'id');
     }
+
+    public function trsDetail(){
+        return $this->hasMany(DetailTransaksi::class, 'trs_id', 'trs_id');
+    }
 }

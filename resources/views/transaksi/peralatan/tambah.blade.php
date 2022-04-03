@@ -26,7 +26,7 @@
                                 </ul>
                             </div>
                         @endif
-                        {{-- <form method="post" action="{{ route('save_trs_aplikasi') }}" class="needs-validation-pegawai" id="save_data" enctype="multipart/form-data"> --}}
+                        <form method="post" action="{{ route('save_trs_atk') }}" class="needs-validation-pegawai" id="save_data" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group row">
                                 <div class="col-md-3">
@@ -58,30 +58,29 @@
                                     <button type="button" class="add-new btn btn-info" id="addBtn">Add New Income</button>
                                 </div>
                             </div>
-                            
-                          
                             <div class="table-responsive mt-4">
-                                <table class="table table-bordered">
+                                <table class="table table-bordered table-striped table-inka" id="data_perangkat" width="100%">
                                     <thead>
                                       <tr>
-                                        <th class="text-center">Row Number</th>
-                                        <th class="text-center">Remove Row</th>
+                                        <th class="text-center">Nama Alat Kantor</th>
+                                        <th class="text-center">Pegawai</th>
+                                        <th class="text-center">Gedung</th>
+                                        <th class="text-center">Ruangan</th>
+                                        <th class="text-center">Jumlah</th>
+                                        <th class="text-center">Remove</th>
                                       </tr>
                                     </thead>
                                     <tbody id="tbody">
-                              
                                     </tbody>
-                                  </table>
-                                  
-                                  
-                            </div>    
+                                </table>
+                            </div>
                             <div class="form-group row">
                                 <div class="col-sm-12">
                                     <a href="{{ url('transaksi_data/aplikasi_trans') }}" class="btn btn-info">Kembali</a>
                                     <button type="submit" id="disabled" class="btn btn-success">Simpan</button>
                                 </div>
                             </div>
-                        {{-- </form> --}}
+                        </form>
                     </div>
                 </div>
             </div>
@@ -92,7 +91,7 @@
 @push('page-script')
 <script>
 $(document).ready(function () {
-  
+
   // Denotes total number of rows
   var rowIdx = 0;
 
@@ -101,20 +100,46 @@ $(document).ready(function () {
 
     // Adding a row inside the tbody.
     $('#tbody').append(`<tr id="R${++rowIdx}">
-         <td class="row-index text-center">
-            <select class="form-control" id="ruangan" name="ruangan" required>
+         <td class="row-index text-center" width="20%">
+            <select class="form-control" id="perangkat" name="perangkat[]" required>
+                <option value="{{old('perangkat')}}">Pilih Perangkat</option>
+                @foreach ($dataStok as $stok)
+                    <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
+                @endforeach
+            </select>
+         </td>
+         <td class="row-index text-center" width="20%">
+            <select class="form-control" id="pegawai" name="pegawai[]" required>
+                <option value="{{old('pegawai')}}">Pilih Pegawai</option>
+                @foreach ($dataPegawai as $pegawai)
+                    <option value="{{ $pegawai->pegawai_id }}">{{ $pegawai->pegawai_name }}</option>
+                @endforeach
+            </select>
+        </td>
+        <td width="20%">
+            <select class="form-control" id="gedung" name="gedung[]" required>
+                <option value="{{old('gedung')}}">Pilih Gedung</option>
+                @foreach ($gedung as $gdg)
+                    <option value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
+                @endforeach
+            </select>
+        </td>
+        <td width="20%">
+            <select class="form-control" id="ruangan" name="ruangan[]" required>
                 <option value="{{old('ruangan')}}">Pilih Ruangan</option>
                 @foreach ($ruangan as $ru)
                     <option value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
                 @endforeach
             </select>
-        
-         </td>
-          <td class="text-center">
-            <button class="btn btn-danger remove"
-              type="button">Remove</button>
-            </td>
-          </tr>`);
+        </td>
+        <td width="15%">
+            <input type="text" name="jml[]" id="jml" class="form-control" placeholder="" required>
+        </td>
+        <td width="10%">
+            <a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="" data-placement="top" title="delete" class="btn btn-sm btn-danger rounded-circle remove" ><i class="fas fa-trash"></i></a>
+
+        </td>
+        </tr>`);
   });
 
   // jQuery button click event to remove a row.
@@ -124,7 +149,7 @@ $(document).ready(function () {
     // containing the clicked button
     var child = $(this).closest('tr').nextAll();
 
-    // Iterating across all the rows 
+    // Iterating across all the rows
     // obtained to change the index
     child.each(function () {
 
@@ -154,7 +179,7 @@ $(document).ready(function () {
 
 
 $('#tgl').datepicker({
-    format: 'dd/mm/yyyy',
+    format: 'dd-mm-yyyy',
     // startDate: '-3d'
 });
 

@@ -63,20 +63,17 @@
       </div>
     </div>
   </div>
-<script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
-
 <script type="text/javascript">
 
 $(function() {
-            var template = Handlebars.compile($("#details-template").html());
-            var table =$('#data_perangkat').DataTable({
-            processing: true,
-            serverSide: true,
-            responsive: true,
-            ajax: '{{ url('transaksi_data/p_kantor_trans/getTrsAtk') }}',
-            columns: [
+        var table =$('#data_perangkat').DataTable({
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        ajax: '{{ url('transaksi_data/p_kantor_trans/getTrsAtk') }}',
+        columns: [
 
-                 {
+            {
                 "className":      'details-control',
                 "orderable":      false,
                 "searchable":      false,
@@ -85,57 +82,17 @@ $(function() {
 
                 data: 'details_url', name: 'details_url',
             },
-                { "data": 'DT_RowIndex',orderable: false, searchable: false },
-                { data: 'perangkat', name: 'perangkat' },
-                { data: 'pegawai', name: 'pegawai' },
-                { data: 'bagian', name: 'bagian' },
-                { data: 'sub', name: 'sub' },
-                { data: 'status', name: 'status' },
-                { data: 'trs_keterangan', name: 'trs_keterangan' },
-            ]
-        });
-
-        // $('#data_perangkat tbody').on('click', '.cek', function (event) {
-        //     event.preventDefault()
-        //     var tr = $(this).closest('tr');
-        //     var row = table.row( tr );
-        //     var tableId = 'posts-' + row.data().trs_id;
-        //     // console.log($(this).data('url'))
-        //     // console.log(tableId)
-        //     if (row.child.isShown()) {
-        // //     // This row is already open - close it
-        //     row.child.hide();
-        //     tr.removeClass('shown');
-        // } else {
-        // //     // Open this row
-        //     row.child(template(row.data())).show();
-        //     initTable(tableId, $(this).data('url'));
-        //     tr.addClass('shown');
-        //     tr.next().find('td').addClass('no-padding bg-gray');
-        // }
-        // });
+            { "data": 'DT_RowIndex',orderable: false, searchable: false },
+            { data: 'perangkat', name: 'perangkat' },
+            { data: 'pegawai', name: 'pegawai' },
+            { data: 'bagian', name: 'bagian' },
+            { data: 'sub', name: 'sub' },
+            { data: 'status', name: 'status' },
+            { data: 'trs_keterangan', name: 'trs_keterangan' },
+        ]
     });
-    // function initTable(tableId, data) {
-    //     console.log(data)
-    //     $('#' + tableId).DataTable({
-    //         processing: true,
-    //         serverSide: true,
-    //         responsive: true,
-    //         ajax: data,
-    //         columns: [
-    //             { "data": 'DT_RowIndex',orderable: false, searchable: false },
-    //             { data: 'merk', name: 'merk' },
-    //             { data: 'type', name: 'type' },
-    //             { data: 'kondisi', name: 'kondisi' },
-    //             { data: 'gedung', name: 'gedung' },
-    //             { data: 'ruangan', name: 'ruangan' },
-    //             { data: 'supplier', name: 'supplier' },
-    //             { data: 'kelompok', name: 'kelompok' },
-    //         ]
-    //     })
-    // }
 
-   // Add event listener for opening and closing details
+});
 
 
    // display a modal (small modal)
@@ -165,26 +122,5 @@ $(function() {
     });
 
 </script>
-<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
-{{-- <script id="details-template" type="text/x-handlebars-template">
-    <div style="text-align: center;">
-        <h5>Detail Perangkat</h5>
-    </div><br>
-    <table class="table">
-        <table class="table details-table" id="posts-@{{trs_id}}">
-            <thead>
-            <tr>
-                <th>No</th>
-                <th>Merk</th>
-                <th>Type / Kategori</th>
-                <th>Kondisi</th>
-                <th>Gedung</th>
-                <th>Ruangan</th>
-                <th>Supplier</th>
-                <th>Kelompok</th>
-            </tr>
-            </thead>
-        </table>
-    </table>
-</script> --}}
+
 @endpush

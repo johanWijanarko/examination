@@ -106,7 +106,7 @@
                                     <label class="col-form-label mandatory">Nama Pegawai</label>
                                 </div>
                                 <div class="col-md-8">
-                                   <select class="form-control" id="pegawai" name="pegawai" required>
+                                    <select class="form-control" id="pegawai" name="pegawai" required>
                                         <option value="{{old('pegawai')}}">Pilih Pegawai</option>
                                         @foreach ($dataPegawai as $pegawai)
                                             <option value="{{ $pegawai->pegawai_id }}">{{ $pegawai->pegawai_name }}</option>
