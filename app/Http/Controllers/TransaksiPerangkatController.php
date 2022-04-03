@@ -94,7 +94,7 @@ class TransaksiPerangkatController extends Controller
             ->make(true);
 
     }
- 
+
 
     public function detail($id){
         // $getData = DataManajemenModels::find($id);

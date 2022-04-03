@@ -24,16 +24,16 @@ class TransaksiAlatKantor extends Controller
 {
     public function index()
     {
-        $trsDetail = DetailTransaksi::with(['trsHasStok2', 'trsHasPegawai2'=> function($q){
-            $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
-        }, 'mainTransaksi'])
-        ->whereHas('trsHasStok2', function($q){
-            $q->where('data_kategory_id',4);
-        })
-        ->whereHas('mainTransaksi', function($q){
-            $q->orderBy('trs_id', 'asc')->where('trs_status_id',1);
-        })
-        ->get();
+        // $trsDetail = DetailTransaksi::with(['trsHasStok2', 'trsHasPegawai2'=> function($q){
+        //     $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+        // }, 'mainTransaksi'])
+        // ->whereHas('trsHasStok2', function($q){
+        //     $q->where('data_kategory_id',4);
+        // })
+        // ->whereHas('mainTransaksi', function($q){
+        //     $q->orderBy('trs_id', 'asc')->where('trs_status_id',1);
+        // })
+        // ->get();
 
         // dd($trsDetail);
         return \view('transaksi/peralatan.index');
@@ -232,22 +232,29 @@ class TransaksiAlatKantor extends Controller
 
     public function edit($id){
 
-        $trsPerangkat = TransaksiModels::with(['trsHasStok'=> function ($q){
-            $q->with(['stokHasMerk','stokHasType','stokHasKondisi','stokHasSupplier']);
-        },'trsHasPegawai'=> function ($q){
-            $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
-        },'trsHasGedung','trsHasRuangan','trsHasPic'])
-        ->orderBy('trs_id', 'asc')->where('trs_status_id',1)->where('trs_id', $id)
-        ->whereHas('trsHasStok', function ($q){
-            $q->where('data_kategory_id',13);
-        })->first();
+        // $trsDetail = DetailTransaksi::with(['trsHasStok2', 'trsHasPegawai2'=> function($q){
+        //     $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+        // }, 'mainTransaksi'])
+        // ->whereHas('trsHasStok2', function($q){
+        //     $q->where('data_kategory_id',4);
+        // })
+        // ->whereHas('mainTransaksi', function($q) use ($id){
+        //     $q->orderBy('trs_id', 'asc')->where('trs_status_id',1);
+        //     $q->where('trs_id', $id);
+        // })->first();
 
-        $dataStok = StokModels::where('data_status_id',1)->where('data_jumlah', '>', 0)->where('data_kategory_id',3)->get();
+        $detail = TransaksiModels::with(['trsDetail'=> function($q){
+            $q->with(['trsHasPegawai2' => function($q){
+                $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+            }]);
+        }])->where('trs_id', $id)->first();
+        // dd($detail);
+        $dataStok = StokModels::where('data_status_id',1)->where('data_jumlah', '>', 0)->where('data_kategory_id',4)->get();
         $dataPegawai = PegawaiModels::get();
         $gedung = GedungModels::get();
         $ruangan = RuanganModels::get();
 
-        return \view('transaksi/peralatan.edit', \compact('ruangan','gedung','trsPerangkat', 'dataPegawai','dataStok'));
+        return \view('transaksi/peralatan.edit', \compact('ruangan','gedung','detail', 'dataPegawai','dataStok'));
     }
 
     public function update(Request $request , $id){
