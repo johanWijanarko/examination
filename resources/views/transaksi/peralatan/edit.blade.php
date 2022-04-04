@@ -26,7 +26,7 @@
                                 </ul>
                             </div>
                         @endif
-                        <form method="post" action="{{ route('save_trs_atk') }}" class="needs-validation-pegawai" id="save_data" enctype="multipart/form-data">
+                        <form method="post" action="{{ route('update_trs_atk', $detail->trs_id) }}" class="needs-validation-pegawai" id="save_data" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group row">
                                 <div class="col-md-3">
@@ -110,7 +110,10 @@
                                             <td>
                                                 <input type="text" name="jml[]" id="jml" value="{{ $item->trs_detail_jumlah }}" class="form-control" placeholder="" required>
                                             </td>
-                                            <td></td>
+                                            <td>
+                                                <a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="" data-placement="top" title="delete" class="btn btn-sm btn-danger rounded-circle del" ><i class="fas fa-trash"></i></a>
+                                                <input type="hidden" class="form-control" name="old[]" value="{{ $item->trs_detail_id }}" >
+                                            </td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -118,7 +121,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-12">
-                                    <a href="{{ url('transaksi_data/aplikasi_trans') }}" class="btn btn-info">Kembali</a>
+                                    <a href="{{ url('transaksi_data/p_kantor_trans') }}" class="btn btn-info">Kembali</a>
                                     <button type="submit" id="disabled" class="btn btn-success">Simpan</button>
                                 </div>
                             </div>
@@ -217,6 +220,40 @@ $(document).ready(function () {
     // Decreasing total number of rows by 1.
     rowIdx--;
   });
+
+
+  $('#tbody').on('click', '.del', function () {
+
+// Getting all the rows next to the row
+// containing the clicked button
+var child = $(this).closest('tr').nextAll();
+
+// Iterating across all the rows
+// obtained to change the index
+child.each(function () {
+
+  // Getting <tr> id.
+  var id = $(this).attr('id');
+
+  // Getting the <p> inside the .row-index class.
+  var idx = $(this).children('.row-index').children('p');
+
+  // Gets the row number from <tr> id.
+  var dig = parseInt(id.substring(1));
+
+  // Modifying row index.
+  idx.html(`Row ${dig - 1}`);
+
+  // Modifying row id.
+  $(this).attr('id', `R${dig - 1}`);
+});
+
+// Removing the current row.
+$(this).closest('tr').remove();
+
+// Decreasing total number of rows by 1.
+rowIdx--;
+});
 });
 
 
@@ -293,8 +330,6 @@ $(document).ready(function() {
             }
         })
     });
-
-
 
 </script>
 @endpush

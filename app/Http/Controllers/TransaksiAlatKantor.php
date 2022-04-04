@@ -258,31 +258,49 @@ class TransaksiAlatKantor extends Controller
     }
 
     public function update(Request $request , $id){
-        // dd($request->all());
+        $tgl = date("Y-m-d", strtotime($request->tgl) );
+
         $request->validate([
             'keterangan' => 'required',
-            'pegawai' => 'required',
-            'gedung' => 'required',
-            'ruangan' => 'required',
+            'tgl' => 'required',
 
         ],
         [
             'keterangan.required' => 'Keterangan tidak boleh kosong!',
-            'pegawai.required' => 'Pegawai tidak boleh kosong!',
-            'gedung.required' => 'Gedung tidak boleh kosong!',
-            'ruangan.required' => 'Ruangan tidak boleh kosong!',
+            'tgl.required' => ' Tanggal tidak boleh kosong!',
         ]);
 
         $save = [
-            'trs_gedung_id'=> $request->gedung,
-            'trs_ruang_id'=> $request->ruangan,
-            'trs_pic_id'=> Auth::user()->id,
-            'trs_date'=> Carbon::today(),
             'trs_keterangan'=> $request->keterangan,
-            'trs_pegawai_id'=> $request->pegawai,
+            'trs_date'=> $tgl,
         ];
 
         $updatedata = TransaksiModels::where('trs_id', $id)->update($save);
+
+
+        $getOld = ($request->old)? $request->old : [];
+        $checkFile = DetailTransaksi::where('trs_id', $id)->pluck('trs_detail_id');
+
+            foreach ($checkFile as $key => $file) {
+                if(!in_array($file, $getOld)){
+                    $getDelete =DetailTransaksi::where('trs_detail_id',$file)->first();
+                       
+                        $getDelete->delete();
+                    }
+                }  
+
+            // if ($request->hasfile('file')) {
+            //     foreach ($request->file('file') as $key => $file) {
+            //         // $filename = time() . '.' . $file->extension();
+            //         $name = $this->generateUUID(6) . '.' . $file->getClientOriginalName();
+            //         $file->storeAs('public/upload', $name);
+            //         // $file->move(public_path() . 'public/upload/', $name);
+            //          $data1[$key]['assign_eks_file_name'] = $name;
+
+            //         $data1[$key]['assign_eks_file_asig_id'] = $id;
+            //     }
+            //     $save_file = DB::table('assignment_eksternal_file')->insert($data1);
+            // }
 
         $cek = Log::channel('database')->info($updatedata);
         $query = DB::getQueryLog();
