@@ -26,4 +26,6 @@ class PegawaiModels extends Model
         return $this->hasOne(SubBagianModels::class, 'sub_bagian_id', 'pegawai_sub_bagian_id');
     }
 
+    
+
 }

@@ -146,7 +146,7 @@ $(document).ready(function () {
     // Adding a row inside the tbody.
     $('#tbody').append(`<tr id="R${++rowIdx}">
          <td class="row-index text-center" width="20%">
-            <select class="form-control" id="perangkat" name="perangkat[]" required>
+            <select class="form-control" id="perangkat" name="perangkat_insert[]" required>
                 <option value="{{old('perangkat')}}">Pilih Perangkat</option>
                 @foreach ($dataStok as $stok)
                     <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
@@ -154,7 +154,7 @@ $(document).ready(function () {
             </select>
          </td>
          <td class="row-index text-center" width="20%">
-            <select class="form-control" id="pegawai" name="pegawai[]" required>
+            <select class="form-control" id="pegawai" name="pegawai_insert[]" required>
                 <option value="{{old('pegawai')}}">Pilih Pegawai</option>
                 @foreach ($dataPegawai as $pegawai)
                     <option value="{{ $pegawai->pegawai_id }}">{{ $pegawai->pegawai_name }}</option>
@@ -162,7 +162,7 @@ $(document).ready(function () {
             </select>
         </td>
         <td width="20%">
-            <select class="form-control" id="gedung" name="gedung[]" required>
+            <select class="form-control" id="gedung" name="gedung_insert[]" required>
                 <option value="{{old('gedung')}}">Pilih Gedung</option>
                 @foreach ($gedung as $gdg)
                     <option value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
@@ -170,7 +170,7 @@ $(document).ready(function () {
             </select>
         </td>
         <td width="20%">
-            <select class="form-control" id="ruangan" name="ruangan[]" required>
+            <select class="form-control" id="ruangan" name="ruangan_insert[]" required>
                 <option value="{{old('ruangan')}}">Pilih Ruangan</option>
                 @foreach ($ruangan as $ru)
                     <option value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
@@ -178,7 +178,7 @@ $(document).ready(function () {
             </select>
         </td>
         <td width="15%">
-            <input type="text" name="jml[]" id="jml" class="form-control" placeholder="" required>
+            <input type="text" name="jml_insert[]" id="jml" class="form-control" placeholder="" required>
         </td>
         <td width="10%">
             <a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="" data-placement="top" title="delete" class="btn btn-sm btn-danger rounded-circle remove" ><i class="fas fa-trash"></i></a>
@@ -222,38 +222,11 @@ $(document).ready(function () {
   });
 
 
-  $('#tbody').on('click', '.del', function () {
+    $('#tbody').on('click', '.del', function () {
+        // Removing the current row.
+        $(this).closest('tr').remove();
 
-// Getting all the rows next to the row
-// containing the clicked button
-var child = $(this).closest('tr').nextAll();
-
-// Iterating across all the rows
-// obtained to change the index
-child.each(function () {
-
-  // Getting <tr> id.
-  var id = $(this).attr('id');
-
-  // Getting the <p> inside the .row-index class.
-  var idx = $(this).children('.row-index').children('p');
-
-  // Gets the row number from <tr> id.
-  var dig = parseInt(id.substring(1));
-
-  // Modifying row index.
-  idx.html(`Row ${dig - 1}`);
-
-  // Modifying row id.
-  $(this).attr('id', `R${dig - 1}`);
-});
-
-// Removing the current row.
-$(this).closest('tr').remove();
-
-// Decreasing total number of rows by 1.
-rowIdx--;
-});
+    });
 });
 
 
@@ -270,66 +243,66 @@ $(document).ready(function() {
     // $('#kelompok').select2();
 });
 
-    $('#atk').on('change', function () {
-        //  console.log($(this).val());
-        $.ajax({
-            url: '{{ url('transaksi_data/p_kantor_trans/gatAtk') }}',
-            method: 'get',
-            data: {id: $(this).val()},
-            dataType : 'json',
-            success: function (response) {
-                console.log(response.kondisi)
-                $('[name="merk"]').val(response.getMerk.nama_data_merk);
-                $('#kondisi').val(response.kondisi.nama_data_kondisi);
-                $('#kondisi_id').val(response.kondisi.data_kondisi_id);
-                $('#sup').val(response.supplier.supplier_name);
-                $('#jumlah').val(response.dataStok.data_jumlah+' Unit');
+    // $('#atk').on('change', function () {
+    //     //  console.log($(this).val());
+    //     $.ajax({
+    //         url: '{{ url('transaksi_data/p_kantor_trans/gatAtk') }}',
+    //         method: 'get',
+    //         data: {id: $(this).val()},
+    //         dataType : 'json',
+    //         success: function (response) {
+    //             console.log(response.kondisi)
+    //             $('[name="merk"]').val(response.getMerk.nama_data_merk);
+    //             $('#kondisi').val(response.kondisi.nama_data_kondisi);
+    //             $('#kondisi_id').val(response.kondisi.data_kondisi_id);
+    //             $('#sup').val(response.supplier.supplier_name);
+    //             $('#jumlah').val(response.dataStok.data_jumlah+' Unit');
 
 
-            }
-        })
-    });
+    //         }
+    //     })
+    // });
 
-    $('#bagian').on('change', function () {
-        //  console.log($(this).val());
-        $.ajax({
-            url: '{{ url('transaksi_data/perangkat_trans/getSubBagian') }}',
-            method: 'get',
-            data: {id: $(this).val()},
-            dataType : 'json',
-            success: function (response) {
-                // console.log(response)
-                $('#subBagian').empty();
-				        $('#subBagian').append(new Option('- Pilih -', ''))
-                $('#subBagian').trigger('change')
+    // $('#bagian').on('change', function () {
+    //     //  console.log($(this).val());
+    //     $.ajax({
+    //         url: '{{ url('transaksi_data/perangkat_trans/getSubBagian') }}',
+    //         method: 'get',
+    //         data: {id: $(this).val()},
+    //         dataType : 'json',
+    //         success: function (response) {
+    //             // console.log(response)
+    //             $('#subBagian').empty();
+	// 			        $('#subBagian').append(new Option('- Pilih -', ''))
+    //             $('#subBagian').trigger('change')
 
-                response.forEach(item => {
-                    $('#subBagian').append(new Option(item.nama, item.id))
-                });
+    //             response.forEach(item => {
+    //                 $('#subBagian').append(new Option(item.nama, item.id))
+    //             });
 
-            }
-        })
-    });
+    //         }
+    //     })
+    // });
 
-    $('#pegawai').on('change', function () {
-        //  console.log($(this).val());
-        $.ajax({
-            url: '{{ url('transaksi_data/perangkat_trans/getPegawai') }}',
-            method: 'get',
-            data: {id: $(this).val()},
-            dataType : 'json',
-            success: function (response) {
-                console.log(response)
-                $('#bagian_').val(response.pegawai_has_bagian.bagian_id)
-                $('#subBagian_').val(response.pegawai_has_sub_bagian.sub_bagian_id)
+    // $('#pegawai').on('change', function () {
+    //     //  console.log($(this).val());
+    //     $.ajax({
+    //         url: '{{ url('transaksi_data/perangkat_trans/getPegawai') }}',
+    //         method: 'get',
+    //         data: {id: $(this).val()},
+    //         dataType : 'json',
+    //         success: function (response) {
+    //             console.log(response)
+    //             $('#bagian_').val(response.pegawai_has_bagian.bagian_id)
+    //             $('#subBagian_').val(response.pegawai_has_sub_bagian.sub_bagian_id)
 
-                $('#bagian').val(response.pegawai_has_bagian.nama_bagian)
-                $('#subBagian').val(response.pegawai_has_sub_bagian.sub_bagian_nama)
+    //             $('#bagian').val(response.pegawai_has_bagian.nama_bagian)
+    //             $('#subBagian').val(response.pegawai_has_sub_bagian.sub_bagian_nama)
 
 
-            }
-        })
-    });
+    //         }
+    //     })
+    // });
 
 </script>
 @endpush

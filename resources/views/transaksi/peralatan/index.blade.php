@@ -30,8 +30,6 @@
                         <th>No</th>
                         <th>Nama Alat Kantor</th>
                         <th>Nama Pegawai</th>
-                        <th>Bagian</th>
-                        <th>Sub Bagian</th>
                         <th>Status</th>
                         <th>Keterangan</th>
 
@@ -85,8 +83,6 @@ $(function() {
             { "data": 'DT_RowIndex',orderable: false, searchable: false },
             { data: 'perangkat', name: 'perangkat' },
             { data: 'pegawai', name: 'pegawai' },
-            { data: 'bagian', name: 'bagian' },
-            { data: 'sub', name: 'sub' },
             { data: 'status', name: 'status' },
             { data: 'keterangan', name: 'keterangan' },
         ]

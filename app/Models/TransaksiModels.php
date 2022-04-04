@@ -36,4 +36,5 @@ class TransaksiModels extends Model
     public function trsDetail(){
         return $this->hasMany(DetailTransaksi::class, 'trs_id', 'trs_id');
     }
+
 }
