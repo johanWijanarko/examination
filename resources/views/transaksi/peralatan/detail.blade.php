@@ -81,18 +81,17 @@
             <div class="col-md-8">
                
                 @if ($details->trsDetail)
-                    @foreach ($details->trsDetail as $key_1 => $detail)
-                        @if ($detail->hasManyPegawai)
-                            @foreach ($detail->hasManyPegawai as $key => $value)
-                                @if ($value->pegawaiHasSubBagian)
-                                    <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $key_1+1}}. {{ $value->pegawaiHasSubBagian->sub_bagian_nama7
-                                    }}" placeholder="" readonly>
-                                    
-                                @endif
-                            @endforeach
-                        @endif
-                    @endforeach
-                @endif
+                @foreach ($details->trsDetail as $key_1 => $detail)
+                    @if ($detail->hasManyPegawai)
+                        @foreach ($detail->hasManyPegawai as $key => $value)
+                            @if ($value->pegawaiHasSubBagian)
+                                <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $key_1+1}}. {{ $value->pegawaiHasSubBagian->sub_bagian_nama }}" placeholder="" readonly>
+                                
+                            @endif
+                        @endforeach
+                    @endif
+                @endforeach
+            @endif
             </div>
         </div>
         <div class="form-group row">
