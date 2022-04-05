@@ -76,7 +76,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-12">
-                                    <a href="{{ url('transaksi_data/aplikasi_trans') }}" class="btn btn-info">Kembali</a>
+                                    <a href="{{ url('transaksi_data/p_kantor_trans') }}" class="btn btn-info">Kembali</a>
                                     <button type="submit" id="disabled" class="btn btn-success">Simpan</button>
                                 </div>
                             </div>
@@ -97,11 +97,11 @@ $(document).ready(function () {
 
   // jQuery button click event to add a row
   $('#addBtn').on('click', function () {
-
+  
     // Adding a row inside the tbody.
     $('#tbody').append(`<tr id="R${++rowIdx}">
          <td class="row-index text-center" width="20%">
-            <select class="form-control" id="perangkat" name="perangkat[]" required>
+            <select class="form-control perangkat" id="perangkat${rowIdx}" name="perangkat[]" required>
                 <option value="{{old('perangkat')}}">Pilih Perangkat</option>
                 @foreach ($dataStok as $stok)
                     <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
@@ -109,7 +109,7 @@ $(document).ready(function () {
             </select>
          </td>
          <td class="row-index text-center" width="20%">
-            <select class="form-control" id="pegawai" name="pegawai[]" required>
+            <select class="form-control pegawai" id="pegawai${rowIdx}" name="pegawai[]" required>
                 <option value="{{old('pegawai')}}">Pilih Pegawai</option>
                 @foreach ($dataPegawai as $pegawai)
                     <option value="{{ $pegawai->pegawai_id }}">{{ $pegawai->pegawai_name }}</option>
@@ -117,7 +117,7 @@ $(document).ready(function () {
             </select>
         </td>
         <td width="20%">
-            <select class="form-control" id="gedung" name="gedung[]" required>
+            <select class="form-control gedung" id="gedung${rowIdx}" name="gedung[]" required>
                 <option value="{{old('gedung')}}">Pilih Gedung</option>
                 @foreach ($gedung as $gdg)
                     <option value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
@@ -125,7 +125,7 @@ $(document).ready(function () {
             </select>
         </td>
         <td width="20%">
-            <select class="form-control" id="ruangan" name="ruangan[]" required>
+            <select class="form-control ruangan" id="ruangan${rowIdx}" name="ruangan[]" required>
                 <option value="{{old('ruangan')}}">Pilih Ruangan</option>
                 @foreach ($ruangan as $ru)
                     <option value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
@@ -140,8 +140,12 @@ $(document).ready(function () {
 
         </td>
         </tr>`);
+        $("#R"+rowIdx).find('.pegawai').select2();
+        $("#R"+rowIdx).find('.perangkat').select2();
+        $("#R"+rowIdx).find('.gedung').select2();
+        $("#R"+rowIdx).find('.ruangan').select2();
+        // console.log($("#R"+rowIdx).find('.pegawai'))
   });
-
   // jQuery button click event to remove a row.
   $('#tbody').on('click', '.remove', function () {
 
@@ -184,7 +188,7 @@ $('#tgl').datepicker({
 });
 
 $(document).ready(function() {
-    $("#pegawai").select2({ width: '300px', dropdownCssClass: "bigdrop" });
+    $("#pegawai").select2();
     $('#atk').select2();
     $('#gedung').select2();
     $('#ruangan').select2();

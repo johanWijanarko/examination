@@ -71,12 +71,10 @@
                                       </tr>
                                     </thead>
                                     <tbody id="tbody">
-                                        @foreach ($detail->trsDetail as $item)
-
-
-                                        <tr>
+                                        @foreach ($detail->trsDetail as $key=>$item)
+                                        <tr id="cek{{ $key}}">
                                             <td>
-                                                <select class="form-control" id="perangkat" name="perangkat[]" required>
+                                                <select class="form-control perangkat" id="perangkat{{ $key}}" name="perangkat[]" required>
                                                     <option value="{{old('perangkat')}}">Pilih Perangkat</option>
                                                     @foreach ($dataStok as $perangkat)
                                                     <option {{ ($item->trs_detail_data_stok_id == $perangkat->data_stok_id ) ? 'selected' : ''}}  value="{{$perangkat->data_stok_id}}" >{{ $perangkat->data_name }}</option>
@@ -84,7 +82,7 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <select class="form-control" id="pegawai" name="pegawai[]" required>
+                                                <select class="form-control pegawai" id="pegawai{{ $key}}" name="pegawai[]" required>
                                                     <option value="{{old('pegawai')}}">Pilih Pegawai</option>
                                                     @foreach ($dataPegawai as $pegawai)
                                                         <option {{  ($item->trs_detail_pegawai_id ==  $pegawai->pegawai_id ) ? 'selected' : '' }} value="{{ $pegawai->pegawai_id }}">{{ $pegawai->pegawai_name }}</option>
@@ -92,7 +90,7 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <select class="form-control" id="gedung" name="gedung[]" required>
+                                                <select class="form-control gedung" id="gedung{{ $key}}" name="gedung[]" required>
                                                     <option value="{{old('gedung')}}">Pilih Gedung</option>
                                                     @foreach ($gedung as $gdg)
                                                         <option {{  ($item->trs_detail_gedung_id ==  $gdg->data_gedung_id ) ? 'selected' : '' }}  value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
@@ -100,7 +98,7 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <select class="form-control" id="ruangan" name="ruangan[]" required>
+                                                <select class="form-control ruangan" id="ruangan{{ $key}}" name="ruangan[]" required>
                                                     <option value="{{old('ruangan')}}">Pilih Ruangan</option>
                                                     @foreach ($ruangan as $ru)
                                                         <option {{ ($item->trs_detail_ruangan_id ==  $ru->data_ruangan_id ) ? 'selected' : '' }} value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
@@ -137,6 +135,14 @@
 <script>
 $(document).ready(function () {
 
+    $.each($("#cek{{ $key}}"), function( index, value ) {
+        $('.perangkat').select2(value)
+        $('.pegawai').select2(value)
+        $('.gedung').select2(value)
+        $('.ruangan').select2(value)
+        // console.log($('.perangkat').select2(value));
+    });
+  
   // Denotes total number of rows
   var rowIdx = 0;
 
@@ -146,7 +152,7 @@ $(document).ready(function () {
     // Adding a row inside the tbody.
     $('#tbody').append(`<tr id="R${++rowIdx}">
          <td class="row-index text-center" width="20%">
-            <select class="form-control" id="perangkat" name="perangkat_insert[]" required>
+            <select class="form-control perangkat_insert" id="perangkat_insert${rowIdx}" name="perangkat_insert[]" required>
                 <option value="{{old('perangkat')}}">Pilih Perangkat</option>
                 @foreach ($dataStok as $stok)
                     <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
@@ -154,7 +160,7 @@ $(document).ready(function () {
             </select>
          </td>
          <td class="row-index text-center" width="20%">
-            <select class="form-control" id="pegawai" name="pegawai_insert[]" required>
+            <select class="form-control pegawai_insert" id="pegawai_insert${rowIdx}" name="pegawai_insert[]" required>
                 <option value="{{old('pegawai')}}">Pilih Pegawai</option>
                 @foreach ($dataPegawai as $pegawai)
                     <option value="{{ $pegawai->pegawai_id }}">{{ $pegawai->pegawai_name }}</option>
@@ -162,7 +168,7 @@ $(document).ready(function () {
             </select>
         </td>
         <td width="20%">
-            <select class="form-control" id="gedung" name="gedung_insert[]" required>
+            <select class="form-control gedung_insert" id="gedung_insert${rowIdx}" name="gedung_insert[]" required>
                 <option value="{{old('gedung')}}">Pilih Gedung</option>
                 @foreach ($gedung as $gdg)
                     <option value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
@@ -170,7 +176,7 @@ $(document).ready(function () {
             </select>
         </td>
         <td width="20%">
-            <select class="form-control" id="ruangan" name="ruangan_insert[]" required>
+            <select class="form-control ruangan_insert" id="ruangan_insert${rowIdx}" name="ruangan_insert[]" required>
                 <option value="{{old('ruangan')}}">Pilih Ruangan</option>
                 @foreach ($ruangan as $ru)
                     <option value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
@@ -185,6 +191,11 @@ $(document).ready(function () {
 
         </td>
         </tr>`);
+
+        $("#R"+rowIdx).find('.perangkat_insert').select2();
+        $("#R"+rowIdx).find('.pegawai_insert').select2();
+        $("#R"+rowIdx).find('.gedung_insert').select2();
+        $("#R"+rowIdx).find('.ruangan_insert').select2();
   });
 
   // jQuery button click event to remove a row.
@@ -235,13 +246,6 @@ $('#tgl').datepicker({
     // startDate: '-3d'
 });
 
-$(document).ready(function() {
-    $("#pegawai").select2({ width: '300px', dropdownCssClass: "bigdrop" });
-    $('#perangkat').select2();
-    $('#gedung').select2();
-    $('#ruangan').select2();
-    // $('#kelompok').select2();
-});
 
     // $('#atk').on('change', function () {
     //     //  console.log($(this).val());

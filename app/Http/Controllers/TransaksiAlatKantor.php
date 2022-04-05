@@ -35,7 +35,11 @@ class TransaksiAlatKantor extends Controller
             $q->whereHas('trsHasStok2', function($q){
                 $q->where('data_kategory_id',4);
             });
-        }])->whereHas('trsDetail')
+        }])->whereHas('trsDetail', function ($q){
+            $q->whereHas('trsHasStok2', function($q){
+                $q->where('data_kategory_id',4);
+            });
+        })
         ->orderBy('trs_id', 'asc')->where('trs_status_id',1)
         ->get();
 
