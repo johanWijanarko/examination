@@ -116,7 +116,6 @@ class TransaksiAlatKantor extends Controller
 
 
     public function detail($id){
-        // $getData = DataManajemenModels::find($id);
         $details = TransaksiModels::with(['trsDetail'=> function($q){
             $q->with(['trsHasPegawai2' => function($q){
                 $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
@@ -128,8 +127,6 @@ class TransaksiAlatKantor extends Controller
                 $q->where('data_kategory_id',4);
             });
         }])->where('trs_id', $id)->first();
-        // $data = $details->first()->stokHasMerk;
-        // dd($details);
 
         return view('transaksi/peralatan.detail',compact('details'));
     }

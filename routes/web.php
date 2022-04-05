@@ -335,18 +335,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/deleteruangan{id}', [RuanganController::class, 'delete'])->name('deleteruangan');
     });
 
-    Route::group(['prefix' => 'm_data/perangkat'], function () {
-        // perangkat
-        Route::get('/', [DataPerangkatController::class, 'index'])->name('perangkat');
-        Route::get('/getDataPerangkat', [DataPerangkatController::class, 'getDataPerangkat'])->name('getDataPerangkat');
-        Route::get('/add', [DataPerangkatController::class, 'tambah'])->name('add_perangkat');
-        Route::post('/save', [DataPerangkatController::class, 'save'])->name('save_perangkat');
-        Route::get('/edit/{id}', [DataPerangkatController::class, 'edit'])->name('edit_perangkat');
-        Route::post('/update/{id}', [DataPerangkatController::class, 'update'])->name('update_perangkat');
-        Route::get('/confrimdelperangkat/{id}', [DataPerangkatController::class, 'confrimDelete'])->name('confrimdelperangkat');
-        Route::get('/delete/{id}', [DataPerangkatController::class, 'delete'])->name('delete_perangkat');
-    });
-
     Route::group(['prefix' => 'm_data/data_stok'], function () {
         // perangkat
         Route::get('/', [Stokdata::class, 'index'])->name('stok');
@@ -359,29 +347,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/delete/{id}', [Stokdata::class, 'delete'])->name('delete_stok');
     });
 
-    Route::group(['prefix' => 'm_data/aplikasi'], function () {
-        // aplikasi
-        Route::get('/', [DataAplikasiController::class, 'index'])->name('aplikasi');
-        Route::get('/getDataAplikasi', [DataAplikasiController::class, 'getDataAplikasi'])->name('getDataAplikasi');
-        Route::get('/add', [DataAplikasiController::class, 'tambah'])->name('add_Aplikasi');
-        Route::post('/save', [DataAplikasiController::class, 'save'])->name('save_Aplikasi');
-        Route::get('/edit/{id}', [DataAplikasiController::class, 'edit'])->name('edit_Aplikasi');
-        Route::post('/update/{id}', [DataAplikasiController::class, 'update'])->name('update_Aplikasi');
-        Route::get('/confrimdelAplikasi/{id}', [DataAplikasiController::class, 'confrimDelete'])->name('confrimdelAplikasi');
-        Route::get('/delete/{id}', [DataAplikasiController::class, 'delete'])->name('delete_Aplikasi');
-    });
-
-    Route::group(['prefix' => 'm_data/alat_kantor'], function () {
-        // alat_kantor
-        Route::get('/', [DataAlatKantorController::class, 'index'])->name('aplikasi');
-        Route::get('/getDataAtk', [DataAlatKantorController::class, 'getDataAtk'])->name('getDataAtk');
-        Route::get('/add', [DataAlatKantorController::class, 'tambah'])->name('add_Atk');
-        Route::post('/save', [DataAlatKantorController::class, 'save'])->name('save_Atk');
-        Route::get('/edit/{id}', [DataAlatKantorController::class, 'edit'])->name('edit_Atk');
-        Route::post('/update/{id}', [DataAlatKantorController::class, 'update'])->name('update_Atk');
-        Route::get('/confrimdelAtk/{id}', [DataAlatKantorController::class, 'confrimDelete'])->name('confrimdelAtk');
-        Route::get('/delete/{id}', [DataAlatKantorController::class, 'delete'])->name('delete_Atk');
-    });
+   
 
     Route::group(['prefix' => 'm_data/data_lainnya'], function () {
         // perangkat
@@ -446,7 +412,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/getTrsInv', [TransaksiInvController::class, 'getTrsInv'])->name('getTrsInv');
         Route::get('/gatInv', [TransaksiInvController::class, 'gatInv'])->name('gatInv');
         Route::post('/save', [TransaksiInvController::class, 'save'])->name('save_trsInv');
-        Route::get('/detail/{id}/{id_trs}', [TransaksiInvController::class, 'detail'])->name('detail_trsInv');
+        Route::get('/detail/{id}', [TransaksiInvController::class, 'detail'])->name('detail_trsInv');
         Route::get('/edit/{id}', [TransaksiInvController::class, 'edit'])->name('edit_trsInv');
         Route::post('/update/{id}', [TransaksiInvController::class, 'update'])->name('update_trsInv');
     });

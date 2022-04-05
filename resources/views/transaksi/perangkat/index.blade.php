@@ -30,8 +30,6 @@
                         <th>No</th>
                         <th>Nama Perangkat</th>
                         <th>Nama Pegawai</th>
-                        <th>Bagian</th>
-                        <th>Sub Bagian</th>
                         <th>Status</th>
                         <th>Keterangan</th>
 
@@ -75,8 +73,7 @@ $(function() {
             responsive: true,
             ajax: '{{ url('transaksi_data/perangkat_trans/getTrsPerangkat') }}',
             columns: [
-
-                 {
+                {
                 "className":      'details-control',
                 "orderable":      false,
                 "searchable":      false,
@@ -85,13 +82,11 @@ $(function() {
 
                 data: 'details_url', name: 'details_url',
             },
-                { "data": 'DT_RowIndex',orderable: false, searchable: false },
-                { data: 'perangkat', name: 'perangkat' },
-                { data: 'pegawai', name: 'pegawai' },
-                { data: 'bagian', name: 'bagian' },
-                { data: 'sub', name: 'sub' },
-                { data: 'status', name: 'status' },
-                { data: 'trs_keterangan', name: 'trs_keterangan' },
+            { "data": 'DT_RowIndex',orderable: false, searchable: false },
+            { data: 'perangkat', name: 'perangkat' },
+            { data: 'pegawai', name: 'pegawai' },
+            { data: 'status', name: 'status' },
+            { data: 'keterangan', name: 'keterangan' },
             ]
         });
 

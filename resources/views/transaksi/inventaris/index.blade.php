@@ -19,18 +19,16 @@
           {{-- <a class="btn btn-outline-info btn-outline-oke" href="{{ url('parameter/par_audit') }}"><i class="fas fa-arrow-left"></i> Kembali</a> --}}
         </div>
         <div class="table-responsive mt-4">
-            <table class="table table-bordered table-striped table-inka" id="data_perangkat">
+            <table class="table table-bordered table-striped table-inka" id="data_perangkat" width="100%">
                 <thead>
                     <tr>
                         <th>Action</th>
                         <th>No</th>
-                        <th>Inventaris</th>
+                        <th>Nama Inventaris</th>
                         <th>Nama Pegawai</th>
-                        <th>Bagian</th>
-                        <th>Sub Bagian</th>
                         <th>Status</th>
                         <th>Keterangan</th>
-                       
+
                     </tr>
                 </thead>
                 <tbody>
@@ -70,31 +68,21 @@ $(function() {
             responsive: true,
             ajax: '{{ url('transaksi_data/invtentaris_trans/getTrsInv') }}',
             columns: [
-                  
-                 {
+                {
                 "className":      'details-control',
                 "orderable":      false,
                 "searchable":      false,
                 "data":           null,
                 "defaultContent": '',
-                
+
                 data: 'details_url', name: 'details_url',
             },
-                { "data": 'DT_RowIndex',orderable: false, searchable: false },
-                { data: 'dataName', name: 'dataName' },
-                { data: 'pegawai', name: 'pegawai' },
-                { data: 'bagian', name: 'bagian' },
-                { data: 'sub', name: 'sub' },
-                { data: 'status', name: 'status' },
-                { data: 'trs_name', name: 'trs_name' },
+            { "data": 'DT_RowIndex',orderable: false, searchable: false },
+            { data: 'perangkat', name: 'perangkat' },
+            { data: 'pegawai', name: 'pegawai' },
+            { data: 'status', name: 'status' },
+            { data: 'keterangan', name: 'keterangan' },
             ]
-            // ,
-            // columnDefs: [
-            //     { width: 50, targets: 0 },
-            //     { width: 250, targets: 1 },
-            //     { width: 350, targets: 2 },
-            //     { width: 100, targets: 3 },
-            // ]
         });
 
         $('#data_perangkat tbody').on('click', '.cek', function (event) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\StokModels;
 use App\Models\GedungModels;
 use Illuminate\Http\Request;
 use App\Models\KondisiModels;
@@ -10,8 +11,10 @@ use App\Models\RuanganModels;
 use App\Models\DataMerkModels;
 use App\Models\SupplierModels;
 use Illuminate\Support\Carbon;
+use App\Models\DetailTransaksi;
 use App\Models\ParBagianModels;
 use App\Models\SubBagianModels;
+use App\Models\TransaksiModels;
 use App\Models\TypeKtegoryModels;
 use App\Models\DataKelompokModels;
 use App\Models\TransaksiDataModel;
@@ -31,134 +34,118 @@ class TransaksiInvController extends Controller
 
     public function getTrsInv()
     {
-        $trsInv = TransaksiDataModel::with(['trsHasData','trsHasPegawai','trsHasSubBagian','trsHasBagian','trsHasPic'])
-        ->orderBy('trs_id', 'desc')->where('trs_jenis_id',4)->get();
+        $trsInv = TransaksiModels::with(['trsDetail' =>function ($q){
+            $q->with(['trsHasPegawai2' ]);
+            $q->whereHas('trsHasStok2', function($q){
+                $q->where('data_kategory_id',5);
+            });
+        }])->whereHas('trsDetail', function ($q){
+            $q->whereHas('trsHasStok2', function($q){
+                $q->where('data_kategory_id',5);
+            });
+        })
+        ->orderBy('trs_id', 'asc')->where('trs_status_id',1)
+        ->get();
 
+       
         return DataTables::of($trsInv)
-            // ->addColumn('actions', 'transaksi/dataName.actions')
-            ->addColumn('details_url', function(TransaksiDataModel $dp) {
-               if ($dp->trsHasData) {
-                   $btn = '<button data-url="'.route("detail_trsInv",['id'=>$dp->trsHasData->data_manajemen_id,'id_trs'=>$dp->trs_id ]).' " data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek">Detail</button>';
-                    $btn = $btn.'<a href="'.route("edit_trsInv",['id'=>$dp->trs_id]).'" class="edit btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
-                   return $btn;
+            ->addColumn('details_url', function(TransaksiModels $dp) {
+               if ($dp->trs_id) {
+                $btn ='<a href="'.route("edit_trsInv",['id'=>$dp->trs_id]).'" data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-sm btn-warning rounded-circle " ><i class="fas fa-edit"></i></i></a>';
+                $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("detail_trsInv",['id'=>$dp->trs_id]).'" data-placement="top" title="Edit" class="btn btn-sm btn-success rounded-circle " ><i class="fas fa-eye"></i></a>';
+                return $btn;
                 }
                 return '';
             })
-            ->addColumn('dataName', function (TransaksiDataModel $dp) {
-                if ($dp->trsHasData) {
-                    return $dp->trsHasData->data_manajemen_name;
+            ->addColumn('perangkat', function (TransaksiModels $dp) {
+                if ($dp->trsDetail) {
+                    foreach ($dp->trsDetail as $key => $detail) {
+                        if($detail->trsHasStok2){
+                            return $detail->trsHasStok2->data_name;
+                        }
+                       
+                    }
                 }
                 return '';
             })
-            ->addColumn('pegawai', function (TransaksiDataModel $dt) {
-                if ($dt->trsHasPegawai) {
-                    return $dt->trsHasPegawai->pegawai_name;
+            ->addColumn('pegawai', function (TransaksiModels $dp) {
+                $detail_='';
+                if ($dp->trsDetail) {
+                    foreach ($dp->trsDetail as $key_1 => $detail) {
+                        
+                        if($detail->hasManyPegawai){
+                            $angka = $key_1+1;
+                            foreach ($detail->hasManyPegawai as $key => $value) {
+                                $detail_ .= $angka.'. '.$value->pegawai_name.'<br>';
+                            }
+                        }
+                       
+                    }
                 }
-                return '';
+                return $detail_;
             })
-            ->addColumn('sub', function (TransaksiDataModel $dk) {
-                if ($dk->trsHasSubBagian) {
-                    return $dk->trsHasSubBagian->sub_bagian_nama;
-                }
-                return '';
-            })
-             ->addColumn('bagian', function (TransaksiDataModel $dg) {
-                if ($dg->trsHasBagian) {
-                    return $dg->trsHasBagian->nama_bagian;
-                }
-                return '';
-            })
-            ->addColumn('status', function (TransaksiDataModel $dp) {
-                $status = [ 
+            ->addColumn('status', function (TransaksiModels $dp) {
+                $status = [
                     '1' => 'Dipakai',
                     '2' => 'Dipinjam',
-                    '3' => 'Diperbaiki',
+                    '3' => 'Sedang diperbaiki',
                     '4' => 'Dikembalikan',
                     '5' => 'Dimutasi',
                 ];
-                
-                if ($dp->trs_status_id) {
-                    return $status[$dp->trs_status_id];
+
+                $detail_2='';
+                if ($dp->trsDetail) {
+                    foreach ($dp->trsDetail as $key_1 => $detail) {
+                        $angka = $key_1+1;
+                        $detail_2 .=  $angka.'. '.$status[$detail->trs_detail_status].'<br>';
+                    }
+                    
+                }
+               
+                return $detail_2;
+            })
+            ->addColumn('keterangan', function (TransaksiModels $dp) {
+                if ($dp) {
+                    return $dp->trs_keterangan;
                 }
                 return '';
             })
-            ->rawColumns(['actions', 'dataName', 'pegawai', 'sub', 'bagian', 'details_url'])
+            ->rawColumns(['actions', 'perangkat', 'pegawai', 'details_url', 'status'])
             ->addIndexColumn()
             ->make(true);
     }
 
-    public function detail($id, $id_trs)
+    public function detail($id)
     {
-        $DatadataName = TransaksiDataModel::with(['trsHasData' => function($q) use ($id){
-            $q->with(['manajemenHasMerk','manajemenHasType','manajemenHasKondisi', 'manajemenHasSupplier']);
-            $q->where('data_manajemen_id', $id);
-        }, 'trsHasGedung', 'trsHasRuangan', 'trsHasKondisi'])
-        ->where('trs_id', $id_trs)
-        ->get();
+        $details = TransaksiModels::with(['trsDetail'=> function($q){
+            $q->with(['trsHasPegawai2' => function($q){
+                $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+            }, 'trsHasStok2'=> function ($q){
+                $q->with(['stokHasMerk','stokHasKondisi']);
+            }]);
+            $q->with(['trsHasGedung', 'trsHasRuangan']);
+            $q->whereHas('trsHasStok2', function($q){
+                $q->where('data_kategory_id',5);
+            });
+        }])->where('trs_id', $id)->first();
 
-
-        return DataTables::of($DatadataName)
-            ->addColumn('merk', function (TransaksiDataModel $dp) {
-                if ($dp->trsHasData->manajemenHasMerk) {
-                    return $dp->trsHasData->manajemenHasMerk->nama_data_merk;
-                }
-                return '';
-            })
-            ->addColumn('type', function (TransaksiDataModel $dt) {
-                if ($dt->trsHasData->manajemenHasType) {
-                    return $dt->trsHasData->manajemenHasType->nama_data_type;
-                }
-                return '';
-            })
-            ->addColumn('kondisi', function (TransaksiDataModel $dk) {
-                if ($dk->trsHasKondisi) {
-                    return $dk->trsHasKondisi->nama_data_kondisi;
-                }
-                return '';
-            })
-            ->addColumn('gedung', function (TransaksiDataModel $dg) {
-                if ($dg->trsHasGedung) {
-                    return $dg->trsHasGedung->nama_data_gedung;
-                }
-                return '';
-            })
-            ->addColumn('ruangan', function (TransaksiDataModel $dr) {
-                if ($dr->trsHasRuangan) {
-                    return $dr->trsHasRuangan->nama_data_ruangan;
-                }
-                return '';
-            })
-            ->addColumn('supplier', function (TransaksiDataModel $ds) {
-                if ($ds->trsHasData->manajemenHasSupplier) {
-                    return $ds->trsHasData->manajemenHasSupplier->supplier_name;
-                }
-                return '';
-            })
-            ->addColumn('kelompok', function (TransaksiDataModel $ds) {
-                if ($ds->trsHasKelompok) {
-                    return $ds->trsHasKelompok->nama_data_kelompok;
-                }
-                return '';
-            })
-            ->rawColumns(['merk', 'type', 'kondisi', 'gedung', 'ruangan', 'supplier', 'kelompok'])
-            ->addIndexColumn()
-            ->make(true);
+        return \view('transaksi/inventaris.detail', compact('details'));
     }
 
 
     public function tambah(Request $request)
     {
         // $getKodeTrs = '';
-        $dataInv = DataManajemenModels::where('data_manajemen_kode_id',4)->where('data_manajemen_jumlah', '>', 0)->get();
+        $dataInv = StokModels::where('data_status_id',1)->where('data_jumlah', '>', 0)->where('data_kategory_id',5)->get();
+
         $dataPegawai = PegawaiModels::get();
-        $kelompok = DataKelompokModels::get();
         $gedung = GedungModels::get();
         $ruangan = RuanganModels::get();
         $countTrs = TransaksiDataModel::all()->count()+1;
         $getKodeTrs = 'TRS-INV-' . $countTrs .'';
 
         
-        return \view('transaksi/inventaris.tambah', \compact('dataPegawai','gedung','ruangan' ,'dataInv', 'kelompok', 'getKodeTrs'));
+        return \view('transaksi/inventaris.tambah', \compact('dataPegawai','gedung','ruangan' ,'dataInv', 'getKodeTrs'));
     }
 
     public function gatInv(Request $request)
@@ -187,58 +174,50 @@ class TransaksiInvController extends Controller
 
     public function save(Request $request)
     {
-        $request->validate([
+        $tgl = date("Y-m-d", strtotime($request->tgl) );
 
+        $request->validate([
             'keterangan' => 'required',
-            'inv' => 'required',
-            'pegawai' => 'required',
-            'bagian' => 'required',
-            'subBagian' => 'required',
-            'kelompok' => 'required',
-            'gedung' => 'required',
-            'ruangan' => 'required',
-            
+            'tgl' => 'required',
+
         ],
         [
             'keterangan.required' => 'Keterangan tidak boleh kosong!',
-            'inv.required' => ' Inventaris tidak boleh kosong!',
-            'pegawai.required' => 'Pegawai tidak boleh kosong!',
-            'bagian.required' => 'Bagian tidak boleh kosong!',
-            'subBagian.required' => 'Sub Bagian tidak boleh kosong!',
-            'kelompok.required' => 'Kelompok tidak boleh kosong!',
-            'gedung.required' => 'Gedung tidak boleh kosong!',
-            'ruangan.required' => 'Ruangan tidak boleh kosong!',
+            'tgl.required' => ' Tanggal tidak boleh kosong!',
         ]);
-        
+
         $save = [
-            'trs_jenis_id'=> 4,
             'trs_kode'=> $request->id_trs_prkt,
-            'trs_data_id'=> $request->inv,
-            'trs_name'=> $request->keterangan,
-            'trs_pegawai_id'=> $request->pegawai,
-            'trs_bagian_id'=> $request->bagian_,
-            'trs_sub_bagian_id'=> $request->subBagian_,
-            'trs_kelompok_id'=> $request->kelompok,
-            'trs_ruangan_id'=> $request->ruangan,
-            'trs_gedung_id'=> $request->gedung,
-            'trs_pic_id'=> Auth::user()->id,
-            'trs_date'=> Carbon::today(),
-            'trs_kondisi_id'=> $request->kondisi_id,
-            'trs_status_id' => 1,
+            'trs_keterangan'=> $request->keterangan,
+            'trs_date'=> $tgl,
         ];
+        $trsAtk =TransaksiModels::create($save);
+        // dd($trsAtk->trs_id);
+        $trsId = $trsAtk->trs_id;
+        $data2 = array();
+        if ($request->inventaris) {
+            foreach ($request->inventaris as $key => $data) {
+                $data2[$key]['trs_id'] = $trsId;
+                $data2[$key]['trs_detail_pegawai_id'] = $request->pegawai[$key];
+                $data2[$key]['trs_detail_data_stok_id'] = $request->inventaris[$key];
+                $data2[$key]['trs_detail_gedung_id'] = $request->gedung[$key];
+                $data2[$key]['trs_detail_ruangan_id'] = $request->ruangan[$key];
+                $data2[$key]['trs_detail_jumlah'] = $request->jml[$key];
 
-        $product = DataManajemenModels::find($request->inv);
-        $product->decrement('data_manajemen_jumlah', 1);
+                $stok = StokModels::whereIn('data_stok_id',[$request->inventaris[$key]]);
+                $stok->decrement('data_jumlah', $request->jml[$key]);
 
-        $product = DataManajemenModels::find($request->inv);
-        $product->increment('data_manajemen_jumlah_pemakai', 1);
-        
-        $saveInv =TransaksiDataModel::create($save);
+                $stok = StokModels::whereIn('data_stok_id',[$request->inventaris[$key]]);
+                $stok->increment('data_dipakai', $request->jml[$key]);
+            }
 
-        $cek = \Log::channel('database')->info($saveInv);
+            $save_detail = DB::table('trs_detail')->insert($data2);
+        }
+
+        $cek = Log::channel('database')->info($save_detail);
         $query = DB::getQueryLog();
         $query = end($query);
-        $this->save_log('tambah data transaksi Inventaris' ,json_encode($query));
+        $this->save_log('tambah data transaksi inventaris' ,json_encode($query));
 
         Alert::success('Success', 'Data berhasil di Simpan');
         return redirect('transaksi_data/invtentaris_trans');
@@ -246,60 +225,75 @@ class TransaksiInvController extends Controller
 
     public function edit($id)
     {
-        $trsInv = TransaksiDataModel::with(['trsHasData'=> function ($q){
-            $q->with(['manajemenHasMerk','manajemenHasType','manajemenHasKondisi','manajemenHasSupplier']);
-        },'trsHasPegawai','trsHasSubBagian','trsHasBagian','trsHasPic'])
-        ->orderBy('trs_id', 'asc')->where('trs_jenis_id',4)->where('trs_id', $id)->first();
+        $detail = TransaksiModels::with(['trsDetail'=> function($q){
+            $q->with(['trsHasPegawai2' => function($q){
+                $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+            }]);
+        }])->where('trs_id', $id)->first();
 
-        $dataInv = DataManajemenModels::where('data_manajemen_kode_id',4)->get();
+        $dataInv = StokModels::where('data_status_id',1)->where('data_jumlah', '>', 0)->where('data_kategory_id',5)->get();
         $dataPegawai = PegawaiModels::get();
-        $kelompok = DataKelompokModels::get();
         $gedung = GedungModels::get();
         $ruangan = RuanganModels::get();
         
         //  dd($trsInv->trsHasData);
-        return \view('transaksi/inventaris.edit', \compact('trsInv', 'dataPegawai', 'kelompok', 'dataInv', 'gedung', 'ruangan'));
+        return \view('transaksi/inventaris.edit', \compact('dataInv', 'dataPegawai', 'detail', 'gedung', 'ruangan'));
     }
 
     public function update(Request $request , $id)
     {
-        // dd($id);
+        $tgl = date("Y-m-d", strtotime($request->tgl) );
+
         $request->validate([
-           
             'keterangan' => 'required',
-            'pegawai' => 'required',
-            'bagian' => 'required',
-            'subBagian' => 'required',
-            'kelompok' => 'required',
-            'gedung' => 'required',
-            'ruangan' => 'required',
+            'tgl' => 'required',
+
         ],
         [
             'keterangan.required' => 'Keterangan tidak boleh kosong!',
-            'pegawai.required' => 'Pegawai tidak boleh kosong!',
-            'bagian.required' => 'Bagian tidak boleh kosong!',
-            'subBagian.required' => 'Sub Bagian tidak boleh kosong!',
-            'kelompok.required' => 'Kelompok tidak boleh kosong!',
-            'gedung.required' => 'Gedung tidak boleh kosong!',
-            'ruangan.required' => 'Ruangan tidak boleh kosong!',
-            
+            'tgl.required' => ' Tanggal tidak boleh kosong!',
         ]);
-        
+
         $save = [
-            'trs_name'=> $request->keterangan,
-            'trs_pegawai_id'=> $request->pegawai,
-            'trs_bagian_id'=> $request->bagian_,
-            'trs_sub_bagian_id'=> $request->subBagian_,
-            'trs_kelompok_id'=> $request->kelompok,
-            'trs_ruangan_id'=> $request->ruangan,
-            'trs_gedung_id'=> $request->gedung,
-            'trs_pic_id'=> Auth::user()->id,
-            'trs_date'=> Carbon::today(),
+            'trs_keterangan'=> $request->keterangan,
+            'trs_date'=> $tgl,
         ];
 
-        $updatedata = TransaksiDataModel::where('trs_id', $id)->update($save);
+        $updatedata = TransaksiModels::where('trs_id', $id)->update($save);
 
-        $cek = \Log::channel('database')->info($updatedata);
+
+        $getOld = ($request->old)? $request->old : [];
+        $checkFile = DetailTransaksi::where('trs_id', $id)->pluck('trs_detail_id');
+
+            foreach ($checkFile as $key => $file) {
+                if(!in_array($file, $getOld)){
+                    $getDelete =DetailTransaksi::where('trs_detail_id',$file)->first();
+                       
+                        $getDelete->delete();
+                    }
+                }  
+
+                $data2 = array();
+                if ($request->inventaris_insert) {
+                    foreach ($request->inventaris_insert as $key => $data) {
+                        $data2[$key]['trs_id'] = $id;
+                        $data2[$key]['trs_detail_pegawai_id'] = $request->pegawai_insert[$key];
+                        $data2[$key]['trs_detail_data_stok_id'] = $request->inventaris_insert[$key];
+                        $data2[$key]['trs_detail_gedung_id'] = $request->gedung_insert[$key];
+                        $data2[$key]['trs_detail_ruangan_id'] = $request->ruangan_insert[$key];
+                        $data2[$key]['trs_detail_jumlah'] = $request->jml_insert[$key];
+        
+                        $stok = StokModels::whereIn('data_stok_id',[$request->inventaris_insert[$key]]);
+                        $stok->decrement('data_jumlah', $request->jml_insert[$key]);
+        
+                        $stok = StokModels::whereIn('data_stok_id',[$request->inventaris_insert[$key]]);
+                        $stok->increment('data_dipakai', $request->jml_insert[$key]);
+                    }
+        
+                    $save_detail = DB::table('trs_detail')->insert($data2);
+                }
+
+        $cek = Log::channel('database')->info($updatedata);
         $query = DB::getQueryLog();
         $query = end($query);
         $this->save_log('update data transaksi Inventaris' ,json_encode($query));

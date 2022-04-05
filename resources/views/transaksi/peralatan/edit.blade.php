@@ -75,7 +75,7 @@
                                         <tr id="cek{{ $key}}">
                                             <td>
                                                 <select class="form-control perangkat" id="perangkat{{ $key}}" name="perangkat[]" required>
-                                                    <option value="{{old('perangkat')}}">Pilih Perangkat</option>
+                                                    <option value="{{old('perangkat')}}">Pilih Peralatan Kantor</option>
                                                     @foreach ($dataStok as $perangkat)
                                                     <option {{ ($item->trs_detail_data_stok_id == $perangkat->data_stok_id ) ? 'selected' : ''}}  value="{{$perangkat->data_stok_id}}" >{{ $perangkat->data_name }}</option>
                                                     @endforeach
@@ -153,7 +153,7 @@ $(document).ready(function () {
     $('#tbody').append(`<tr id="R${++rowIdx}">
          <td class="row-index text-center" width="20%">
             <select class="form-control perangkat_insert" id="perangkat_insert${rowIdx}" name="perangkat_insert[]" required>
-                <option value="{{old('perangkat')}}">Pilih Perangkat</option>
+                <option value="{{old('perangkat')}}">Pilih Peralatan Kantor</option>
                 @foreach ($dataStok as $stok)
                     <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
                 @endforeach

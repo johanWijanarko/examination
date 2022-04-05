@@ -1,5 +1,5 @@
 @extends('layout.app',[
-    
+
 ])
 @section('content')
 <style>
@@ -15,10 +15,8 @@
                 <div class="card card-img-holder">
                     <div class="card-body">
                         {{-- <div class="col-xs-12 col-sm-12 col-md-12"> --}}
-                        <h4 class="card-title">Edit Transaksi Inventaris<Menu></Menu></h4>
-                        <div class="alert alert-danger print-error-msg" style="display:none">
-                            <ul></ul>
-                        </div>
+                        <h4 class="card-title">Edit Transaksi Alat Kantor</h4><br>
+
                         @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
@@ -28,160 +26,100 @@
                                 </ul>
                             </div>
                         @endif
-                        <form method="post" action="{{ url('transaksi_data/invtentaris_trans/update', $trsInv->trs_id) }}" class="needs-validation-pegawai" id="save_data" enctype="multipart/form-data">
+                        <form method="post" action="{{ route('update_trsInv', $detail->trs_id) }}" class="needs-validation-pegawai" id="save_data" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Id Transaksi</label>
+                                    <label class="col-form-label mandatory">Kode Transaksi</label>
                                 </div>
-                                <div class="col-md-8">
-                                    <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $trsInv->trs_kode }}" placeholder="" readonly>
+                                <div class="col-md-5">
+                                    <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $detail->trs_kode }}" placeholder="" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Keterangan</label>
                                 </div>
-                                <div class="col-md-8">
-                                    <input type="text" name="keterangan" id="keterangan" value="{{ $trsInv->trs_name }}" class="form-control" placeholder="" required>
+                                <div class="col-md-5">
+                                    <input type="text" name="keterangan" id="keterangan" class="form-control"  value="{{ $detail->trs_keterangan }}" placeholder="" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <label class="col-form-label mandatory">Tanggal</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <input type="text" name="tgl" id="tgl" class="form-control" value="{{ date("d-m-Y", strtotime($detail->trs_date) )  }}" placeholder="" required>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Nama Inventaris</label>
+                                    <button type="button" class="add-new btn btn-info" id="addBtn">Add New Income</button>
                                 </div>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="inv" name="inv" required>
-                                        <option value="{{old('inv')}}">Pilih Inventaris</option>
-                                        @foreach ($dataInv as $inv)
-                                        <option {{ ($trsInv->trs_data_id == $inv->data_manajemen_id ) ? 'selected' : ''}}  value="{{$inv->data_manajemen_id}}" >{{ $inv->data_manajemen_name }}</option>
+                            </div>
+                            <div class="table-responsive mt-4">
+                                <table class="table table-bordered table-striped table-inka" id="data_perangkat" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th class="text-center" width="20%">Nama Alat Kantor</th>
+                                        <th class="text-center" width="20%">Pegawai</th>
+                                        <th class="text-center" width="20%">Gedung</th>
+                                        <th class="text-center" width="20%">Ruangan</th>
+                                        <th class="text-center" width="15%">Jumlah</th>
+                                        <th class="text-center" width="10%">Remove</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody id="tbody">
+                                        @foreach ($detail->trsDetail as $key=>$item)
+                                        <tr id="cek{{ $key}}">
+                                            <td>
+                                                <select class="form-control inventaris" id="inventaris{{ $key}}" name="inventaris[]" required>
+                                                    <option value="{{old('inventaris')}}">Pilih Inventaris</option>
+                                                    @foreach ($dataInv as $perangkat)
+                                                    <option {{ ($item->trs_detail_data_stok_id == $perangkat->data_stok_id ) ? 'selected' : ''}}  value="{{$perangkat->data_stok_id}}" >{{ $perangkat->data_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="form-control pegawai" id="pegawai{{ $key}}" name="pegawai[]" required>
+                                                    <option value="{{old('pegawai')}}">Pilih Pegawai</option>
+                                                    @foreach ($dataPegawai as $pegawai)
+                                                        <option {{  ($item->trs_detail_pegawai_id ==  $pegawai->pegawai_id ) ? 'selected' : '' }} value="{{ $pegawai->pegawai_id }}">{{ $pegawai->pegawai_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="form-control gedung" id="gedung{{ $key}}" name="gedung[]" required>
+                                                    <option value="{{old('gedung')}}">Pilih Gedung</option>
+                                                    @foreach ($gedung as $gdg)
+                                                        <option {{  ($item->trs_detail_gedung_id ==  $gdg->data_gedung_id ) ? 'selected' : '' }}  value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="form-control ruangan" id="ruangan{{ $key}}" name="ruangan[]" required>
+                                                    <option value="{{old('ruangan')}}">Pilih Ruangan</option>
+                                                    @foreach ($ruangan as $ru)
+                                                        <option {{ ($item->trs_detail_ruangan_id ==  $ru->data_ruangan_id ) ? 'selected' : '' }} value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" name="jml[]" id="jml" value="{{ $item->trs_detail_jumlah }}" class="form-control" placeholder="" required>
+                                            </td>
+                                            <td>
+                                                <a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="" data-placement="top" title="delete" class="btn btn-sm btn-danger rounded-circle del" ><i class="fas fa-trash"></i></a>
+                                                <input type="hidden" class="form-control" name="old[]" value="{{ $item->trs_detail_id }}" >
+                                            </td>
+                                        </tr>
                                         @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Jumlah Aplikasi</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="text" name="jumlah" id="jumlah" value="{{ $trsInv->trsHasData->data_manajemen_jumlah }}" class="form-control" placeholder="" readonly>
-                                </div>
-                            </div>
-                            <p>
-                                <a class="btn btn-primary" title="Detail" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                    <span data-toggle="tooltip" title="Detail"><i class="fas fa-eye"></i><span>
-                                </a>
-                            </p>
-                            <div class="collapse" id="collapseExample">
-                                <div class="card card-body" style="background-color: #F4F7FA">
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Merk</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="merk" id="merk" value="{{ $trsInv->trsHasData->manajemenHasMerk->nama_data_merk }}" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Type</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="type" id="type" value="{{ $trsInv->trsHasData->manajemenHasType->nama_data_type }}" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Kondisi</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="kondisi" id="kondisi" value="{{ $trsInv->trsHasData->manajemenHasKondisi->nama_data_kondisi }}" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Supplier</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="supplier" id="supplier" value="{{ $trsInv->trsHasData->manajemenHasSupplier->supplier_name }}" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Nama Pegawai</label>
-                                </div>
-                                <div class="col-md-8">
-                                   <select class="form-control" id="pegawai" name="pegawai" required>
-                                        <option value="{{old('pegawai')}}">Pilih Pegawai</option>
-                                        @foreach ($dataPegawai as $pegawai)
-                                            <option {{ ($trsInv->trs_pegawai_id ==  $pegawai->pegawai_id) ? 'selected' : '' }} value="{{ $pegawai->pegawai_id }}">{{ $pegawai->pegawai_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                             <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Bagian</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="hidden" class="form-control" name="bagian_" id="bagian_"  value="{{ $trsInv->trsHasBagian->bagian_id }}" readonly>
-                                    <input type="text" class="form-control" name="bagian" id="bagian"  value="{{ $trsInv->trsHasBagian->nama_bagian  }}" readonly>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Sub Bagian</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="hidden" class="form-control" name="subBagian_" id="subBagian_" value="{{ $trsInv->trsHasSubBagian->sub_bagian_id }}" readonly>
-                                    <input type="text" class="form-control" name="subBagian" id="subBagian"  value="{{ $trsInv->trsHasSubBagian->sub_bagian_nama }}" readonly>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Gedung</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="gedung" name="gedung" required>
-                                        <option value="{{old('gedung')}}">Pilih Gedung</option>
-                                        @foreach ($gedung as $gdg)
-                                            <option {{ ($trsInv->trs_gedung_id ==  $gdg->data_gedung_id) ? 'selected' : '' }} value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Ruangan</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="ruangan" name="ruangan" required>
-                                        <option value="{{old('ruangan')}}">Pilih Ruangan</option>
-                                        @foreach ($ruangan as $ru)
-                                            <option {{ ($trsInv->trs_ruangan_id ==  $ru->data_ruangan_id) ? 'selected' : '' }} value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Kelompok</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="kelompok" name="kelompok" required>
-                                        <option value="{{old('kelompok')}}">Pilih Kelompok</option>
-                                        @foreach ($kelompok as $kel)
-                                            <option {{ ($trsInv->trs_kelompok_id == $kel->data_kelompok_id ) ? 'selected' : '' }} value="{{ $kel->data_kelompok_id }}">{{ $kel->nama_data_kelompok }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-12">
-                                    <a href="{{ url('transaksi_data/invtentaris_trans') }}" class="btn btn-info">Kembali</a>
+                                    <a href="{{ url('transaksi_data/p_kantor_trans') }}" class="btn btn-info">Kembali</a>
                                     <button type="submit" id="disabled" class="btn btn-success">Simpan</button>
                                 </div>
                             </div>
@@ -195,74 +133,118 @@
 @endsection
 @push('page-script')
 <script>
-$(document).ready(function() {
-    $('#inv').select2({
-        allowClear: true,
-        disabled:true
+$(document).ready(function () {
+
+    $.each($("#cek{{ $key}}"), function( index, value ) {
+        $('.inventaris').select2(value)
+        $('.pegawai').select2(value)
+        $('.gedung').select2(value)
+        $('.ruangan').select2(value)
+        // console.log($('.perangkat').select2(value));
     });
-     $('#pegawai , #kelompok, #gedung, #ruangan' ).select2();
+  
+  // Denotes total number of rows
+  var rowIdx = 0;
+
+  // jQuery button click event to add a row
+  $('#addBtn').on('click', function () {
+
+    // Adding a row inside the tbody.
+    $('#tbody').append(`<tr id="R${++rowIdx}">
+         <td class="row-index text-center" width="20%">
+            <select class="form-control inventaris_insert" id="inventaris_insert${rowIdx}" name="inventaris_insert[]" required>
+                <option value="{{old('inventaris_insert')}}">Pilih Peralatan Inventaris</option>
+                @foreach ($dataInv as $stok)
+                    <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
+                @endforeach
+            </select>
+         </td>
+         <td class="row-index text-center" width="20%">
+            <select class="form-control pegawai_insert" id="pegawai_insert${rowIdx}" name="pegawai_insert[]" required>
+                <option value="{{old('pegawai')}}">Pilih Pegawai</option>
+                @foreach ($dataPegawai as $pegawai)
+                    <option value="{{ $pegawai->pegawai_id }}">{{ $pegawai->pegawai_name }}</option>
+                @endforeach
+            </select>
+        </td>
+        <td width="20%">
+            <select class="form-control gedung_insert" id="gedung_insert${rowIdx}" name="gedung_insert[]" required>
+                <option value="{{old('gedung')}}">Pilih Gedung</option>
+                @foreach ($gedung as $gdg)
+                    <option value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
+                @endforeach
+            </select>
+        </td>
+        <td width="20%">
+            <select class="form-control ruangan_insert" id="ruangan_insert${rowIdx}" name="ruangan_insert[]" required>
+                <option value="{{old('ruangan')}}">Pilih Ruangan</option>
+                @foreach ($ruangan as $ru)
+                    <option value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
+                @endforeach
+            </select>
+        </td>
+        <td width="15%">
+            <input type="text" name="jml_insert[]" id="jml" class="form-control" placeholder="" required>
+        </td>
+        <td width="10%">
+            <a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="" data-placement="top" title="delete" class="btn btn-sm btn-danger rounded-circle remove" ><i class="fas fa-trash"></i></a>
+
+        </td>
+        </tr>`);
+
+        $("#R"+rowIdx).find('.inventaris_insert').select2();
+        $("#R"+rowIdx).find('.pegawai_insert').select2();
+        $("#R"+rowIdx).find('.gedung_insert').select2();
+        $("#R"+rowIdx).find('.ruangan_insert').select2();
+  });
+
+  // jQuery button click event to remove a row.
+  $('#tbody').on('click', '.remove', function () {
+
+    // Getting all the rows next to the row
+    // containing the clicked button
+    var child = $(this).closest('tr').nextAll();
+
+    // Iterating across all the rows
+    // obtained to change the index
+    child.each(function () {
+
+      // Getting <tr> id.
+      var id = $(this).attr('id');
+
+      // Getting the <p> inside the .row-index class.
+      var idx = $(this).children('.row-index').children('p');
+
+      // Gets the row number from <tr> id.
+      var dig = parseInt(id.substring(1));
+
+      // Modifying row index.
+      idx.html(`Row ${dig - 1}`);
+
+      // Modifying row id.
+      $(this).attr('id', `R${dig - 1}`);
+    });
+
+    // Removing the current row.
+    $(this).closest('tr').remove();
+
+    // Decreasing total number of rows by 1.
+    rowIdx--;
+  });
+
+
+    $('#tbody').on('click', '.del', function () {
+        // Removing the current row.
+        $(this).closest('tr').remove();
+
+    });
 });
 
- $('#perangkat').on('change', function () {
-    //  console.log($(this).val());
-        $.ajax({
-            url: '{{ url('transaksi_data/perangkat_trans/getperangkat') }}',
-            method: 'get',
-            data: {id: $(this).val()},
-            dataType : 'json',
-            success: function (response) {
-                $('[name="merk"]').val(response.getMerk.nama_data_merk);
-                $('#type').val(response.typeKategory.nama_data_type);
-                $('#kondisi').val(response.kondisi.nama_data_kondisi);
-                $('#gedung').val(response.gedung.nama_data_gedung);
-                $('#ruangan').val(response.ruangan.nama_data_ruangan);
-                $('#supplier').val(response.supplier.supplier_name);
-               
-            }
-        })
-    });
 
+$('#tgl').datepicker({
+    format: 'dd-mm-yyyy',
+    // startDate: '-3d'
+});
 
-    $('#bagian').on('change', function () {
-        //  console.log($(this).val());
-        $.ajax({
-            url: '{{ url('transaksi_data/aplikasi_trans/getSubBagian') }}',
-            method: 'get',
-            data: {id: $(this).val()},
-            dataType : 'json',
-            success: function (response) {
-                // console.log(response)
-                $('#subBagian').empty();
-				        $('#subBagian').append(new Option('- Pilih -', ''))
-                $('#subBagian').trigger('change')
-              
-                response.forEach(item => {
-                    $('#subBagian').append(new Option(item.nama, item.id))
-                });
-               
-            }
-        })
-    });
-
-    $('#pegawai').on('change', function () {
-        //  console.log($(this).val());
-        $.ajax({
-            url: '{{ url('transaksi_data/perangkat_trans/getPegawai') }}',
-            method: 'get',
-            data: {id: $(this).val()},
-            dataType : 'json',
-            success: function (response) {
-                console.log(response)
-                $('#bagian_').val(response.pegawai_has_bagian.bagian_id)
-                $('#subBagian_').val(response.pegawai_has_sub_bagian.sub_bagian_id)
-
-                $('#bagian').val(response.pegawai_has_bagian.nama_bagian)
-                $('#subBagian').val(response.pegawai_has_sub_bagian.sub_bagian_nama)
-                
-                
-            }
-        })
-    });
-    
 </script>
 @endpush

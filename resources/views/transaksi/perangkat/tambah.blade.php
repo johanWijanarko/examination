@@ -15,7 +15,7 @@
                 <div class="card card-img-holder">
                     <div class="card-body">
                         {{-- <div class="col-xs-12 col-sm-12 col-md-12"> --}}
-                        <h4 class="card-title">Input Transaksi Perangkat</h4>
+                        <h4 class="card-title">Input Transaksi Perangkat</h4><br>
 
                         @if ($errors->any())
                             <div class="alert alert-danger">
@@ -26,13 +26,13 @@
                                 </ul>
                             </div>
                         @endif
-                        <form method="post" action="{{ url('transaksi_data/perangkat_trans/save') }}" class="needs-validation-pegawai" id="save_data" enctype="multipart/form-data">
+                        <form method="post" action="{{ route('save_trs') }}" class="needs-validation-pegawai" id="save_data" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Id Transaksi</label>
+                                    <label class="col-form-label mandatory">Kode Transaksi</label>
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-5">
                                     <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $getKodeTrs }}" placeholder="" readonly>
                                 </div>
                             </div>
@@ -40,125 +40,40 @@
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Keterangan</label>
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-5">
                                     <input type="text" name="keterangan" id="keterangan" class="form-control" placeholder="" required>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Nama Perangkat</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="perangkat" name="perangkat" required>
-                                        <option value="{{old('perangkat')}}">Pilih Perangkat</option>
-                                        @foreach ($dataStok as $stok)
-                                            <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Jumlah Perangkat</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="text" name="jumlah" id="jumlah" class="form-control" placeholder="" readonly>
-                                </div>
-                            </div>
-                            <p>
-                                <a class="btn btn-primary" title="Detail" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                    <span data-toggle="tooltip" title="Detail"><i class="fas fa-eye"></i><span>
-                                </a>
-                            </p>
-                            <div class="collapse" id="collapseExample">
-                                <div class="card card-body" style="background-color: #F4F7FA">
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Merk / Jenis</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="merk" id="merk" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Kondisi</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="kondisi" id="kondisi" class="form-control" placeholder="" readonly>
-                                            <input type="hidden" name="kondisi_id" id="kondisi_id" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Supplier</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="kondisi" id="sup" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
 
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Nama Pegawai</label>
+                                    <label class="col-form-label mandatory">Tanggal</label>
                                 </div>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="pegawai" name="pegawai" required>
-                                        <option value="{{old('pegawai')}}">Pilih Pegawai</option>
-                                        @foreach ($dataPegawai as $pegawai)
-                                            <option value="{{ $pegawai->pegawai_id }}">{{ $pegawai->pegawai_name }}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="col-md-5">
+                                    <input type="text" name="tgl" id="tgl" class="form-control" placeholder="" required>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Bagian</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="hidden" class="form-control" name="bagian_" id="bagian_" readonly>
-                                    <input type="text" class="form-control" name="bagian" id="bagian" readonly>
+                                    <button type="button" class="add-new btn btn-info" id="addBtn">Add New Income</button>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Sub Bagian</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="hidden" class="form-control" name="subBagian_" id="subBagian_" readonly>
-                                    <input type="text" class="form-control" name="subBagian" id="subBagian" readonly>
-                                </div>
+                            <div class="table-responsive mt-4">
+                                <table class="table table-bordered table-striped table-inka" id="data_perangkat" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th class="text-center">Nama Perangkat</th>
+                                        <th class="text-center">Pegawai</th>
+                                        <th class="text-center">Gedung</th>
+                                        <th class="text-center">Ruangan</th>
+                                        <th class="text-center">Jumlah</th>
+                                        <th class="text-center">Remove</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody id="tbody">
+                                    </tbody>
+                                </table>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Gedung</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="gedung" name="gedung" required>
-                                        <option value="{{old('gedung')}}">Pilih Gedung</option>
-                                        @foreach ($gedung as $gdg)
-                                            <option value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Ruangan</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="ruangan" name="ruangan" required>
-                                        <option value="{{old('ruangan')}}">Pilih Ruangan</option>
-                                        @foreach ($ruangan as $ru)
-                                            <option value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
                             <div class="form-group row">
                                 <div class="col-sm-12">
                                     <a href="{{ url('transaksi_data/perangkat_trans') }}" class="btn btn-info">Kembali</a>
@@ -175,17 +90,107 @@
 @endsection
 @push('page-script')
 <script>
-$(document).ready(function() {
-    $('#perangkat').select2();
-    $('#pegawai').select2();
-    // $('#subBagian').select2();
-    $('#kelompok').select2();
+$(document).ready(function () {
+
+  // Denotes total number of rows
+  var rowIdx = 0;
+
+  // jQuery button click event to add a row
+  $('#addBtn').on('click', function () {
+  
+    // Adding a row inside the tbody.
+    $('#tbody').append(`<tr id="R${++rowIdx}">
+         <td class="row-index text-center" width="20%">
+            <select class="form-control perangkat" id="perangkat${rowIdx}" name="perangkat[]" required>
+                <option value="{{old('perangkat')}}">Pilih Perangkat</option>
+                @foreach ($dataStok as $stok)
+                    <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
+                @endforeach
+            </select>
+         </td>
+         <td class="row-index text-center" width="20%">
+            <select class="form-control pegawai" id="pegawai${rowIdx}" name="pegawai[]" required>
+                <option value="{{old('pegawai')}}">Pilih Pegawai</option>
+                @foreach ($dataPegawai as $pegawai)
+                    <option value="{{ $pegawai->pegawai_id }}">{{ $pegawai->pegawai_name }}</option>
+                @endforeach
+            </select>
+        </td>
+        <td width="20%">
+            <select class="form-control gedung" id="gedung${rowIdx}" name="gedung[]" required>
+                <option value="{{old('gedung')}}">Pilih Gedung</option>
+                @foreach ($gedung as $gdg)
+                    <option value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
+                @endforeach
+            </select>
+        </td>
+        <td width="20%">
+            <select class="form-control ruangan" id="ruangan${rowIdx}" name="ruangan[]" required>
+                <option value="{{old('ruangan')}}">Pilih Ruangan</option>
+                @foreach ($ruangan as $ru)
+                    <option value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
+                @endforeach
+            </select>
+        </td>
+        <td width="15%">
+            <input type="text" name="jml[]" id="jml" class="form-control" placeholder="" required>
+        </td>
+        <td width="10%">
+            <a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="" data-placement="top" title="delete" class="btn btn-sm btn-danger rounded-circle remove" ><i class="fas fa-trash"></i></a>
+
+        </td>
+        </tr>`);
+        $("#R"+rowIdx).find('.pegawai').select2();
+        $("#R"+rowIdx).find('.perangkat').select2();
+        $("#R"+rowIdx).find('.gedung').select2();
+        $("#R"+rowIdx).find('.ruangan').select2();
+        // console.log($("#R"+rowIdx).find('.pegawai'))
+  });
+  // jQuery button click event to remove a row.
+  $('#tbody').on('click', '.remove', function () {
+
+    // Getting all the rows next to the row
+    // containing the clicked button
+    var child = $(this).closest('tr').nextAll();
+
+    // Iterating across all the rows
+    // obtained to change the index
+    child.each(function () {
+
+      // Getting <tr> id.
+      var id = $(this).attr('id');
+
+      // Getting the <p> inside the .row-index class.
+      var idx = $(this).children('.row-index').children('p');
+
+      // Gets the row number from <tr> id.
+      var dig = parseInt(id.substring(1));
+
+      // Modifying row index.
+      idx.html(`Row ${dig - 1}`);
+
+      // Modifying row id.
+      $(this).attr('id', `R${dig - 1}`);
+    });
+
+    // Removing the current row.
+    $(this).closest('tr').remove();
+
+    // Decreasing total number of rows by 1.
+    rowIdx--;
+  });
 });
 
-    $('#perangkat').on('change', function () {
+
+$('#tgl').datepicker({
+    format: 'dd-mm-yyyy',
+    // startDate: '-3d'
+});
+
+    $('#atk').on('change', function () {
         //  console.log($(this).val());
         $.ajax({
-            url: '{{ url('transaksi_data/perangkat_trans/getperangkat') }}',
+            url: '{{ url('transaksi_data/p_kantor_trans/gatAtk') }}',
             method: 'get',
             data: {id: $(this).val()},
             dataType : 'json',

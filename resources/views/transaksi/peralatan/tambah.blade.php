@@ -102,7 +102,7 @@ $(document).ready(function () {
     $('#tbody').append(`<tr id="R${++rowIdx}">
          <td class="row-index text-center" width="20%">
             <select class="form-control perangkat" id="perangkat${rowIdx}" name="perangkat[]" required>
-                <option value="{{old('perangkat')}}">Pilih Perangkat</option>
+                <option value="{{old('perangkat')}}">Pilih Peralatan Kantor</option>
                 @foreach ($dataStok as $stok)
                     <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
                 @endforeach
@@ -187,13 +187,6 @@ $('#tgl').datepicker({
     // startDate: '-3d'
 });
 
-$(document).ready(function() {
-    $("#pegawai").select2();
-    $('#atk').select2();
-    $('#gedung').select2();
-    $('#ruangan').select2();
-    // $('#kelompok').select2();
-});
 
     $('#atk').on('change', function () {
         //  console.log($(this).val());
@@ -235,28 +228,6 @@ $(document).ready(function() {
             }
         })
     });
-
-    $('#pegawai').on('change', function () {
-        //  console.log($(this).val());
-        $.ajax({
-            url: '{{ url('transaksi_data/perangkat_trans/getPegawai') }}',
-            method: 'get',
-            data: {id: $(this).val()},
-            dataType : 'json',
-            success: function (response) {
-                console.log(response)
-                $('#bagian_').val(response.pegawai_has_bagian.bagian_id)
-                $('#subBagian_').val(response.pegawai_has_sub_bagian.sub_bagian_id)
-
-                $('#bagian').val(response.pegawai_has_bagian.nama_bagian)
-                $('#subBagian').val(response.pegawai_has_sub_bagian.sub_bagian_nama)
-
-
-            }
-        })
-    });
-
-
 
 </script>
 @endpush

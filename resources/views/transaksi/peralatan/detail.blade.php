@@ -4,7 +4,7 @@
         @csrf
         <div class="form-group row">
             <div class="col-md-3">
-                <label class="col-form-label">Nama Perangkat</label>
+                <label class="col-form-label">Nama Peralatan Kantor</label>
             </div>
             <div class="col-md-8">
             @php

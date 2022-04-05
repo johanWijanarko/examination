@@ -32,9 +32,9 @@
                             {{ csrf_field() }}
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Id Transaksi</label>
+                                    <label class="col-form-label mandatory">Kode Transaksi</label>
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-5">
                                     <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $getKodeTrs }}" placeholder="" readonly>
                                 </div>
                             </div>
@@ -42,143 +42,39 @@
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Keterangan</label>
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-5">
                                     <input type="text" name="keterangan" id="keterangan" class="form-control" placeholder="" required>
                                 </div>
                             </div>
+
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Inventaris</label>
+                                    <label class="col-form-label mandatory">Tanggal</label>
                                 </div>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="inv" name="inv" required>
-                                        <option value="{{old('aplikasi')}}">Pilih Inventaris</option>
-                                        @foreach ($dataInv as $inv)
-                                            <option value="{{ $inv->data_manajemen_id }}">{{ $inv->data_manajemen_name }}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="col-md-5">
+                                    <input type="text" name="tgl" id="tgl" class="form-control" placeholder="" required>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Jumlah Perangkat</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="text" name="jumlah" id="jumlah" class="form-control" placeholder="" readonly>
+                                    <button type="button" class="add-new btn btn-info" id="addBtn">Add New Income</button>
                                 </div>
                             </div>
-                            <p>
-                                <a class="btn btn-primary" title="Detail" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                    <span data-toggle="tooltip" title="Detail"><i class="fas fa-eye"></i><span>
-                                </a>
-                            </p>
-                            <div class="collapse" id="collapseExample">
-                                <div class="card card-body" style="background-color: #F4F7FA">
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Merk / Jenis</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="merk" id="merk" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Type</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="type" id="type" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Kondisi</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="kondisi" id="kondisi" class="form-control" placeholder="" readonly>
-                                            <input type="hidden" name="kondisi_id" id="kondisi_id" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Supplier</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="supplier" id="supplier" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Nama Pegawai</label>
-                                </div>
-                                <div class="col-md-8">
-                                   <select class="form-control" id="pegawai" name="pegawai" required>
-                                        <option value="{{old('pegawai')}}">Pilih Pegawai</option>
-                                        @foreach ($dataPegawai as $pegawai)
-                                            <option value="{{ $pegawai->pegawai_id }}">{{ $pegawai->pegawai_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Bagian</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="hidden" class="form-control" name="bagian_" id="bagian_" readonly>
-                                    <input type="text" class="form-control" name="bagian" id="bagian" readonly>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Sub Bagian</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="hidden" class="form-control" name="subBagian_" id="subBagian_" readonly>
-                                    <input type="text" class="form-control" name="subBagian" id="subBagian" readonly>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Gedung</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="gedung" name="gedung" required>
-                                        <option value="{{old('gedung')}}">Pilih Gedung</option>
-                                        @foreach ($gedung as $gdg)
-                                            <option value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Ruangan</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="ruangan" name="ruangan" required>
-                                        <option value="{{old('ruangan')}}">Pilih Ruangan</option>
-                                        @foreach ($ruangan as $ru)
-                                            <option value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Kelompok</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="kelompok" name="kelompok" required>
-                                        <option value="{{old('kelompok')}}">Pilih Kelompok</option>
-                                        @foreach ($kelompok as $kel)
-                                            <option value="{{ $kel->data_kelompok_id }}">{{ $kel->nama_data_kelompok }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                            <div class="table-responsive mt-4">
+                                <table class="table table-bordered table-striped table-inka" id="data_perangkat" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th class="text-center">Nama Perangkat</th>
+                                        <th class="text-center">Pegawai</th>
+                                        <th class="text-center">Gedung</th>
+                                        <th class="text-center">Ruangan</th>
+                                        <th class="text-center">Jumlah</th>
+                                        <th class="text-center">Remove</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody id="tbody">
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-12">
@@ -196,72 +92,103 @@
 @endsection
 @push('page-script')
 <script>
-$(document).ready(function() {
-    $('#inv, #pegawai , #kelompok, #gedung, #ruangan' ).select2();
+$(document).ready(function () {
+
+// Denotes total number of rows
+var rowIdx = 0;
+
+// jQuery button click event to add a row
+$('#addBtn').on('click', function () {
+
+  // Adding a row inside the tbody.
+  $('#tbody').append(`<tr id="R${++rowIdx}">
+       <td class="row-index text-center" width="20%">
+          <select class="form-control inventaris" id="inventaris${rowIdx}" name="inventaris[]" required>
+              <option value="{{old('inventaris')}}">Pilih Inventaris</option>
+              @foreach ($dataInv as $stok)
+                  <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
+              @endforeach
+          </select>
+       </td>
+       <td class="row-index text-center" width="20%">
+          <select class="form-control pegawai" id="pegawai${rowIdx}" name="pegawai[]" required>
+              <option value="{{old('pegawai')}}">Pilih Pegawai</option>
+              @foreach ($dataPegawai as $pegawai)
+                  <option value="{{ $pegawai->pegawai_id }}">{{ $pegawai->pegawai_name }}</option>
+              @endforeach
+          </select>
+      </td>
+      <td width="20%">
+          <select class="form-control gedung" id="gedung${rowIdx}" name="gedung[]" required>
+              <option value="{{old('gedung')}}">Pilih Gedung</option>
+              @foreach ($gedung as $gdg)
+                  <option value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
+              @endforeach
+          </select>
+      </td>
+      <td width="20%">
+          <select class="form-control ruangan" id="ruangan${rowIdx}" name="ruangan[]" required>
+              <option value="{{old('ruangan')}}">Pilih Ruangan</option>
+              @foreach ($ruangan as $ru)
+                  <option value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
+              @endforeach
+          </select>
+      </td>
+      <td width="15%">
+          <input type="text" name="jml[]" id="jml" class="form-control" placeholder="" required>
+      </td>
+      <td width="10%">
+          <a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="" data-placement="top" title="delete" class="btn btn-sm btn-danger rounded-circle remove" ><i class="fas fa-trash"></i></a>
+
+      </td>
+      </tr>`);
+      $("#R"+rowIdx).find('.pegawai').select2();
+      $("#R"+rowIdx).find('.inventaris').select2();
+      $("#R"+rowIdx).find('.gedung').select2();
+      $("#R"+rowIdx).find('.ruangan').select2();
+      // console.log($("#R"+rowIdx).find('.pegawai'))
+});
+// jQuery button click event to remove a row.
+$('#tbody').on('click', '.remove', function () {
+
+  // Getting all the rows next to the row
+  // containing the clicked button
+  var child = $(this).closest('tr').nextAll();
+
+  // Iterating across all the rows
+  // obtained to change the index
+  child.each(function () {
+
+    // Getting <tr> id.
+    var id = $(this).attr('id');
+
+    // Getting the <p> inside the .row-index class.
+    var idx = $(this).children('.row-index').children('p');
+
+    // Gets the row number from <tr> id.
+    var dig = parseInt(id.substring(1));
+
+    // Modifying row index.
+    idx.html(`Row ${dig - 1}`);
+
+    // Modifying row id.
+    $(this).attr('id', `R${dig - 1}`);
+  });
+
+  // Removing the current row.
+  $(this).closest('tr').remove();
+
+  // Decreasing total number of rows by 1.
+  rowIdx--;
+});
 });
 
-    $('#inv').on('change', function () {
-    //  console.log($(this).val());
-        $.ajax({
-            url: '{{ url('transaksi_data/invtentaris_trans/gatInv') }}',
-            method: 'get',
-            data: {id: $(this).val()},
-            dataType : 'json',
-            success: function (response) {
-                console.log(response);
-                $('[name="merk"]').val(response.getMerk.nama_data_merk);
-                $('#type').val(response.typeKategory.nama_data_type);
-                $('#kondisi').val(response.kondisi.nama_data_kondisi);
-                $('#kondisi_id').val(response.kondisi.data_kondisi_id);
-                $('#supplier').val(response.supplier.supplier_name);
-                $('#jumlah').val(response.getInv.data_manajemen_jumlah+' Unit');
-               
-            }
-        })
-    });
 
-    $('#bagian').on('change', function () {
-        //  console.log($(this).val());
-        $.ajax({
-            url: '{{ url('transaksi_data/p_kantor_trans/getSubBagian') }}',
-            method: 'get',
-            data: {id: $(this).val()},
-            dataType : 'json',
-            success: function (response) {
-                // console.log(response)
-                $('#subBagian').empty();
-                        $('#subBagian').append(new Option('- Pilih -', ''))
-                $('#subBagian').trigger('change')
-                
-                response.forEach(item => {
-                    $('#subBagian').append(new Option(item.nama, item.id))
-                });
-                
-            }
-        })
-    });
+$('#tgl').datepicker({
+  format: 'dd-mm-yyyy',
+  // startDate: '-3d'
+});
 
-
-    $('#pegawai').on('change', function () {
-        //  console.log($(this).val());
-        $.ajax({
-            url: '{{ url('transaksi_data/perangkat_trans/getPegawai') }}',
-            method: 'get',
-            data: {id: $(this).val()},
-            dataType : 'json',
-            success: function (response) {
-                console.log(response)
-                $('#bagian_').val(response.pegawai_has_bagian.bagian_id)
-                $('#subBagian_').val(response.pegawai_has_sub_bagian.sub_bagian_id)
-
-                $('#bagian').val(response.pegawai_has_bagian.nama_bagian)
-                $('#subBagian').val(response.pegawai_has_sub_bagian.sub_bagian_nama)
-                
-               
-            }
-        })
-    });
-    
     
 </script>
 @endpush
