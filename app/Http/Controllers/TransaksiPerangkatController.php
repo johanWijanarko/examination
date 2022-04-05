@@ -172,7 +172,12 @@ class TransaksiPerangkatController extends Controller
 
     public function getPegawai(Request $request){
         $detailPegawai = PegawaiModels::with(['pegawaiHasBagian','pegawaiHasSubBagian'])->where('pegawai_id', $request->id)->first();
-        return response()->json($detailPegawai);
+        if($detailPegawai){
+
+            return response()->json($detailPegawai);
+        }else{
+            return '';
+        }
     }
 
     public function save(Request $request)

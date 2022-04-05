@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\StokModels;
 use App\Models\GedungModels;
 use App\Models\MutasiModels;
 use Illuminate\Http\Request;
 use App\Models\KondisiModels;
 use App\Models\PegawaiModels;
 use App\Models\RuanganModels;
+use App\Models\DetailTransaksi;
 use App\Models\MutasiHasDetail;
 use App\Models\ParBagianModels;
 use App\Models\SubBagianModels;
+use App\Models\TransaksiModels;
+use App\Models\TypeKtegoryModels;
 use App\Models\TransaksiDataModel;
 use Illuminate\Support\Facades\DB;
 use App\Models\DataManajemenModels;
@@ -30,14 +34,16 @@ class MutasiController extends Controller
     public function getDtaMutasi(Request $request)
     {
         $getMutasi = MutasiModels::with(['MutasiHasPegawai', 'mutasiHasKondisi', 'MutasiHasDetail'=> function($q){
-            $q->with('DetailMutasiHasPegawai');
-        }, 'MutasiHasBagian', 'MutasiHasSubBagian', 'MutasiHasGedung', 'MutasiHasRuangan'])->get();
+            $q->with(['DetailMutasiHasPegawai'=> function ($q){
+                $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+            }]);
+        }, 'MutasiHasGedung', 'MutasiHasRuangan'])->get();
         // dd($getMutasi);
         return DataTables::of($getMutasi)
             // ->addColumn('actions', 'transaksi/perangkat.actions')
             ->addColumn('details_url', function(MutasiModels $dp) {
                if ($dp) {
-                   $btn = '<button data-url="'.route("detailMutasi",['id_trs'=>$dp->mutasi_trs_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek">Detail</button>';
+                    $btn = '<button data-url="'.route("detailMutasi",['id_trs'=>$dp->mutasi_trs_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek">Detail</button>';
                     $btn = $btn.'<a href="'.route("editMutasi",['id'=>$dp->mutasi_id]).'" class="edit btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
                    return $btn;
                 }
@@ -62,14 +68,16 @@ class MutasiController extends Controller
                 return '';
             })
              ->addColumn('bagian', function (MutasiModels $dp) {
-            if ($dp->MutasiHasBagian) {
-                return $dp->MutasiHasBagian->nama_bagian;
-            }
-            return '';
+                if ($dp->MutasiHasPegawai) {
+                    if($dp->MutasiHasPegawai->pegawaiHasBagian)
+                        return $dp->MutasiHasPegawai->pegawaiHasBagian->nama_bagian;
+                }
+                return '';
             })
             ->addColumn('subBagian', function (MutasiModels $dp) {
-                if ($dp->MutasiHasSubBagian) {
-                    return $dp->MutasiHasSubBagian->sub_bagian_nama;
+                if ($dp->MutasiHasPegawai) {
+                    if($dp->MutasiHasPegawai->pegawaiHasSubBagian)
+                        return $dp->MutasiHasPegawai->pegawaiHasSubBagian->sub_bagian_nama;
                 }
                 return '';
             })
@@ -98,7 +106,9 @@ class MutasiController extends Controller
 
     public function detailMutasi($id_trs)
     {
-        $detailMutasi = MutasiHasDetail::with(['mutasiParent','DetailMutasiHasPegawai', 'DetailMutasiHasBagian', 'DetailMutasiHasSubBagian', 'DetailMutasiHasGedung', 'DetailMutasiHasRuangan', 'DetailMutasiHasKondisi'])->where('detail_mutasi_trs_id', $id_trs)->orderBy('detail_id', 'asc')->get();
+        $detailMutasi = MutasiHasDetail::with(['mutasiParent','DetailMutasiHasPegawai'=> function($q){
+            $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+        }, 'DetailMutasiHasGedung', 'DetailMutasiHasRuangan', 'DetailMutasiHasKondisi'])->where('detail_mutasi_trs_id', $id_trs)->orderBy('detail_id', 'asc')->get();
 
         return DataTables::of($detailMutasi)
         ->addColumn('keterangan', function (MutasiHasDetail $dp) {
@@ -120,14 +130,18 @@ class MutasiController extends Controller
             return '';
         })
         ->addColumn('bagian', function (MutasiHasDetail $dp) {
-            if ($dp->DetailMutasiHasBagian) {
-                return $dp->DetailMutasiHasBagian->nama_bagian;
+            if ($dp->DetailMutasiHasPegawai) {
+                if($dp->DetailMutasiHasPegawai->pegawaiHasBagian){
+                    return $dp->DetailMutasiHasPegawai->pegawaiHasBagian->nama_bagian;
+                }
             }
             return '';
         })
         ->addColumn('subBagian', function (MutasiHasDetail $dp) {
-            if ($dp->DetailMutasiHasSubBagian) {
-                return $dp->DetailMutasiHasSubBagian->sub_bagian_nama;
+            if ($dp->DetailMutasiHasPegawai) {
+                if($dp->DetailMutasiHasPegawai->pegawaiHasSubBagian){
+                    return $dp->DetailMutasiHasPegawai->pegawaiHasSubBagian->sub_bagian_nama;
+                }
             }
             return '';
         })
@@ -161,30 +175,31 @@ class MutasiController extends Controller
         $dataPegawai = PegawaiModels::get();
         $datakondisi = KondisiModels::get();
         $gedung = GedungModels::get();
+        $type = TypeKtegoryModels::get();
         $ruangan = RuanganModels::get();
-        return \view('transaksi/mutasi.tambah', \compact('dataPegawai', 'datakondisi','gedung', 'ruangan'));
+        return \view('transaksi/mutasi.tambah', \compact('dataPegawai', 'datakondisi','gedung', 'ruangan', 'type'));
     }
     
     public function getObejkMutasi(Request $request)
     {
-        $getOjekMutasi = DataManajemenModels::where('data_manajemen_kode_id', $request->id)
-        ->orderBy('data_manajemen_name', 'desc')
-        ->pluck('data_manajemen_name', 'data_manajemen_id');
+        $getOjekMutasi = StokModels::where('data_kategory_id', $request->id)
+        ->orderBy('data_stok_id', 'desc')
+        ->pluck('data_name', 'data_stok_id');
             
         return response()->json($getOjekMutasi);
     }
 
     public function getPegawiMutasi(Request $request)
     {
-        $getPegawiMutasi = TransaksiDataModel ::with('trsHasPegawai',)
-        ->where('trs_data_id', $request->id)
-        ->orderBy('trs_id', 'asc')->get()
+        $getPegawiMutasi = DetailTransaksi ::with('trsHasPegawai2')
+        ->where('trs_detail_data_stok_id', $request->id)
+        ->orderBy('trs_detail_id', 'asc')->get()
         // ->map('trsHasPegawai.pegawai_name', 'trsHasPegawai.pegawai_id');
         ->map(function ($p){
             return [
-                'id' => $p->trs_id,
-                'id_peg' => $p->trsHasPegawai->pegawai_id,
-                'pegawe_name' => $p->trsHasPegawai->pegawai_name,
+                'id' => $p->trs_detail_id,
+                'id_peg' => $p->trsHasPegawai2->pegawai_id,
+                'pegawe_name' => $p->trsHasPegawai2->pegawai_name,
             ];
         });
        
@@ -218,11 +233,9 @@ class MutasiController extends Controller
 
         $request->validate([
             'ketMutasi' => 'required',
-            'data_mutasi' => 'required',
+            'typeMutasi' => 'required',
             'obj' => 'required',
             'kePegawai' => 'required',
-            'bagian' => 'required',
-            'subBagian' => 'required',
             'gedung' => 'required',
             'ruangan' => 'required',
             'kondisi' => 'required',
@@ -233,8 +246,6 @@ class MutasiController extends Controller
             'data_mutasi.required' => 'Data Mutasi tidak boleh kosong!',
             'obj.required' => ' Objek Mutasi tidak boleh kosong!',
             'kePegawai.required' => 'Pegawai Sekarang tidak boleh kosong!',
-            'bagian.required' => 'Bagian tidak boleh kosong!',
-            'subBagian.required' => 'Sub Bagian tidak boleh kosong!',
             'gedung.required' => 'Gedung tidak boleh kosong!',
             'ruangan.required' => 'Ruangan tidak boleh kosong!',
             'kondisi.required' => 'Kondisi tidak boleh kosong!',
@@ -242,12 +253,10 @@ class MutasiController extends Controller
         
         $save = [
             'mutasi_keterangan'=> $request->ketMutasi,
-            'mutasi_data_id'=> $request->data_mutasi,
+            'mutasi_data_id'=> $request->typeMutasi,
             'mutasi_objek_id'=> $request->obj,
             'mutasi_pegawai_id'=> $request->kePegawai,
-            'mutasi_kondisi_id'=> $request->kondisi,
-            'mutasi_bagian_id'=>$request->bagian_,
-            'mutasi_sub_bagian_id'=>$request->subBagian_,
+            // 'mutasi_kondisi_id'=> $request->kondisi,
             'mutasi_gedung_id'=>$request->gedung,
             'mutasi_ruangan_id'=> $request->ruangan,
             'mutasi_trs_id'=> $trs_id,
@@ -256,7 +265,7 @@ class MutasiController extends Controller
         ];
         $mutasi =MutasiModels::create($save);
 
-        $cek = \Log::channel('database')->info($mutasi);
+        $cek = Log::channel('database')->info($mutasi);
         $query = DB::getQueryLog();
         $query = end($query);
         $this->save_log('tambah data mutasi' ,json_encode($query));
@@ -265,31 +274,26 @@ class MutasiController extends Controller
             'detail_mutasi_id'=>$mutasi->mutasi_id,
             'detail_mutasi_trs_id'=> $trs_id,
             'detail_mutasi_pegawai_id'=> $request->pegawai,
-            'detail_mutasi_bagian_id'=> $request->bagian_detail_id,
-            'detail_mutasi_sub_bagian_id'=> $request->sub_bagian_detail_id,
-            'detail_mutasi_gedung_id'=>$request->gedung_detail_id,
-            'detail_mutasi_ruangan_id'=>$request->ruangan_detail_id,
-            'detail_mutasi_kondisi_id'=> $request->kds_detail_id,
+            'detail_mutasi_gedung_id'=>$request->gedung,
+            'detail_mutasi_ruangan_id'=>$request->ruangan,
+            'detail_mutasi_kondisi_id'=> $request->kondisi,
             'detail_mutasi_tgl'=> Carbon::today(),
         ];
 
         $save_detail = DB::table('mutasi_has_detail')->insert($detailMutasi);
         
         $mutasiTrs = [
-            'trs_pegawai_id' => $request->kePegawai,
-            'trs_bagian_id' => $request->bagian_,
-            'trs_sub_bagian_id' => $request->subBagian_,
-            'trs_gedung_id' => $request->gedung,
-            'trs_ruangan_id' => $request->ruangan,
-            'trs_kondisi_id' => $request->kondisi,
-            'trs_status_id' => 5,
-            'trs_pic_id'=> Auth::user()->id,
-            'trs_date'=> Carbon::today(),
+            'trs_detail_pegawai_id' => $request->kePegawai,
+            'trs_detail_gedung_id' => $request->gedung,
+            'trs_detail_ruangan_id' => $request->ruangan,
+            'trs_detail_status' => 5,
+            'trs_detail_pic_id'=> Auth::user()->id,
+            'trs_detail_date'=> Carbon::today(),
         ];
-        $updateTrs = TransaksiDataModel::where('trs_id',$trs_id)->update($mutasiTrs);
+        $updateTrs = DetailTransaksi::where('trs_detail_id',$trs_id)->update($mutasiTrs);
 
-        $product = DataManajemenModels::find($request->obj);
-        $product->increment('data_manajemen_jumlah_mutasi', 1);
+        // $product = DataManajemenModels::find($request->obj);
+        // $product->increment('data_manajemen_jumlah_mutasi', 1);
         
         Alert::success('Success', 'Data berhasil di Simpan');
         return redirect('transaksi_data/mutasi');
@@ -366,7 +370,7 @@ class MutasiController extends Controller
             ];
             $mutasi =MutasiModels::where('mutasi_id', $id)->update($save1);
 
-            $cek = \Log::channel('database')->info($mutasi);
+            $cek = Log::channel('database')->info($mutasi);
             $query = DB::getQueryLog();
             $query = end($query);
             $this->save_log('edit data mutasi' ,json_encode($query));
@@ -388,7 +392,7 @@ class MutasiController extends Controller
             ];
             $mutasi =MutasiModels::where('mutasi_id', $id)->update($save2);
 
-            $cek = \Log::channel('database')->info($mutasi);
+            $cek = Log::channel('database')->info($mutasi);
             $query = DB::getQueryLog();
             $query = end($query);
             $this->save_log('edit data mutasi' ,json_encode($query));

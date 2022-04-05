@@ -40,15 +40,15 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Data Mutasi</label>
+                                    <label class="col-form-label mandatory">Type Mutasi / Kategori</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <select class="form-control" id="data_mutasi" name="data_mutasi" required>
-                                        <option value="">Pilih Data Mutasi</option>
-                                        <option value="1">Perangkat</option>
-                                        <option value="2">Aplikasi</option>
-                                        <option value="3">Alat Kantor</option>
-                                        <option value="4">Inventaris Lainnya</option>
+                                    <select class="form-control" id="typeMutasi" name="typeMutasi" required>
+                                        <option value="">Pilih Type</option>
+                                        @foreach ($type as $item)
+                                        <option value="{{ $item->data_type_id }}">{{ $item->nama_data_type}}</option>
+                                            
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -72,60 +72,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <p>
-                                <a class="btn btn-primary" title="Detail" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                    <span data-toggle="tooltip" title="Detail"><i class="fas fa-eye"></i><span>
-                                </a>
-                            </p>
-                            <div class="collapse" id="collapseExample">
-                                <div class="card card-body" style="background-color: #F4F7FA">
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Bagian</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="bagian_detail" id="bagian_detail" class="form-control" placeholder="" readonly>
-                                            <input type="hidden" name="bagian_detail_id" id="bagian_detail_id" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Sub Bagian</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="sub_bagian_detail" id="sub_bagian_detail" class="form-control" placeholder="" readonly>
-                                            <input type="hidden" name="sub_bagian_detail_id" id="sub_bagian_detail_id" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Gedung</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="gedung_detail" id="gedung_detail" class="form-control" placeholder="" readonly>
-                                            <input type="hidden" name="gedung_detail_id" id="gedung_detail_id" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Ruangan</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="ruangan_detail" id="ruangan_detail" class="form-control" placeholder="" readonly>
-                                            <input type="hidden" name="ruangan_detail_id" id="ruangan_detail_id" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Kondisi</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="kds_detail" id="kds_detail" class="form-control" placeholder="" readonly>
-                                            <input type="hidden" name="kds_detail_id" id="kds_detail_id" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                           
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Ke Pegawai</label>
@@ -139,24 +86,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Bagian</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="hidden" class="form-control" name="bagian_" id="bagian_" readonly>
-                                    <input type="text" class="form-control" name="bagian" id="bagian" readonly>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Sub Bagian</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="hidden" class="form-control" name="subBagian_" id="subBagian_" readonly>
-                                    <input type="text" class="form-control" name="subBagian" id="subBagian" readonly>
-                                </div>
-                            </div>
+                            
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Gedung</label>
@@ -213,10 +143,10 @@
 @push('page-script')
 <script>
 $(document).ready(function() {
-    $('#data_mutasi, #pegawai, #kePegawai, #gedung, #ruangan, #kondisi, #obj').select2();
+    $('#typeMutasi, #pegawai, #kePegawai, #gedung, #ruangan, #kondisi, #obj').select2();
 });
 
-$('#data_mutasi').on('change', function () {
+$('#typeMutasi').on('change', function () {
     //  console.log($(this).val());
     $.ajax({
         url: '{{ url('transaksi_data/mutasi/getObejkMutasi') }}',
@@ -230,7 +160,7 @@ $('#data_mutasi').on('change', function () {
             $('#obj').trigger('change')
             
             $.each(response, function (id, name) {
-            // console.log(name)
+            console.log(id)
                 $('#obj').append(new Option(name, id))
                 // console.log( $('#obj').append(new Option(name, id)))
             })
@@ -246,12 +176,12 @@ $('#obj').on('change', function () {
         data: {id: $(this).val()},
         dataType : 'json',
         success: function (response) {
-            // console.log(response)
             $('#pegawai').empty();
-                    $('#pegawai').append(new Option('- Pilih -', ''))
+            $('#pegawai').append(new Option('- Pilih -', ''))
             $('#pegawai').trigger('change')
             
             response.forEach(item => {
+                console.log(item)
                 $('#pegawai').append(new Option(item.pegawe_name, item.id_peg+':'+item.id))
             });
         }
@@ -266,44 +196,10 @@ $('#pegawai').on('change', function () {
         data: {id: $(this).val()},
         dataType : 'json',
         success: function (response) {
-            console.log(response)
-            $('#bagian_detail').val(response.trs_has_bagian.nama_bagian);
-            $('#sub_bagian_detail').val(response.trs_has_sub_bagian.sub_bagian_nama);
-            $('#gedung_detail').val(response.trs_has_gedung.nama_data_gedung);
-            $('#ruangan_detail').val(response.trs_has_ruangan.nama_data_ruangan);
-            $('#kds_detail').val(response.trs_has_data.manajemen_has_kondisi.nama_data_kondisi);
-            
-            //   insert to  pivot table
-
-            $('#bagian_detail_id').val(response.trs_has_bagian.bagian_id);
-            $('#sub_bagian_detail_id').val(response.trs_has_sub_bagian.sub_bagian_id);
-            $('#gedung_detail_id').val(response.trs_has_gedung.data_gedung_id);
-            $('#ruangan_detail_id').val(response.trs_has_ruangan.data_ruangan_id);
-            $('#kds_detail_id').val(response.trs_has_data.manajemen_has_kondisi.data_kondisi_id);
+           
         }
     })
-});
-
-$('#bagian').on('change', function () {
-        //  console.log($(this).val());
-        $.ajax({
-            url: '{{ url('transaksi_data/perangkat_trans/getSubBagian') }}',
-            method: 'get',
-            data: {id: $(this).val()},
-            dataType : 'json',
-            success: function (response) {
-                // console.log(response)
-                $('#subBagian').empty();
-				        $('#subBagian').append(new Option('- Pilih -', ''))
-                $('#subBagian').trigger('change')
-              
-                response.forEach(item => {
-                    $('#subBagian').append(new Option(item.nama, item.id))
-                });
-               
-            }
-        })
-    });  
+});  
     
 
     $('#kePegawai').on('change', function () {
@@ -314,12 +210,6 @@ $('#bagian').on('change', function () {
             data: {id: $(this).val()},
             dataType : 'json',
             success: function (response) {
-                console.log(response)
-                $('#bagian_').val(response.pegawai_has_bagian.bagian_id)
-                $('#subBagian_').val(response.pegawai_has_sub_bagian.sub_bagian_id)
-
-                $('#bagian').val(response.pegawai_has_bagian.nama_bagian)
-                $('#subBagian').val(response.pegawai_has_sub_bagian.sub_bagian_nama)
                 
                
             }
