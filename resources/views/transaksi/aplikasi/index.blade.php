@@ -28,7 +28,7 @@
                     <tr>
                         <th>Action</th>
                         <th>No</th>
-                        <th>Nama Alat Kantor</th>
+                        <th>Nama Aplikasi</th>
                         <th>Nama Pegawai</th>
                         <th>Status</th>
                         <th>Keterangan</th>

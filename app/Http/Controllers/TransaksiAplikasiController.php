@@ -39,15 +39,19 @@ class TransaksiAplikasiController extends Controller
 
     public function getTrsaplikasi()
     {
-        $trsDetail = TransaksiModels::whereHas('trsDetail', function($q){
-            $q->whereHas('trsHasPegawai2');
+        $trsDetail = TransaksiModels::with(['trsDetail' =>function ($q){
+            $q->with(['trsHasPegawai2' ]);
+            $q->whereHas('trsHasStok2', function($q){
+                $q->where('data_kategory_id',13);
+            });
+        }])->whereHas('trsDetail', function ($q){
             $q->whereHas('trsHasStok2', function($q){
                 $q->where('data_kategory_id',13);
             });
         })
         ->orderBy('trs_id', 'asc')->where('trs_status_id',1)
         ->get();
-        
+
         return DataTables::of($trsDetail)
         ->addColumn('details_url', function(TransaksiModels $dp) {
            if ($dp->trs_id) {
@@ -120,8 +124,7 @@ class TransaksiAplikasiController extends Controller
  
 
     public function detail($id){
-        
-          $details = TransaksiModels::with(['trsDetail'=> function($q){
+        $details = TransaksiModels::with(['trsDetail'=> function($q){
             $q->with(['trsHasPegawai2' => function($q){
                 $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
             }, 'trsHasStok2'=> function ($q){
@@ -129,11 +132,9 @@ class TransaksiAplikasiController extends Controller
             }]);
             $q->with(['trsHasGedung', 'trsHasRuangan']);
             $q->whereHas('trsHasStok2', function($q){
-                $q->where('data_kategory_id',4);
+                $q->where('data_kategory_id',13);
             });
         }])->where('trs_id', $id)->first();
-        // $data = $details->first()->stokHasMerk;
-        // dd($details);
 
         return view('transaksi/aplikasi.detail',compact('details'));
     }
@@ -207,19 +208,19 @@ class TransaksiAplikasiController extends Controller
         // dd($trsAtk->trs_id);
         $trsId = $trsAtk->trs_id;
         $data2 = array();
-        if ($request->perangkat) {
-            foreach ($request->perangkat as $key => $data) {
+        if ($request->aplikasi) {
+            foreach ($request->aplikasi as $key => $data) {
                 $data2[$key]['trs_id'] = $trsId;
                 $data2[$key]['trs_detail_pegawai_id'] = $request->pegawai[$key];
-                $data2[$key]['trs_detail_data_stok_id'] = $request->perangkat[$key];
+                $data2[$key]['trs_detail_data_stok_id'] = $request->aplikasi[$key];
                 $data2[$key]['trs_detail_gedung_id'] = $request->gedung[$key];
                 $data2[$key]['trs_detail_ruangan_id'] = $request->ruangan[$key];
                 $data2[$key]['trs_detail_jumlah'] = $request->jml[$key];
 
-                $stok = StokModels::whereIn('data_stok_id',[$request->perangkat[$key]]);
-                $stok->decrement('data_jumlah', $request->jml[$key]);
+                // $stok = StokModels::whereIn('data_stok_id',[$request->aplikasi[$key]]);
+                // $stok->decrement('data_jumlah', $request->jml[$key]);
 
-                $stok = StokModels::whereIn('data_stok_id',[$request->perangkat[$key]]);
+                $stok = StokModels::whereIn('data_stok_id',[$request->aplikasi[$key]]);
                 $stok->increment('data_dipakai', $request->jml[$key]);
             }
 
@@ -232,28 +233,17 @@ class TransaksiAplikasiController extends Controller
         $this->save_log('tambah data transaksi atk' ,json_encode($query));
 
         Alert::success('Success', 'Data berhasil di Simpan');
-        return redirect('transaksi_data/p_kantor_trans');
+        return redirect('transaksi_data/aplikasi_trans');
     }
 
     public function edit($id){
-
-        // $trsPerangkat = TransaksiModels::with(['trsHasStok'=> function ($q){
-        //     $q->with(['stokHasMerk','stokHasType','stokHasKondisi','stokHasSupplier']);
-        // },'trsHasPegawai'=> function ($q){
-        //     $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
-        // },'trsHasGedung','trsHasRuangan','trsHasPic'])
-        // ->orderBy('trs_id', 'asc')->where('trs_status_id',1)->where('trs_id', $id)
-        //  ->whereHas('trsHasStok', function ($q){
-        //     $q->where('data_kategory_id',13);
-        // })->first();
-
         $detail = TransaksiModels::with(['trsDetail'=> function($q){
             $q->with(['trsHasPegawai2' => function($q){
                 $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
             }]);
         }])->where('trs_id', $id)->first();
 
-        $dataStok = StokModels::where('data_status_id',1)->where('data_jumlah', '>', 0)->where('data_kategory_id',3)->get();
+        $dataStok = StokModels::where('data_status_id',1)->where('data_jumlah', '>', 0)->where('data_kategory_id',13)->get();
         $dataPegawai = PegawaiModels::get();
         $gedung = GedungModels::get();
         $ruangan = RuanganModels::get();
@@ -294,19 +284,19 @@ class TransaksiAplikasiController extends Controller
                 }  
 
                 $data2 = array();
-                if ($request->perangkat_insert) {
-                    foreach ($request->perangkat_insert as $key => $data) {
+                if ($request->aplikasi_insert) {
+                    foreach ($request->aplikasi_insert as $key => $data) {
                         $data2[$key]['trs_id'] = $id;
                         $data2[$key]['trs_detail_pegawai_id'] = $request->pegawai_insert[$key];
-                        $data2[$key]['trs_detail_data_stok_id'] = $request->perangkat_insert[$key];
+                        $data2[$key]['trs_detail_data_stok_id'] = $request->aplikasi_insert[$key];
                         $data2[$key]['trs_detail_gedung_id'] = $request->gedung_insert[$key];
                         $data2[$key]['trs_detail_ruangan_id'] = $request->ruangan_insert[$key];
                         $data2[$key]['trs_detail_jumlah'] = $request->jml_insert[$key];
         
-                        $stok = StokModels::whereIn('data_stok_id',[$request->perangkat_insert[$key]]);
-                        $stok->decrement('data_jumlah', $request->jml_insert[$key]);
+                        // $stok = StokModels::whereIn('data_stok_id',[$request->aplikasi_insert[$key]]);
+                        // $stok->decrement('data_jumlah', $request->jml_insert[$key]);
         
-                        $stok = StokModels::whereIn('data_stok_id',[$request->perangkat_insert[$key]]);
+                        $stok = StokModels::whereIn('data_stok_id',[$request->aplikasi_insert[$key]]);
                         $stok->increment('data_dipakai', $request->jml_insert[$key]);
                     }
         
@@ -316,7 +306,7 @@ class TransaksiAplikasiController extends Controller
         $cek = Log::channel('database')->info($updatedata);
         $query = DB::getQueryLog();
         $query = end($query);
-        $this->save_log('update data transaksi perangkat' ,json_encode($query));
+        $this->save_log('update data transaksi aplikasi' ,json_encode($query));
 
         Alert::success('Success', 'Data berhasil di Update');
         return redirect('transaksi_data/aplikasi_trans');

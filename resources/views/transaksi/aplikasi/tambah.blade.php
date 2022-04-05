@@ -15,7 +15,7 @@
                 <div class="card card-img-holder">
                     <div class="card-body">
                         {{-- <div class="col-xs-12 col-sm-12 col-md-12"> --}}
-                        <h4 class="card-title">Input Transaksi Alat Kantor</h4><br>
+                        <h4 class="card-title">Input Transaksi Aplikasi</h4><br>
 
                         @if ($errors->any())
                             <div class="alert alert-danger">
@@ -26,7 +26,7 @@
                                 </ul>
                             </div>
                         @endif
-                        <form method="post" action="{{ route('save_trs_atk') }}" class="needs-validation-pegawai" id="save_data" enctype="multipart/form-data">
+                        <form method="post" action="{{ route('save_trs_aplikasi') }}" class="needs-validation-pegawai" id="save_data" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group row">
                                 <div class="col-md-3">
@@ -62,7 +62,7 @@
                                 <table class="table table-bordered table-striped table-inka" id="data_perangkat" width="100%">
                                     <thead>
                                       <tr>
-                                        <th class="text-center">Nama Alat Kantor</th>
+                                        <th class="text-center">Nama Aplikasi</th>
                                         <th class="text-center">Pegawai</th>
                                         <th class="text-center">Gedung</th>
                                         <th class="text-center">Ruangan</th>
@@ -90,30 +90,26 @@
 @endsection
 @push('page-script')
 <script>
-
 $(document).ready(function () {
-    $("#pegawai").select2({ width: '300px', dropdownCssClass: "bigdrop" });
-    $('#atk').select2();
-    $('#gedung').select2();
-    $('#ruangan').select2();
+
   // Denotes total number of rows
   var rowIdx = 0;
 
   // jQuery button click event to add a row
   $('#addBtn').on('click', function () {
-
+  
     // Adding a row inside the tbody.
     $('#tbody').append(`<tr id="R${++rowIdx}">
          <td class="row-index text-center" width="20%">
-            <select class="form-control" id="perangkat" name="perangkat[]" required>
-                <option value="{{old('perangkat')}}">Pilih Perangkat</option>
+            <select class="form-control aplikasi" id="aplikasi${rowIdx}" name="aplikasi[]" required>
+                <option value="{{old('aplikasi')}}">Pilih Aplikasi</option>
                 @foreach ($dataStok as $stok)
                     <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
                 @endforeach
             </select>
          </td>
          <td class="row-index text-center" width="20%">
-            <select class="form-control" id="pegawai" name="pegawai[]" required>
+            <select class="form-control pegawai" id="pegawai${rowIdx}" name="pegawai[]" required>
                 <option value="{{old('pegawai')}}">Pilih Pegawai</option>
                 @foreach ($dataPegawai as $pegawai)
                     <option value="{{ $pegawai->pegawai_id }}">{{ $pegawai->pegawai_name }}</option>
@@ -121,7 +117,7 @@ $(document).ready(function () {
             </select>
         </td>
         <td width="20%">
-            <select class="form-control" id="gedung" name="gedung[]" required>
+            <select class="form-control gedung" id="gedung${rowIdx}" name="gedung[]" required>
                 <option value="{{old('gedung')}}">Pilih Gedung</option>
                 @foreach ($gedung as $gdg)
                     <option value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
@@ -129,7 +125,7 @@ $(document).ready(function () {
             </select>
         </td>
         <td width="20%">
-            <select class="form-control" id="ruangan" name="ruangan[]" required>
+            <select class="form-control ruangan" id="ruangan${rowIdx}" name="ruangan[]" required>
                 <option value="{{old('ruangan')}}">Pilih Ruangan</option>
                 @foreach ($ruangan as $ru)
                     <option value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
@@ -144,8 +140,12 @@ $(document).ready(function () {
 
         </td>
         </tr>`);
+        $("#R"+rowIdx).find('.pegawai').select2();
+        $("#R"+rowIdx).find('.aplikasi').select2();
+        $("#R"+rowIdx).find('.gedung').select2();
+        $("#R"+rowIdx).find('.ruangan').select2();
+        // console.log($("#R"+rowIdx).find('.pegawai'))
   });
-
   // jQuery button click event to remove a row.
   $('#tbody').on('click', '.remove', function () {
 
@@ -187,7 +187,13 @@ $('#tgl').datepicker({
     // startDate: '-3d'
 });
 
-
+$(document).ready(function() {
+    $("#pegawai").select2();
+    $('#atk').select2();
+    $('#gedung').select2();
+    $('#ruangan').select2();
+    // $('#kelompok').select2();
+});
 
     $('#atk').on('change', function () {
         //  console.log($(this).val());

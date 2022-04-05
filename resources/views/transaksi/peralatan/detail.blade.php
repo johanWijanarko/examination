@@ -64,7 +64,6 @@
                             @foreach ($detail->hasManyPegawai as $key => $value)
                                 @if ($value->pegawaiHasBagian)
                                     <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $key_1+1}}. {{ $value->pegawaiHasBagian->nama_bagian }}" placeholder="" readonly>
-                                    
                                 @endif
                             @endforeach
                         @endif
