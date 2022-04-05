@@ -40,16 +40,17 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Data Mutasi</label>
+                                    <label class="col-form-label mandatory">Type / Kategori</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <select class="form-control" id="data_mutasi" name="data_mutasi" required>
-                                        <option value="">Pilih Data Mutasi</option>
-                                        <option value="1" {{($editMutasi->mutasi_data_id == '1' )? 'selected' : ''}}>Perangkat</option>
-                                        <option value="2" {{($editMutasi->mutasi_data_id == '2' )? 'selected' : ''}}>Aplikasi</option>
-                                        <option value="3" {{($editMutasi->mutasi_data_id == '3' )? 'selected' : ''}}>Alat Kantor</option>
-                                        <option value="4" {{($editMutasi->mutasi_data_id == '3' )? 'selected' : ''}}>Inventaris Lainnya</option>
+                                    <select class="form-control" id="typeMutasi" name="typeMutasi" required>
+                                        <option value="">Pilih Type / Kategori</option>
+                                        @foreach ($type as $tp)
+                                            <option {{ ($editMutasi->mutasi_data_id == $tp->data_type_id ) ? 'selected' : ''}}  value="{{$tp->data_type_id}}" >{{$tp->nama_data_type}}</option>
+                                        @endforeach
                                     </select>
+                                    <input type="text" value="{{ $editMutasi->MutasiHasDetail->detail_id }}">
+                                    <input type="text" value="{{$editMutasi->MutasiHasDetail->detail_mutasi_trs_id}}" id="">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -60,7 +61,7 @@
                                     <select class="form-control" id="obj" name="obj" required>
                                         <option value="{{old('obj')}}">Pilih Objek Mutasi</option>
                                         @foreach ($objekMutasi as $obj)
-                                            <option {{ ($editMutasi->mutasi_objek_id == $obj->data_manajemen_id ) ? 'selected' : ''}}  value="{{$obj->data_manajemen_id}}" >{{$obj->data_manajemen_name}}
+                                            <option {{ ($editMutasi->mutasi_objek_id == $obj->data_stok_id ) ? 'selected' : ''}}  value="{{$obj->data_stok_id}}" >{{$obj->data_name}}
                                             </option>
                                         @endforeach 
                                     </select>
@@ -78,64 +79,10 @@
                                             </option>
                                         @endforeach 
                                     </select>
+                                    
                                 </div>
                             </div>
-                            <p>
-                                <a class="btn btn-primary" title="Detail" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                    <span data-toggle="tooltip" title="Detail"><i class="fas fa-eye"></i><span>
-                                </a>
-                            </p>
-                            <div class="collapse" id="collapseExample">
-                                <div class="card card-body" style="background-color: #F4F7FA">
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Bagian</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="bagian_detail" value="{{ $editMutasi->MutasiHasDetail->DetailMutasiHasBagian->nama_bagian }}" id="bagian_detail" class="form-control" placeholder="" readonly>
-                                            <input type="hidden" name="bagian_detail_id" id="bagian_detail_id" value="{{ $editMutasi->MutasiHasDetail->detail_mutasi_bagian_id }}" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Sub Bagian</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="sub_bagian_detail" id="sub_bagian_detail" value="{{ $editMutasi->MutasiHasDetail->DetailMutasiHasSubBagian->sub_bagian_nama }}" class="form-control" placeholder="" readonly>
-                                            <input type="hidden" name="sub_bagian_detail_id" id="sub_bagian_detail_id"
-                                            value="{{ $editMutasi->MutasiHasDetail->DetailMutasiHasSubBagian->sub_bagian_id }}"
-                                            class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Gedung</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="gedung_detail" id="gedung_detail" value="{{ $editMutasi->MutasiHasDetail->DetailMutasiHasGedung->nama_data_gedung }}" class="form-control" placeholder="" readonly>
-                                            <input type="hidden" name="gedung_detail_id" id="gedung_detail_id" value="{{ $editMutasi->MutasiHasDetail->DetailMutasiHasGedung->data_gedung_id }}" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Ruangan</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="ruangan_detail" id="ruangan_detail" value="{{ $editMutasi->MutasiHasDetail->DetailMutasiHasRuangan->nama_data_ruangan }}" class="form-control" placeholder="" readonly>
-                                            <input type="hidden" name="ruangan_detail_id" id="ruangan_detail_id" value="{{ $editMutasi->MutasiHasDetail->DetailMutasiHasRuangan->data_ruangan_id }}" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Kondisi</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="kds_detail" id="kds_detail" value="{{ $editMutasi->MutasiHasDetail->DetailMutasiHasKondisi->nama_data_kondisi }}" class="form-control" placeholder="" readonly>
-                                            <input type="hidden" name="kds_detail_id" id="kds_detail_id" value="{{ $editMutasi->MutasiHasDetail->DetailMutasiHasKondisi->data_kondisi_id }}" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Ke Pegawai</label>
@@ -150,24 +97,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Bagian</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="hidden" class="form-control" name="bagian_" id="bagian_"  value="{{ $editMutasi->MutasiHasBagian->bagian_id }}" readonly>
-                                    <input type="text" class="form-control" name="bagian" id="bagian"  value="{{ $editMutasi->MutasiHasBagian->nama_bagian  }}" readonly>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Sub Bagian</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="hidden" class="form-control" name="subBagian_" id="subBagian_" value="{{ $editMutasi->MutasiHasSubBagian->sub_bagian_id }}" readonly>
-                                    <input type="text" class="form-control" name="subBagian" id="subBagian"  value="{{ $editMutasi->MutasiHasSubBagian->sub_bagian_nama }}" readonly>
-                                </div>
-                            </div>
+                            
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Gedung</label>
@@ -226,10 +156,11 @@
 @push('page-script')
 <script>
 $(document).ready(function() {
-    $('#data_mutasi, #pegawaian, #kePegawai, #gedung, #ruangan, #kondisi, #obj').select2();
+    $(' #pegawaian, #kePegawai, #gedung, #ruangan, #kondisi').select2();
+    $('#typeMutasi, #pegawai,  #obj').prop('readonly', true);
 });
 
-$('#data_mutasi').on('change', function () {
+$('#typeMutasi').on('change', function () {
     //  console.log($(this).val());
     $.ajax({
         url: '{{ url('transaksi_data/mutasi/getObejkMutasi') }}',
@@ -259,84 +190,16 @@ $('#obj').on('change', function () {
         data: {id: $(this).val()},
         dataType : 'json',
         success: function (response) {
-            // console.log(response)
             $('#pegawai').empty();
-                    $('#pegawai').append(new Option('- Pilih -', ''))
+            $('#pegawai').append(new Option('- Pilih -', ''))
             $('#pegawai').trigger('change')
             
             response.forEach(item => {
+                console.log(item)
                 $('#pegawai').append(new Option(item.pegawe_name, item.id_peg+':'+item.id));
             });
         }
     })
-});
-
-$('#pegawai').on('change', function () {
-    // console.log($(this).val());
-    $.ajax({
-        url: '{{ url('transaksi_data/mutasi/getRekapMutasi') }}',
-        method: 'get',
-        data: {id: $(this).val()},
-        dataType : 'json',
-        success: function (response) {
-            console.log(response)
-            $('#bagian_detail').val(response.trs_has_bagian.nama_bagian);
-            $('#sub_bagian_detail').val(response.trs_has_sub_bagian.sub_bagian_nama);
-            $('#gedung_detail').val(response.trs_has_gedung.nama_data_gedung);
-            $('#ruangan_detail').val(response.trs_has_ruangan.nama_data_ruangan);
-            $('#kds_detail').val(response.trs_has_data.manajemen_has_kondisi.nama_data_kondisi);
-            
-            //   insert to  pivot table
-
-            $('#bagian_detail_id').val(response.trs_has_bagian.bagian_id);
-            $('#sub_bagian_detail_id').val(response.trs_has_sub_bagian.sub_bagian_id);
-            $('#gedung_detail_id').val(response.trs_has_gedung.data_gedung_id);
-            $('#ruangan_detail_id').val(response.trs_has_ruangan.data_ruangan_id);
-            $('#kds_detail_id').val(response.trs_has_data.manajemen_has_kondisi.data_kondisi_id);
-        }
-    })
-});
-
-$('#bagian').on('change', function () {
-        //  console.log($(this).val());
-        $.ajax({
-            url: '{{ url('transaksi_data/perangkat_trans/getSubBagian') }}',
-            method: 'get',
-            data: {id: $(this).val()},
-            dataType : 'json',
-            success: function (response) {
-                // console.log(response)
-                $('#subBagian').empty();
-				        $('#subBagian').append(new Option('- Pilih -', ''))
-                $('#subBagian').trigger('change')
-              
-                response.forEach(item => {
-                    $('#subBagian').append(new Option(item.nama, item.id))
-                });
-               
-            }
-        })
-    });  
-    
-
-     $('#kePegawai').on('change', function () {
-        //  console.log($(this).val());
-        $.ajax({
-            url: '{{ url('transaksi_data/perangkat_trans/getPegawai') }}',
-            method: 'get',
-            data: {id: $(this).val()},
-            dataType : 'json',
-            success: function (response) {
-                console.log(response)
-                $('#bagian_').val(response.pegawai_has_bagian.bagian_id)
-                $('#subBagian_').val(response.pegawai_has_sub_bagian.sub_bagian_id)
-
-                $('#bagian').val(response.pegawai_has_bagian.nama_bagian)
-                $('#subBagian').val(response.pegawai_has_sub_bagian.sub_bagian_nama)
-                
-                
-            }
-        })
-    });
+});    
 </script>
 @endpush

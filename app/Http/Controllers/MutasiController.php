@@ -28,6 +28,12 @@ class MutasiController extends Controller
 {
     public function index()
     {
+        $getMutasi = MutasiModels::with(['MutasiHasPegawai', 'mutasiHasKondisi', 'MutasiHasDetail'=> function($q){
+            $q->with(['DetailMutasiHasPegawai'=> function ($q){
+                $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+            }]);
+        }, 'MutasiHasGedung', 'MutasiHasRuangan', 'MutasiHasType'])->get();
+        // dd($getMutasi);
         return \view('transaksi/mutasi.index');
     }
 
@@ -37,7 +43,7 @@ class MutasiController extends Controller
             $q->with(['DetailMutasiHasPegawai'=> function ($q){
                 $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
             }]);
-        }, 'MutasiHasGedung', 'MutasiHasRuangan'])->get();
+        }, 'MutasiHasGedung', 'MutasiHasRuangan', 'MutasiHasType'])->get();
         // dd($getMutasi);
         return DataTables::of($getMutasi)
             // ->addColumn('actions', 'transaksi/perangkat.actions')
@@ -50,8 +56,8 @@ class MutasiController extends Controller
                 return '';
             })
             ->addColumn('ObjekMutasi', function (MutasiModels $dp) {
-                if ($dp->mutasiHasManajemen) {
-                    return $dp->mutasiHasManajemen->data_manajemen_name;
+                if ($dp->MutasiHasType) {
+                    return $dp->MutasiHasType->data_name;
                 }
                 return '';
             })
@@ -207,23 +213,6 @@ class MutasiController extends Controller
         return response()->json($getPegawiMutasi);
     }
 
-    public function getRekapMutasi(Request $request)
-    {
-        $data = explode(":", $request->id);
-        $pegawai_id = (int)$data[0];
-        $trs_id = (int)$data[1];
-
-        $getRekapMutasi_ = TransaksiDataModel ::with(['trsHasBagian', 'trsHasSubBagian', 'trsHasGedung','trsHasRuangan', 'trsHasData'=> function ($q){
-            $q->with('manajemenHasKondisi');
-        }])
-        ->where('trs_id', $trs_id)
-        ->where('trs_pegawai_id', $pegawai_id)
-        ->first();
-
-       return response()->json($getRekapMutasi_);
-        
-    }
-
     public function save(Request $request)
     {
         // dd($request->all());
@@ -239,7 +228,6 @@ class MutasiController extends Controller
             'gedung' => 'required',
             'ruangan' => 'required',
             'kondisi' => 'required',
-            
         ],
         [
             'ketMutasi.required' => 'Keterangan Mutasi tidak boleh kosong!',
@@ -256,7 +244,7 @@ class MutasiController extends Controller
             'mutasi_data_id'=> $request->typeMutasi,
             'mutasi_objek_id'=> $request->obj,
             'mutasi_pegawai_id'=> $request->kePegawai,
-            // 'mutasi_kondisi_id'=> $request->kondisi,
+            'mutasi_kondisi_id'=> $request->kondisi,
             'mutasi_gedung_id'=>$request->gedung,
             'mutasi_ruangan_id'=> $request->ruangan,
             'mutasi_trs_id'=> $trs_id,
@@ -300,22 +288,23 @@ class MutasiController extends Controller
     }
 
     public function edit($id){
-        $editMutasi = MutasiModels::with(['MutasiHasPegawai', 'mutasiHasKondisi', 'MutasiHasDetail'=> function($q){
-            $q->with(['mutasiParent','DetailMutasiHasPegawai', 'DetailMutasiHasBagian', 'DetailMutasiHasSubBagian', 'DetailMutasiHasGedung', 'DetailMutasiHasRuangan', 'DetailMutasiHasKondisi']);
-        }, 'MutasiHasBagian', 'MutasiHasSubBagian', 'MutasiHasGedung', 'MutasiHasRuangan'])->first();
+        $editMutasi = MutasiModels::with(['MutasiHasPegawai', 'MutasiHasDetail'=> function($q){
+            $q->with(['mutasiParent','DetailMutasiHasPegawai', 'DetailMutasiHasGedung', 'DetailMutasiHasRuangan', 'DetailMutasiHasKondisi']);
+        }, 'MutasiHasGedung', 'MutasiHasRuangan'])->where('mutasi_id',$id)->first();
         // dd($editMutasi); 
-
+// 
         $dataPegawai = PegawaiModels::get();
         $datakondisi = KondisiModels::get();
-        $Bagian = ParBagianModels::get();
         $gedung = GedungModels::get();
         $ruangan = RuanganModels::get();
-        $objekMutasi = DataManajemenModels::get();
-        $subBagian = SubBagianModels::where('sub_bagian_bagian_id',$editMutasi->mutasi_bagian_id)->get();
-        return \view('transaksi/mutasi.edit', \compact('editMutasi','dataPegawai', 'datakondisi', 'Bagian','gedung', 'ruangan', 'objekMutasi', 'subBagian'));
+        $objekMutasi = StokModels::get();
+        $type = TypeKtegoryModels::get();
+
+        return \view('transaksi/mutasi.edit', \compact('editMutasi','dataPegawai', 'datakondisi','gedung', 'ruangan', 'objekMutasi', 'type'));
     }
 
     public function update(Request $request, $id){
+        dd($request->all());
        
         $data = explode(":", $request->pegawai);
         
@@ -332,11 +321,9 @@ class MutasiController extends Controller
     
         $request->validate([
             'ketMutasi' => 'required',
-            'data_mutasi' => 'required',
+            'typeMutasi' => 'required',
             'obj' => 'required',
             'kePegawai' => 'required',
-            'bagian' => 'required',
-            'subBagian' => 'required',
             'gedung' => 'required',
             'ruangan' => 'required',
             'kondisi' => 'required',
@@ -347,8 +334,6 @@ class MutasiController extends Controller
             'data_mutasi.required' => 'Data Mutasi tidak boleh kosong!',
             'obj.required' => ' Objek Mutasi tidak boleh kosong!',
             'kePegawai.required' => 'Pegawai Sekarang tidak boleh kosong!',
-            'bagian.required' => 'Bagian tidak boleh kosong!',
-            'subBagian.required' => 'Sub Bagian tidak boleh kosong!',
             'gedung.required' => 'Gedung tidak boleh kosong!',
             'ruangan.required' => 'Ruangan tidak boleh kosong!',
             'kondisi.required' => 'Kondisi tidak boleh kosong!',
@@ -356,12 +341,10 @@ class MutasiController extends Controller
         if($trs_id){
             $save1 = [
                 'mutasi_keterangan'=> $request->ketMutasi,
-                'mutasi_data_id'=> $request->data_mutasi,
+                'mutasi_data_id'=> $request->typeMutasi,
                 'mutasi_objek_id'=> $request->obj,
                 'mutasi_pegawai_id'=> $request->kePegawai,
                 'mutasi_kondisi_id'=> $request->kondisi,
-                'mutasi_bagian_id'=>$request->bagian_,
-                'mutasi_sub_bagian_id'=>$request->subBagian_,
                 'mutasi_gedung_id'=>$request->gedung,
                 'mutasi_ruangan_id'=> $request->ruangan,
                 'mutasi_trs_id'=> $trs_id,

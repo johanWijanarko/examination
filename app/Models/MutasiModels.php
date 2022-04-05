@@ -22,8 +22,8 @@ class MutasiModels extends Model
         return $this->belongsTo(KondisiModels::class, 'mutasi_kondisi_id', 'data_kondisi_id');
     }
 
-     public function mutasiHasManajemen(){
-        return $this->belongsTo(DataManajemenModels::class, 'mutasi_objek_id', 'data_manajemen_id');
+     public function MutasiHasType(){
+        return $this->belongsTo(StokModels::class, 'mutasi_data_id', 'data_kategory_id');
     }
     public function mutasiHasdetail(){
         return $this->belongsTo(MutasiHasDetail::class, 'mutasi_id', 'detail_mutasi_id');

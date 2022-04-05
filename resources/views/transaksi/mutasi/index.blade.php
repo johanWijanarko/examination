@@ -87,11 +87,11 @@ $(function() {
                 { data: 'ObjekMutasi', name: 'ObjekMutasi' },
                 { data: 'pegawaiSebelumnya', name: 'pegawaiSebelumnya' },
                 { data: 'terimaMutasi', name: 'terimaMutasi' },
-                { data: 'kondisi', name: 'kondisi' },
                 { data: 'bagian', name: 'bagian' },
                 { data: 'subBagian', name: 'subBagian' },
                 { data: 'gedung', name: 'gedung' },
                 { data: 'ruangan', name: 'ruangan' },
+                { data: 'kondisi', name: 'kondisi' },
                 { data: 'mutasi_tgl', name: 'mutasi_tgl' },
                 { data: 'mutasi_keterangan', name: 'mutasi_keterangan' },
             ]
