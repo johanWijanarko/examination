@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\StokModels;
 use App\Models\GedungModels;
 use Illuminate\Http\Request;
 use App\Models\KondisiModels;
@@ -10,6 +11,8 @@ use App\Models\PegawaiModels;
 use App\Models\RuanganModels;
 use App\Models\DataMerkModels;
 use App\Models\SupplierModels;
+use App\Models\DetailTransaksi;
+use App\Models\TransaksiModels;
 use App\Models\PeminjamanModels;
 use App\Models\TypeKtegoryModels;
 use App\Models\DataKelompokModels;
@@ -28,9 +31,7 @@ class PeminjamanController extends Controller
     }
 
     public function getDataPinjaman(){
-        $getDataPinjaman = PeminjamanModels::with(['peminjamanHasObjek'=> function($q){
-            $q->with('manajemenHasKondisi');
-        }, 'peminjamanHasPegawai', 'peminjamanHasGedung', 'peminjamanHasRuangan'])->orderBy('peminjaman_id', 'desc')->get();
+        $getDataPinjaman = PeminjamanModels::with(['peminjamanHasObjek', 'peminjamanHasPegawai', 'peminjamanHasGedung', 'peminjamanHasRuangan', 'peminjamanHasType'])->orderBy('peminjaman_id', 'desc')->get();
 
         return DataTables::of($getDataPinjaman)
             // ->addColumn('actions', 'transaksi/perangkat.actions')
@@ -43,21 +44,14 @@ class PeminjamanController extends Controller
                 return '';
             })
             ->addColumn('dataPinjam', function (PeminjamanModels $dp) {
-                $jenisKembali = [ 
-                    '1' => 'Perangkat',
-                    '2' => 'Aplikasi',
-                    '3' => 'Peralatan Kantor',
-                    '4' => 'Inventaris'
-                ];
-                
-                if ($dp->peminjaman_data_id) {
-                    return $jenisKembali[$dp->peminjaman_data_id];
+                if ($dp->peminjamanHasType) {
+                    return $dp->peminjamanHasType->nama_data_type;
                 }
                 return '';
             })
             ->addColumn('objek', function (PeminjamanModels $dt) {
                 if ($dt->peminjamanHasObjek) {
-                    return $dt->peminjamanHasObjek->data_manajemen_name;
+                    return $dt->peminjamanHasObjek->data_name;
                 }
                 
                 return '';
@@ -82,8 +76,9 @@ class PeminjamanController extends Controller
     public function detailpinjaman(Request $request, $id)
     {
         $getDataPinjaman = PeminjamanModels::with(['peminjamanHasObjek'=> function($q){
-            $q->with(['manajemenHasKondisi', 'manajemenHasMerk', 'manajemenHasType', 'manajemenHasSupplier']);
+            $q->with(['stokHasKondisi', 'stokHasMerk', 'stokHasSupplier']);
         }, 'peminjamanHasGedung', 'peminjamanHasRuangan'])->orderBy('peminjaman_id', 'desc')->where('peminjaman_id' ,$id)->get();
+        // dd($getDataPinjaman);
         return DataTables::of($getDataPinjaman)
             ->addColumn('gedung', function (PeminjamanModels $dp) {
                 if ($dp->peminjamanHasGedung) {
@@ -98,34 +93,27 @@ class PeminjamanController extends Controller
                 return '';
             })
             ->addColumn('kondisi', function (PeminjamanModels $dt) {
-                if ($dt->peminjamanHasObjek->manajemenHasKondisi) {
-                    return $dt->peminjamanHasObjek->manajemenHasKondisi->nama_data_kondisi;
+                if ($dt->peminjamanHasObjek->stokHasKondisi) {
+                    return $dt->peminjamanHasObjek->stokHasKondisi->nama_data_kondisi;
                 }
                 
                 return '';
             })
             ->addColumn('merk', function (PeminjamanModels $dt) {
-                if ($dt->peminjamanHasObjek->manajemenHasMerk) {
-                    return $dt->peminjamanHasObjek->manajemenHasMerk->nama_data_merk;
-                }
-                
-                return '';
-            })
-             ->addColumn('type', function (PeminjamanModels $dt) {
-                if ($dt->peminjamanHasObjek->manajemenHasType) {
-                    return $dt->peminjamanHasObjek->manajemenHasType->nama_data_type;
+                if ($dt->peminjamanHasObjek->stokHasMerk) {
+                    return $dt->peminjamanHasObjek->stokHasMerk->nama_data_merk;
                 }
                 
                 return '';
             })
             ->addColumn('supp', function (PeminjamanModels $dt) {
-                if ($dt->peminjamanHasObjek->manajemenHasSupplier) {
-                    return $dt->peminjamanHasObjek->manajemenHasSupplier->supplier_name;
+                if ($dt->peminjamanHasObjek->stokHasSupplier) {
+                    return $dt->peminjamanHasObjek->stokHasSupplier->supplier_name;
                 }
                 
                 return '';
             })
-            ->rawColumns([ 'gedung', 'ruangan', 'kondisi', 'merk', 'type', 'supp'])
+            ->rawColumns([ 'gedung', 'ruangan', 'kondisi', 'merk', 'supp'])
             ->addIndexColumn()
             ->make(true);
     }
@@ -134,45 +122,30 @@ class PeminjamanController extends Controller
         // $getKodeTrs = '';
         $dataPerangkat = DataManajemenModels::where('data_manajemen_jumlah', '>', 0)->get();
         $dataPegawai = PegawaiModels::get();
-        
-        $kelompok = DataKelompokModels::get();
+        $type = TypeKtegoryModels::get();
         $gedung = GedungModels::get();
         $ruangan = RuanganModels::get();
         $countTrs = TransaksiDataModel::all()->count()+1;
         $getKodeTrs = 'TRS-PJM-' . $countTrs .'';
 
         
-        return \view('transaksi/peminjaman.tambah', \compact('ruangan' ,'gedung' ,'dataPegawai','dataPerangkat', 'kelompok', 'getKodeTrs'));
+        return \view('transaksi/peminjaman.tambah', \compact('ruangan' ,'gedung' ,'dataPegawai','dataPerangkat', 'getKodeTrs', 'type'));
     }
 
     public function getObejkPeminjam(Request $request)
     {
-        $getObejkPeminjam = DataManajemenModels::where('data_manajemen_kode_id', $request->id)
-        ->orderBy('data_manajemen_name', 'desc')
-        ->pluck('data_manajemen_name', 'data_manajemen_id');
+        $getObejkPeminjam = StokModels::where('data_kategory_id', $request->id)
+        ->orderBy('data_stok_id', 'desc')
+        ->pluck('data_name', 'data_stok_id');
             
         return response()->json($getObejkPeminjam);
     }
     public function getPinjam(Request $request)
     {
-        $getPinjam =DataManajemenModels::where('data_manajemen_id', $request->get('id'))->first();
-        
-        $getMerk = DataMerkModels::select('nama_data_merk')->where('data_merk_id', $getPinjam->data_manajemen_merk_id)->first();
-        $typeKategory = TypeKtegoryModels::select('nama_data_type')->where('data_type_id', $getPinjam->data_manajemen_type_id)->first();
-        $kondisi = KondisiModels::select('nama_data_kondisi','data_kondisi_id')->where('data_kondisi_id', $getPinjam->data_manajemen_kondisi_id)->first();
-        $gedung = GedungModels::select('nama_data_gedung')->where('data_gedung_id', $getPinjam->data_manajemen_gedung_id)->first();
-        $ruangan = RuanganModels::select('nama_data_ruangan')->where('data_ruangan_id', $getPinjam->data_manajemen_ruangan_id)->first();
-        $supplier = SupplierModels::select('supplier_name')->where('supplier_id', $getPinjam->data_manajemen_supplier_id)->first();
+        $getPinjam =StokModels::where('data_stok_id', $request->get('id'))->first();
 
-         return response()->json([
-            'getMerk' => $getMerk,
-            'typeKategory' => $typeKategory,
-            'kondisi' => $kondisi,
-            'gedung' => $gedung,
-            'ruangan' => $ruangan,
-            'supplier' => $supplier,
-            'getPinjam' => $getPinjam
-        ]);
+         
+        return response()->json($getPinjam);
             
     }
 
@@ -183,7 +156,6 @@ class PeminjamanController extends Controller
     }
     public function save(Request $request)
     {
-        // dd($request->all());
         $request->validate([
             'data_peminjaman' => 'required',
             'obj' => 'required',
@@ -191,7 +163,6 @@ class PeminjamanController extends Controller
             'pegawai' => 'required',
             'gedung' => 'required',
             'ruangan' => 'required',
-            'kelompok' => 'required',
             'tglPinjam' => 'required',
             'keterangan' => 'required',
             
@@ -203,22 +174,20 @@ class PeminjamanController extends Controller
             'pegawai.required' => 'Nama Pegawai tidak boleh kosong!',
             'gedung.required' => 'Gedung tidak boleh kosong!',
             'ruangan.required' => 'Ruangan tidak boleh kosong!',
-            'kelompok.required' => 'Kelompok tidak boleh kosong!',
             'tglPinjam.required' => 'Tanggal Pinjam tidak boleh kosong!',
             'keterangan.required' => 'Keterangan tidak boleh kosong!',
         ]);
 
         ///////////////////////////////////////////////////////////////////////
 
-        $save = [
+        $save_ = [
            
             'peminjaman_kode'=> $request->kode_pinjam,
-            'peminjaman_data_id'=> $request->data_peminjaman,
+            'peminjamanType'=> $request->data_peminjaman,
             'peminjaman_obejk_id'=> $request->obj,
             'peminjaman_pegawai_id'=> $request->pegawai,
             'peminjaman_gedung_id'=> $request->gedung,
             'peminjaman_ruangan_id'=> $request->ruangan,
-            'peminjaman_kelompok_id'=> $request->kelompok,
             'peminjaman_keterangan'=> $request->keterangan,
             'peminjaman_tanggal'=> $request->tglPinjam,
             'peminjaman_pic_id'=> Auth::user()->id,
@@ -226,51 +195,51 @@ class PeminjamanController extends Controller
             
         ];
 
-        $savetrsAplikasi =PeminjamanModels::create($save);
+        $savePinjam =PeminjamanModels::create($save_);
 
-        $cek = \Log::channel('database')->info($savetrsAplikasi);
+        $cek = Log::channel('database')->info($savePinjam);
         $query = DB::getQueryLog();
         $query = end($query);
         $this->save_log('tambah transaksi peminjaman' ,json_encode($query));
 
         ///////////////////////////////////////////////////////////////////////
 
-        $savetrs = [
-            'trs_data_id'=> $request->obj,
+        $save = [
             'trs_kode'=> $request->kode_pinjam,
-            'trs_jenis_id'=> $request->data_peminjaman,
-            'trs_name'=> $request->keterangan,
-            'trs_pegawai_id'=> $request->pegawai,
-            'trs_bagian_id'=> $request->bagian_,
-            'trs_ruangan_id'=> $request->ruangan,
-            'trs_sub_bagian_id'=> $request->subBagian_,
-            'trs_gedung_id'=> $request->gedung,
-            'trs_kelompok_id'=> $request->kelompok,
-            'trs_kondisi_id'=> $request->kondisi_id,
-            'trs_pic_id'=> Auth::user()->id,
-            'trs_status_id'=> 2,
+            'trs_keterangan'=> $request->keterangan,
             'trs_date'=> Carbon::today(),
-            
-            
         ];
+        $pinjamtrs =TransaksiModels::create($save);
+
+        $trsId = $pinjamtrs->trs_id;
+        $saveTrs = [
+            'trs_id' => $trsId,
+            'trs_detail_pegawai_id' => $request->pegawai,
+            'trs_detail_data_stok_id' => $request->obj,
+            'trs_detail_gedung_id' => $request->gedung,
+            'trs_detail_ruangan_id' => $request->ruangan,
+            'trs_detail_jumlah' => $request->jumlah_pinjam,
+            'trs_detail_status' => 2,
+            'trs_detail_pinjam_id' => $savePinjam->peminjaman_id,
+        ];
+        $saveTransaksi =DetailTransaksi::create($saveTrs);
         
        
-        if($request->data_peminjaman == 1){
-            $product = DataManajemenModels::find($request->obj);
-            $product->increment('data_manajemen_jumlah_pinjam', $request->jumlah_pinjam);
-            $product->decrement('data_manajemen_jumlah', $request->jumlah_pinjam);
-        }elseif($request->data_peminjaman == 3) {
-            $product = DataManajemenModels::find($request->obj);
-            $product->increment('data_manajemen_jumlah_pinjam', $request->jumlah_pinjam);
-            $product->decrement('data_manajemen_jumlah', $request->jumlah_pinjam);
+        if($request->data_peminjaman == 3){
+            $product =  StokModels::where('data_stok_id',$request->jumlah_pinjam);
+            $product->increment('data_dipakai', $request->jumlah_pinjam);
+            $product->decrement('data_jumlah', $request->jumlah_pinjam);
         }elseif($request->data_peminjaman == 4) {
-            $product = DataManajemenModels::find($request->obj);
-            $product->increment('data_manajemen_jumlah_pinjam', $request->jumlah_pinjam);
-            $product->decrement('data_manajemen_jumlah', $request->jumlah_pinjam);
+            $product =  StokModels::where('data_stok_id',$request->jumlah_pinjam);
+            $product->increment('data_dipakai', $request->jumlah_pinjam);
+            $product->decrement('data_jumlah', $request->jumlah_pinjam);
+        }elseif($request->data_peminjaman == 5) {
+            $product =  StokModels::where('data_stok_id',$request->jumlah_pinjam);
+            $product->increment('data_dipakai', $request->jumlah_pinjam);
+            $product->decrement('data_jumlah', $request->jumlah_pinjam);
         }
 
 
-        $savetrsAplikasi =TransaksiDataModel::create($savetrs);
         Alert::success('Success', 'Data berhasil di Simpan');
         return redirect('transaksi_data/peminjaman');
     }
@@ -278,43 +247,34 @@ class PeminjamanController extends Controller
     public function edit(Request $request, $id)
     {
         $getDataPinjaman = PeminjamanModels::with(['peminjamanHasObjek'=> function($q){
-            $q->with('manajemenHasKondisi');
-            $q->with('manajemenHasMerk');
-            $q->with('manajemenHasType');
-            $q->with('manajemenHasSupplier');
-        }, 'peminjamanHasPegawai'=>function($q){
-            $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
-        }])->orderBy('peminjaman_id', 'desc')->where('peminjaman_id',$id)->first();
+            $q->with(['stokHasKondisi', 'stokHasMerk', 'stokHasSupplier']);
+        }, 'peminjamanHasPegawai','pinjamHasTrsDetail'])->orderBy('peminjaman_id', 'desc')->where('peminjaman_id',$id)->first();
 
 
-        $getObejkPeminjam = DataManajemenModels::where('data_manajemen_jumlah', '>', 0)->where('data_manajemen_kode_id', $getDataPinjaman->peminjaman_data_id)->get();
+        $getObejkPeminjam = StokModels::where('data_jumlah', '>', 0)->where('data_stok_id', $getDataPinjaman->peminjaman_obejk_id)->get();
         $dataPegawai = PegawaiModels::get();
         
-        $kelompok = DataKelompokModels::get();
+        $type = TypeKtegoryModels::get();
         $gedung = GedungModels::get();
         $ruangan = RuanganModels::get();
 
         // dd($getDataPinjaman);
-        return \view('transaksi/peminjaman.edit', \compact('ruangan' ,'gedung' ,'dataPegawai','getObejkPeminjam', 'kelompok', 'getDataPinjaman'));
+        return \view('transaksi/peminjaman.edit', \compact('ruangan' ,'gedung' ,'dataPegawai','getObejkPeminjam', 'getDataPinjaman', 'type'));
     }
     public function update(Request $request, $id)
     {
         $request->validate([
-            'data_peminjaman' => 'required',
-            'obj' => 'required',
-            'jumlah_pinjam' => 'required',
+            
             'pegawai' => 'required',
             'gedung' => 'required',
             'ruangan' => 'required',
-            'kelompok' => 'required',
             'tglPinjam' => 'required',
             'keterangan' => 'required',
             
         ],
         [
-            'data_peminjaman.required' => 'Data Peminjam tidak boleh kosong!',
-            'obj.required' => ' Objek Peminjaman tidak boleh kosong!',
-            'jumlah_pinjam.required' => 'Jumlah Peminjaman tidak boleh kosong!',
+            
+           
             'pegawai.required' => 'Nama Pegawai tidak boleh kosong!',
             'gedung.required' => 'Gedung tidak boleh kosong!',
             'ruangan.required' => 'Ruangan tidak boleh kosong!',
@@ -324,23 +284,32 @@ class PeminjamanController extends Controller
         ]);
 
         $save = [
-           
-            // 'peminjaman_kode'=> $request->kode_pinjam,
-            'peminjaman_data_id'=> $request->data_peminjaman,
-            'peminjaman_obejk_id'=> $request->obj,
+
             'peminjaman_pegawai_id'=> $request->pegawai,
             'peminjaman_gedung_id'=> $request->gedung,
             'peminjaman_ruangan_id'=> $request->ruangan,
-            'peminjaman_kelompok_id'=> $request->kelompok,
             'peminjaman_keterangan'=> $request->keterangan,
             'peminjaman_tanggal'=> $request->tglPinjam,
             'peminjaman_pic_id'=> Auth::user()->id,
-            'peminjaman_jumlah'=> $request->jumlah_pinjam,
+           
             
         ];
         $update =PeminjamanModels::where('peminjaman_id', $id)->update($save);
 
-        $cek = \Log::channel('database')->info($update);
+        $saveTrs = [
+            'trs_detail_pegawai_id' => $request->pegawai,
+            'trs_detail_gedung_id' => $request->gedung,
+            'trs_detail_ruangan_id' => $request->ruangan,
+        ];
+        $saveTransaksi =DetailTransaksi::where('trs_detail_id', $request->trs_detail_id)->update($saveTrs);
+
+        $save_ = [
+            'trs_keterangan'=> $request->keterangan,
+            'trs_date'=> Carbon::today(),
+        ];
+        $pinjamtrs =TransaksiModels::where('trs_id', $request->trs_id)->update($save_);
+
+        $cek = Log::channel('database')->info($update);
         $query = DB::getQueryLog();
         $query = end($query);
         $this->save_log('update transaksi peminjaman' ,json_encode($query));

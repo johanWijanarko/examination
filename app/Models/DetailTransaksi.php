@@ -13,7 +13,7 @@ class DetailTransaksi extends Model
     protected $table = 'trs_detail';
     protected $primaryKey = 'trs_detail_id';
 
-    protected $fillable = ['trs_detail_id','trs_id', 'trs_detail_pegawai_id', 'trs_detail_data_stok_id', 'trs_detail_gedung_id', 'trs_detail_ruangan_id', 'trs_detail_jumlah', 'trs_detail_status', 'trs_detail_pic_id', 'trs_detail_date', 'created_at', 'updated_at'];
+    protected $fillable = ['trs_detail_id','trs_id', 'trs_detail_pegawai_id', 'trs_detail_data_stok_id', 'trs_detail_gedung_id', 'trs_detail_ruangan_id', 'trs_detail_jumlah', 'trs_detail_status', 'trs_detail_pic_id', 'trs_detail_date','trs_detail_pinjam_id', 'created_at', 'updated_at'];
 
     public function trsHasStok2(){
         return $this->belongsTo(StokModels::class, 'trs_detail_data_stok_id', 'data_stok_id');

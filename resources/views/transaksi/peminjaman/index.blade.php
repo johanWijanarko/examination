@@ -24,7 +24,7 @@
                     <tr>
                         <th>Action</th>
                         <th>No</th>
-                        <th>Data Peminjaman</th>
+                        <th>Type / Kategori</th>
                         <th>Objek Peminjaman</th>
                         <th>Pegawai</th>
                         <th>Tanggal Peminjaman</th>
@@ -120,7 +120,6 @@ $(function() {
             columns: [
                 { "data": 'DT_RowIndex',orderable: false, searchable: false },
                 { data: 'merk', name: 'merk' },
-                { data: 'type', name: 'type' },
                 { data: 'gedung', name: 'gedung' },
                 { data: 'ruangan', name: 'ruangan' },
                 { data: 'kondisi', name: 'kondisi' },
@@ -169,7 +168,6 @@ $(function() {
             <thead>
             <tr>
                 <th>No</th>
-                <th>Type / Kategori</th>
                 <th>Merk</th>
                 <th>Gedung</th>
                 <th>Ruangan</th>

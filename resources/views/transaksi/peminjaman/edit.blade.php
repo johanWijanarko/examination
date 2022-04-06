@@ -38,29 +38,27 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Data Peminjaman</label>
+                                    <label class="col-form-label mandatory">Type / Kategori Pinjam</label>
                                 </div>
                                 <div class="col-md-8">
                                     <select class="form-control" id="data_peminjaman" name="data_peminjaman" required>
-                                        <option value="">Pilih Data Peminjaman</option>
-                                         <option value="1" {{($getDataPinjaman->peminjaman_data_id == '1' )? 'selected' : ''}}>Perangkat</option>
-                                        <option value="2" {{($getDataPinjaman->peminjaman_data_id == '2' )? 'selected' : ''}}>Aplikasi</option>
-                                        <option value="3" {{($getDataPinjaman->peminjaman_data_id == '3' )? 'selected' : ''}}>Alat Kantor</option>
-                                        <option value="4" {{($getDataPinjaman->peminjaman_data_id == '3' )? 'selected' : ''}}>Inventaris Lainnya</option>
+                                        <option value="">Pilih Type</option>
+                                        @foreach ($type as $item)
+                                            <option {{ ($getDataPinjaman->peminjamanType == $item->data_type_id ) ? 'selected' : ''}}   value="{{ $item->data_type_id }}">{{ $item->nama_data_type}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Objek Peminjaman</label>
+                                    <label class="col-form-label mandatory">Objek Pinjam</label>
                                 </div>
                                 <div class="col-md-8">
                                     <select class="form-control" id="obj" name="obj" required>
-                                        <option value="{{old('obj')}}">Pilih Perangkat</option>
-                                        @foreach ($getObejkPeminjam as $obj)
-                                            <option {{ ($getDataPinjaman->peminjaman_obejk_id == $obj->data_manajemen_id ) ? 'selected' : ''}}  value="{{$obj->data_manajemen_id}}" >{{$obj->data_manajemen_name}}
-                                            </option>
-                                        @endforeach 
+                                        <option value="{{old('obj')}}">Pilih Objek Pinjam</option>
+                                            @foreach ($getObejkPeminjam as $obj)
+                                                <option {{ ($getDataPinjaman->peminjaman_obejk_id == $obj->data_stok_id ) ? 'selected' : ''}}   value="{{ $obj->data_stok_id }}">{{ $obj->data_name}}</option>
+                                            @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -69,7 +67,7 @@
                                     <label class="col-form-label mandatory">Jumlah</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" name="jumlah" id="jumlah" value="{{ $getDataPinjaman->peminjamanHasObjek->data_manajemen_jumlah }}" class="form-control" placeholder="" readonly>
+                                    <input type="text" name="jumlah" id="jumlah" value="{{ $getDataPinjaman->peminjamanHasObjek->data_jumlah }}" class="form-control" placeholder="" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -77,52 +75,10 @@
                                     <label class="col-form-label mandatory">Jumlah Peminjaman</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" name="jumlah_pinjam" id="jumlah_pinjam" value="{{ $getDataPinjaman->peminjaman_jumlah }}" class="form-control" placeholder="">
+                                    <input type="text" name="jumlah_pinjam" id="jumlah_pinjam" value="{{ $getDataPinjaman->peminjaman_jumlah }}" class="form-control" placeholder="" readonly>
                                 </div>
                             </div>
-                            <p>
-                                <a class="btn btn-primary" title="Detail" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                    <span data-toggle="tooltip" title="Detail"><i class="fas fa-eye"></i><span>
-                                </a>
-                            </p>
-                            <div class="collapse" id="collapseExample">
-                                <div class="card card-body" style="background-color: #F4F7FA">
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Merk / Jenis</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="merk" id="merk" class="form-control" value="{{ $getDataPinjaman->peminjamanHasObjek->manajemenHasMerk->nama_data_merk }}" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Type</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="type" id="type" value="{{ $getDataPinjaman->peminjamanHasObjek->manajemenHasType->nama_data_type }}"class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Kondisi</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" name="kondisi"  id="kondisi" class="form-control" value="{{ $getDataPinjaman->peminjamanHasObjek->manajemenHasKondisi->nama_data_kondisi }}" placeholder="" readonly>
-                                            <input type="hidden" name="kondisi_id" id="kondisi_id" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-md-3">
-                                            <label class="col-form-label mandatory">Supplier</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="text" value="{{ $getDataPinjaman->peminjamanHasObjek->manajemenHasSupplier->supplier_name }}" name="kondisi" id="sup" class="form-control" placeholder="" readonly>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                            </div>
+                           
                             
                             <div class="form-group row">
                                 <div class="col-md-3">
@@ -138,24 +94,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Bagian</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="hidden" class="form-control" name="bagian_" id="bagian_" readonly>
-                                    <input type="text" class="form-control" name="bagian" id="bagian" value="{{ $getDataPinjaman->peminjamanHasPegawai->pegawaiHasBagian->nama_bagian }}" readonly>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Sub Bagian</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <input type="hidden" class="form-control" name="subBagian_" id="subBagian_" readonly>
-                                    <input type="text" class="form-control" name="subBagian" id="subBagian" value="{{ $getDataPinjaman->peminjamanHasPegawai->pegawaiHasSubBagian->sub_bagian_nama }}"  readonly>
-                                </div>
-                            </div>
+                           
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Gedung</label>
@@ -183,19 +122,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <div class="col-md-3">
-                                    <label class="col-form-label mandatory">Kelompok</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <select class="form-control" id="kelompok" name="kelompok" required>
-                                        <option value="{{old('kelompok')}}">Pilih Kelompok</option>
-                                         @foreach ($kelompok as $kel)
-                                            <option {{ ($getDataPinjaman->peminjaman_kelompok_id == $kel->data_kelompok_id ) ? 'selected' : ''}}  value="{{$kel->data_kelompok_id}}" >{{$kel->nama_data_kelompok}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
+                            
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Tanggal Peminjaman</label>
@@ -212,6 +139,8 @@
                                     <input type="text" name="keterangan" value="{{ $getDataPinjaman->peminjaman_keterangan }}" id="keterangan" class="form-control" placeholder="" required>
                                 </div>
                             </div>
+                            <input type="hidden" name="trs_detail_id" value="{{ $getDataPinjaman->pinjamHasTrsDetail->trs_detail_id}}">
+                            <input type="hidden" name="trs_id" value="{{ $getDataPinjaman->pinjamHasTrsDetail->trs_id}}">
                             <div class="form-group row">
                                 <div class="col-sm-12">
                                     <a href="{{ url('transaksi_data/peminjaman') }}" class="btn btn-info">Kembali</a>
@@ -229,9 +158,8 @@
 @push('page-script')
 <script>
 $(document).ready(function() {
-    $('#data_peminjaman, #obj, ').select2();
+    $("#data_peminjaman,#obj").prop("disabled", true);
     $('#pegawai').select2();
-    $('#kelompok').select2();
 });
 
 $('#data_peminjaman').on('change', function () {
@@ -257,45 +185,31 @@ $('#data_peminjaman').on('change', function () {
 });
 
     $('#obj').on('change', function () {
-        //  console.log($(this).val());
+         console.log($(this).val());
         $.ajax({
             url: '{{ url('transaksi_data/peminjaman/getPinjam') }}',
             method: 'get',
             data: {id: $(this).val()},
             dataType : 'json',
             success: function (response) {
-                // console.log(response.getMerk)
-                $('[name="merk"]').val(response.getMerk.nama_data_merk);
-                $('#type').val(response.typeKategory.nama_data_type);
-                $('#kondisi').val(response.kondisi.nama_data_kondisi);
-                $('#kondisi_id').val(response.kondisi.data_kondisi_id);
-                $('#sup').val(response.supplier.supplier_name);
-                $('#jumlah').val(response.getPinjam.data_manajemen_jumlah+' Unit');
+                $('#jumlah').val(response.data_jumlah)
+                var jumlahstok = $('#jumlah').val(response.data_jumlah)
+                //    console.log(jumlahstok)
             }
         })
     });
-
- $('#pegawai').on('change', function () {
-        //  console.log($(this).val());
-        $.ajax({
-            url: '{{ url('transaksi_data/peminjaman/getPegawai') }}',
-            method: 'get',
-            data: {id: $(this).val()},
-            dataType : 'json',
-            success: function (response) {
-                console.log(response)
-                $('#bagian_').val(response.pegawai_has_bagian.bagian_id)
-                $('#subBagian_').val(response.pegawai_has_sub_bagian.sub_bagian_id)
-
-                $('#bagian').val(response.pegawai_has_bagian.nama_bagian)
-                $('#subBagian').val(response.pegawai_has_sub_bagian.sub_bagian_nama)
-                
-               
+    var validate_stok = 0;
+    $('#jumlah_pinjam').on('input',function(){   
+        var jumlah= $(this).val();
+        var stok = $('#jumlah').val()
+       
+            if(parseInt(jumlah) > parseInt(stok)){
+                swal("Error!", 'Jumlah Pinjam tidak boleh melebihi jumlah stok') 
+                $('#jumlah_pinjam').val('')
+                validate_stok = 1;
+                return false
             }
-        })
     });
-
-    
     
 </script>
 @endpush
