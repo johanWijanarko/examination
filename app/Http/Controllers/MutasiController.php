@@ -39,7 +39,9 @@ class MutasiController extends Controller
 
     public function getDtaMutasi(Request $request)
     {
-        $getMutasi = MutasiModels::with(['MutasiHasPegawai', 'mutasiHasKondisi', 'MutasiHasDetail'=> function($q){
+        $getMutasi = MutasiModels::with(['MutasiHasPegawai'=>function ($q){
+            $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+        }, 'mutasiHasKondisi', 'MutasiHasDetail'=> function($q){
             $q->with(['DetailMutasiHasPegawai'=> function ($q){
                 $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
             }]);
@@ -124,8 +126,8 @@ class MutasiController extends Controller
             return '';
         })
         ->addColumn('objek', function (MutasiHasDetail $dp) {
-            if ($dp->mutasiParent->mutasiHasManajemen) {
-                return $dp->mutasiParent->mutasiHasManajemen->data_manajemen_name;
+            if ($dp->mutasiParent->MutasiHasStok) {
+                return $dp->mutasiParent->MutasiHasStok->data_name;
             }
             return '';
         })
@@ -292,7 +294,7 @@ class MutasiController extends Controller
             $q->with(['mutasiParent','DetailMutasiHasPegawai', 'DetailMutasiHasGedung', 'DetailMutasiHasRuangan', 'DetailMutasiHasKondisi']);
         }, 'MutasiHasGedung', 'MutasiHasRuangan'])->where('mutasi_id',$id)->first();
         // dd($editMutasi); 
-// 
+ 
         $dataPegawai = PegawaiModels::get();
         $datakondisi = KondisiModels::get();
         $gedung = GedungModels::get();
@@ -303,22 +305,8 @@ class MutasiController extends Controller
         return \view('transaksi/mutasi.edit', \compact('editMutasi','dataPegawai', 'datakondisi','gedung', 'ruangan', 'objekMutasi', 'type'));
     }
 
-    public function update(Request $request, $id){
-        dd($request->all());
-       
-        $data = explode(":", $request->pegawai);
-        
-        if(isset($data[1])){
-            $trs_id = (int)$data[1];
-        }else{
-            $trs_id =null;
-        }
-        if(isset($data[0])){
-            $pegawai_id = (int)$data[0];
-        }else{
-            $pegawai_id = '';
-        }
-    
+    public function update(Request $request, $id)
+    {
         $request->validate([
             'ketMutasi' => 'required',
             'typeMutasi' => 'required',
@@ -327,7 +315,6 @@ class MutasiController extends Controller
             'gedung' => 'required',
             'ruangan' => 'required',
             'kondisi' => 'required',
-            
         ],
         [
             'ketMutasi.required' => 'Keterangan Mutasi tidak boleh kosong!',
@@ -338,92 +325,40 @@ class MutasiController extends Controller
             'ruangan.required' => 'Ruangan tidak boleh kosong!',
             'kondisi.required' => 'Kondisi tidak boleh kosong!',
         ]);
-        if($trs_id){
-            $save1 = [
-                'mutasi_keterangan'=> $request->ketMutasi,
-                'mutasi_data_id'=> $request->typeMutasi,
-                'mutasi_objek_id'=> $request->obj,
-                'mutasi_pegawai_id'=> $request->kePegawai,
-                'mutasi_kondisi_id'=> $request->kondisi,
-                'mutasi_gedung_id'=>$request->gedung,
-                'mutasi_ruangan_id'=> $request->ruangan,
-                'mutasi_trs_id'=> $trs_id,
-                'mutasi_pic_id'=> Auth::user()->id,
-                'mutasi_tgl'=> Carbon::today(),
-            ];
-            $mutasi =MutasiModels::where('mutasi_id', $id)->update($save1);
+        $detailMutasi = [
+            'detail_mutasi_trs_id'=> $request->detail_trs_id,
+            'detail_mutasi_pegawai_id'=> $request->pegawai,
+            
+        ];
+      
+        $update_detail = MutasiHasDetail::where('detail_id',$request->detail_mutasi)->update($detailMutasi);
 
-            $cek = Log::channel('database')->info($mutasi);
-            $query = DB::getQueryLog();
-            $query = end($query);
-            $this->save_log('edit data mutasi' ,json_encode($query));
+        $save1 = [
+            'mutasi_keterangan'=> $request->ketMutasi,
+            'mutasi_data_id'=> $request->typeMutasi,
+            'mutasi_objek_id'=> $request->obj,
+            'mutasi_pegawai_id'=> $request->kePegawai,
+            'mutasi_kondisi_id'=> $request->kondisi,
+            'mutasi_gedung_id'=>$request->gedung,
+            'mutasi_ruangan_id'=> $request->ruangan,
+            'mutasi_trs_id'=> $request->detail_trs_id,
+            'mutasi_pic_id'=> Auth::user()->id,
+            'mutasi_tgl'=> Carbon::today(),
+        ];
 
-        }else{
-            $save2 = [
-                'mutasi_keterangan'=> $request->ketMutasi,
-                'mutasi_data_id'=> $request->data_mutasi,
-                'mutasi_objek_id'=> $request->obj,
-                'mutasi_pegawai_id'=> $request->kePegawai,
-                'mutasi_kondisi_id'=> $request->kondisi,
-                'mutasi_bagian_id'=>$request->bagian_,
-                'mutasi_sub_bagian_id'=>$request->subBagian_,
-                'mutasi_gedung_id'=>$request->gedung,
-                'mutasi_ruangan_id'=> $request->ruangan,
-                // 'mutasi_trs_id'=> $trs_id,
-                'mutasi_pic_id'=> Auth::user()->id,
-                'mutasi_tgl'=> Carbon::today(),
-            ];
-            $mutasi =MutasiModels::where('mutasi_id', $id)->update($save2);
-
-            $cek = Log::channel('database')->info($mutasi);
-            $query = DB::getQueryLog();
-            $query = end($query);
-            $this->save_log('edit data mutasi' ,json_encode($query));
-
-        }
-        
-       
-        if($trs_id){
-            $detailMutasi1 = [
-                'detail_mutasi_id'=>$mutasi->mutasi_id,
-                'detail_mutasi_trs_id'=> $trs_id,
-                'detail_mutasi_pegawai_id'=> $request->pegawai,
-                'detail_mutasi_bagian_id'=> $request->bagian_detail_id,
-                'detail_mutasi_sub_bagian_id'=> $request->sub_bagian_detail_id,
-                'detail_mutasi_gedung_id'=>$request->gedung_detail_id,
-                'detail_mutasi_ruangan_id'=>$request->ruangan_detail_id,
-                'detail_mutasi_kondisi_id'=> $request->kds_detail_id,
-                'detail_mutasi_tgl'=> Carbon::today(),
-            ];
-                $save_detail = DB::table('mutasi_has_detail')->where('detail_mutasi_id', $id)->update($detailMutasi1);
-        }else{
-            $detailMutasi2 = [
-                'detail_mutasi_pegawai_id'=> $request->pegawai,
-                'detail_mutasi_bagian_id'=> $request->bagian_detail_id,
-                'detail_mutasi_sub_bagian_id'=> $request->sub_bagian_detail_id,
-                'detail_mutasi_gedung_id'=>$request->gedung_detail_id,
-                'detail_mutasi_ruangan_id'=>$request->ruangan_detail_id,
-                'detail_mutasi_kondisi_id'=> $request->kds_detail_id,
-                'detail_mutasi_tgl'=> Carbon::today(),
-            ];
-                $save_detail = DB::table('mutasi_has_detail')->where('detail_mutasi_id', $id)->update($detailMutasi2);
-        }
+        $mutasi =MutasiModels::where('mutasi_id', $request->mutasi_id)->update($save1);
 
        
-        if($trs_id){
-            $mutasiTrs = [
-                'trs_pegawai_id' => $request->kePegawai,
-                'trs_bagian_id' => $request->bagian_,
-                'trs_sub_bagian_id' => $request->subBagian_,
-                'trs_gedung_id' => $request->gedung,
-                'trs_ruangan_id' => $request->ruangan,
-                'trs_kondisi_id' => $request->kondisi,
-                'trs_status_id' => 5,
-                'trs_pic_id'=> Auth::user()->id,
-                'trs_date'=> Carbon::today(),
-            ];
-            $updateTrs = TransaksiDataModel::where('trs_id',$trs_id)->update($mutasiTrs);
-        }
+        $mutasiTrs = [
+            'trs_detail_pegawai_id' => $request->kePegawai,
+            'trs_detail_gedung_id'=>$request->gedung,
+            'trs_detail_ruangan_id' => $request->ruangan,
+            'trs_detail_status' => 5,
+            'trs_detail_pic_id'=> Auth::user()->id,
+            'trs_detail_date'=> Carbon::today(),
+        ];
+        $updateTrsMutasi = DetailTransaksi::where('trs_detail_id',$request->detail_trs_id)->update($mutasiTrs);
+       
         Alert::success('Success', 'Data berhasil di Simpan');
         return redirect('transaksi_data/mutasi');
        

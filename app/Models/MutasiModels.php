@@ -36,4 +36,9 @@ class MutasiModels extends Model
     {
         return $this->belongsTo(RuanganModels::class, 'mutasi_ruangan_id', 'data_ruangan_id');
     }
+
+    public function MutasiHasStok()
+    {
+        return $this->belongsTo(StokModels::class, 'mutasi_objek_id', 'data_stok_id');
+    }
 }

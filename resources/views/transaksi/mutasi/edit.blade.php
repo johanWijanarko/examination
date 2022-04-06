@@ -49,8 +49,9 @@
                                             <option {{ ($editMutasi->mutasi_data_id == $tp->data_type_id ) ? 'selected' : ''}}  value="{{$tp->data_type_id}}" >{{$tp->nama_data_type}}</option>
                                         @endforeach
                                     </select>
-                                    <input type="text" value="{{ $editMutasi->MutasiHasDetail->detail_id }}">
-                                    <input type="text" value="{{$editMutasi->MutasiHasDetail->detail_mutasi_trs_id}}" id="">
+                                    <input type="hidden" name="detail_mutasi" value="{{ $editMutasi->MutasiHasDetail->detail_id }}">
+                                    <input type="hidden" name="detail_trs_id" value="{{$editMutasi->MutasiHasDetail->detail_mutasi_trs_id}}" id="">
+                                    <input type="hidden" name="mutasi_id" value="{{$editMutasi->mutasi_id}}" id="">
                                 </div>
                             </div>
                             <div class="form-group row">
