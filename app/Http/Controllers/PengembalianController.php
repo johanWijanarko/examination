@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\StokModels;
 use App\Models\GedungModels;
 use Illuminate\Http\Request;
 use App\Models\KondisiModels;
 use App\Models\PegawaiModels;
 use App\Models\RuanganModels;
+use App\Models\DetailTransaksi;
+use App\Models\TransaksiModels;
+use App\Models\TypeKtegoryModels;
 use App\Models\PengembalianModels;
 use App\Models\TransaksiDataModel;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +34,8 @@ class PengembalianController extends Controller
         $datakondisi = KondisiModels::get();
         $gedung = GedungModels::get();
         $ruangan = RuanganModels::get();
-        return \view('transaksi/pengembalian.tambah', \compact('dataPegawai', 'datakondisi','gedung', 'ruangan'));
+        $type = TypeKtegoryModels::get();
+        return \view('transaksi/pengembalian.tambah', \compact('dataPegawai', 'datakondisi','gedung', 'ruangan', 'type'));
     }
 
     public function getDataPengembalian(Request $request)
@@ -225,24 +230,27 @@ class PengembalianController extends Controller
 
     public function getObejkKembali(Request $request)
     {
-        $getOjekMutasi = DataManajemenModels::where('data_manajemen_kode_id', $request->id)
-        ->orderBy('data_manajemen_name', 'asc')
-        ->pluck('data_manajemen_name', 'data_manajemen_id');
-            
-        return response()->json($getOjekMutasi);
+        
+        $getObejkKembali = StokModels::where('data_kategory_id', $request->id)
+        ->orderBy('data_stok_id', 'desc')
+        ->pluck('data_name', 'data_stok_id');
+        return response()->json($getObejkKembali);
     }
 
     public function getPegawiKembali(Request $request)
     {
-        $getPegawiMutasi = TransaksiDataModel ::with('trsHasPegawai',)
-        ->where('trs_data_id', $request->id)->where('trs_status_id','!=', 4)
-        ->orderBy('trs_id', 'asc')->get()
+        $getPegawiMutasi = DetailTransaksi ::with(['trsHasPegawai2','trsHasStok2'=> function($q){
+            $q->with(['stokHasKondisi']);
+        }])
+        ->where('trs_detail_data_stok_id', $request->id)->where('trs_detail_status','!=', 4)
+        ->orderBy('trs_detail_id', 'asc')->get()
         // ->map('trsHasPegawai.pegawai_name', 'trsHasPegawai.pegawai_id');
         ->map(function ($p){
             return [
-                'id' => $p->trs_id,
-                'id_peg' => $p->trsHasPegawai->pegawai_id,
-                'pegawe_name' => $p->trsHasPegawai->pegawai_name,
+                'stok_id' => $p->trs_detail_data_stok_id,
+                'kondisi' => $p->trsHasStok2->stokHasKondisi->nama_data_kondisi,
+                'id_peg' => $p->trsHasPegawai2->pegawai_id,
+                'pegawe_name' => $p->trsHasPegawai2->pegawai_name,
             ];
         });
        
@@ -252,15 +260,14 @@ class PengembalianController extends Controller
 
     public function getRekapKembali(Request $request)
     {
+        // dd($request->all());
         $data = explode(":", $request->id);
-        $pegawai_id = (int)$data[0];
-        $trs_id = (int)$data[1];
-
-        $getRekapMutasi_ = TransaksiDataModel ::with(['trsHasBagian', 'trsHasSubBagian', 'trsHasGedung','trsHasRuangan', 'trsHasData'=> function ($q){
-            $q->with('manajemenHasKondisi');
+        $dataStok = (int)$data[1];
+        $getRekapMutasi_ = DetailTransaksi ::with(['trsHasStok2'=> function($q){
+            $q->with(['stokHasKondisi']);
         }])
-        ->where('trs_id', $trs_id)
-        ->where('trs_pegawai_id', $pegawai_id)
+        // ->where('trs_id', $trs_id)
+        ->where('trs_detail_data_stok_id',$dataStok)
         ->first();
 
        return response()->json($getRekapMutasi_);
