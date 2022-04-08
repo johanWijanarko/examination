@@ -108,6 +108,42 @@ class SiteHelpers
 		}
 
 		return $output;
+
+// api wa zuwinda
+		// $time = Carbon::now()->toTimeString();
+        // $date= Carbon::now()->toDateString();
+        // $instances_id="f7b351e0-4af1-4902-b30f-925fc45728e5";
+        // $content ="cek bro cek cek, cek terakhir mar";
+        // $to="62895424011865";
+        // $curl = curl_init();
+        
+        // curl_setopt_array($curl, [
+        //   CURLOPT_URL => "https://api.zuwinda.com/v1.2/message/whatsapp/send-text",
+        //   CURLOPT_RETURNTRANSFER => true,
+        //   CURLOPT_ENCODING => "",
+        //   CURLOPT_MAXREDIRS => 10,
+        //   CURLOPT_TIMEOUT => 30,
+        //   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        //   CURLOPT_CUSTOMREQUEST => "POST",
+         
+        //   CURLOPT_POSTFIELDS => "time=${time}&date=${date}&instances_id=${instances_id}&content=${content}&to=${to}",
+        //   CURLOPT_HTTPHEADER => [
+            
+        //     "x-access-key: f81376da73b94a95b0aeb3cb9c4c8728"
+        //   ],
+        // ]);
+        
+        // $response = curl_exec($curl);
+        // $err = curl_error($curl);
+        
+        // curl_close($curl);
+        
+        // if ($err) {
+        //   echo "cURL Error #:" . $err;
+        // } else {
+        //   echo $response;
+        // }
+	    //     dd($response);
 	}
 
 	public static function get_mime_type($filename)

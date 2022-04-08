@@ -240,6 +240,8 @@ class PeminjamanController extends Controller
         }
 
 
+
+
         Alert::success('Success', 'Data berhasil di Simpan');
         return redirect('transaksi_data/peminjaman');
     }

@@ -68,9 +68,10 @@
                                     <label class="col-form-label mandatory">Dari Pegawai </label>
                                 </div>
                                 <div class="col-md-8">
-                                   <select class="form-control" id="pegawai" name="pegawai" required>
+                                    <select class="form-control" id="pegawai" name="pegawai" required>
                                         <option value="{{old('pegawai')}}">Pilih Pegawai</option>
                                     </select>
+                                    <input type="hidden" name="trs_detail_id" id="trs_detail_id" class="form-control" placeholder="" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -171,6 +172,9 @@ $('#obj').on('change', function () {
                 $('#pegawai').append(new Option(item.pegawe_name, item.id_peg+':'+item.stok_id))
                 // console.log(item.kondisi)
                 $('#kds_detail').val(item.kondisi)
+                $('#kds_detail_id').val(item.kondisi_id)
+                
+               
             });
         }
     })
@@ -187,9 +191,23 @@ $('#pegawai').on('change', function () {
         success: function (response) {
             // console.log(response)
             $('#jmlPjm').val(response.trs_detail_jumlah)
+            $('#trs_detail_id').val(response.trs_detail_id)
            
         }
     })
 })
+
+var validate_stok = 0;
+    $('#jumlah_kembali').on('input',function(){   
+        var jumlah= $(this).val();
+        var jmlPjm = $('#jmlPjm').val()
+       
+            if(parseInt(jumlah) > parseInt(jmlPjm)){
+                swal("Error!", 'Jumlah Pengambalian tidak boleh melebihi jumlah peminjaman') 
+                $('#jumlah_kembali').val('')
+                validate_stok = 1;
+                return false
+            }
+    });
 </script>
 @endpush
