@@ -439,11 +439,12 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/getPegawiKembali', [PengembalianController::class, 'getPegawiKembali'])->name('getPegawiKembali');
         Route::get('/getRekapKembali', [PengembalianController::class, 'getRekapKembali'])->name('getRekapKembali');
         Route::get('/getDataPengembalian', [PengembalianController::class, 'getDataPengembalian'])->name('getDataPengembalian');
-        Route::get('/detail/{id}/{detail}', [PengembalianController::class, 'detail'])->name('detailkembali');
+        Route::get('/detail/{id}', [PengembalianController::class, 'detail'])->name('detailkembali');
         Route::get('/edit/{id}/{detail}', [PengembalianController::class, 'edit'])->name('editKembali');
         Route::get('/confrimApprove/{id}', [PengembalianController::class, 'confrimApprove'])->name('confrimApprove');
         Route::get('/approve/{id}/{trs_detail_id}', [PengembalianController::class, 'approve'])->name('approveKembali');
         Route::post('/update/{id}', [PengembalianController::class, 'update'])->name('update_kembali');
+        // Route::get('/confrimApprove2/{id}', [PengembalianController::class, 'confrimApprove2'])->name('confrimApprove2');
     });
 
 

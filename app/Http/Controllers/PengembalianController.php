@@ -25,7 +25,7 @@ class PengembalianController extends Controller
 {
     public function index(Request $request)
     {
-         return \view('transaksi/pengembalian.index');
+        return \view('transaksi/pengembalian.index');
     }
 
     public function tambah()
@@ -50,14 +50,14 @@ class PengembalianController extends Controller
         return DataTables::of($datakembali)
             ->addColumn('details_url', function(PengembalianModels $dp) {
                if ($dp) {
-                    $btn = '<button data-url="'.route("detailkembali",['id'=>$dp->pengembalian_id, 'detail'=>$dp->pengembalian_trs_detail_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-warning mr-1 btn-sm cek">Detail</button>';
+
+                $btn ='<a data-toggle="modal" id="smallButton2"  data-target="#smallModal2" data-attr="'.route("detailkembali",['id'=>$dp->pengembalian_id]).'" data-placement="top" title="Approve"  class="edit btn btn-warning btn-sm" >Detail</a>';
+
                     if($dp->pengembalian_status == 1){
 
-                        $btn = $btn.'<a href="'.route("editKembali",['id'=>$dp->pengembalian_id, 'detail'=>$dp->pengembalian_trs_detail_id]).'" class="edit btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
+                        $btn = $btn.'<a href="'.route("editKembali",['id'=>$dp->pengembalian_id, 'detail'=>$dp->pengembalian_trs_detail_id]).'" class="edit btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
 
-                        $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("confrimApprove",['id'=>$dp->pengembalian_id]).'" data-placement="top" title="Approve"  class="edit btn btn-success btn-sm" >Approve</a>';
-
-                        // $btn = $btn.'<a href="'.route("approveKembali",['id'=>$dp->pengembalian_id, 'trs_detail_id'=>$dp->pengembalian_trs_detail_id]).'" class="edit btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Approve">Approve</a>';
+                        $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("confrimApprove",['id'=>$dp->pengembalian_id]).'" data-placement="top" title="Approve"  class="edit btn btn-primary btn-sm" >Approve</a>';
                     return $btn;
                     }
                     return $btn;
@@ -117,64 +117,16 @@ class PengembalianController extends Controller
             ->addIndexColumn()
             ->make(true);
     }
-    public function detail($id, $trs_id)
+    public function detail($id)
     {
-         $datakembali = PengembalianModels::orderBy('pengembalian_id', 'desc')->with(['kembaliHasObjek' => function($q){
-            $q->with('manajemenHasMerk');
-            $q->with('manajemenHasType');
-            $q->with('manajemenHasSupplier');
-        }, 'kembaliHasTrs'=> function($q) use ($trs_id){
-            $q->with('trsHasGedung');
-            $q->with('trsHasRuangan');
-            $q->with('trsHasKelompok');
-            $q->where('trs_id', $trs_id);
-        }])
-        ->where('pengembalian_id', $id)->get();
+        $datakembali = PengembalianModels::orderBy('pengembalian_id', 'desc')->with(['kembaliHasObjek', 'kembaliHasPegawai' => function($q){
+            $q->with('pegawaiHasBagian');
+            $q->with('pegawaiHasSubBagian');
+        }, 'kembaliHasKondisiSkrg', 'kembaliHasKondisiSblm'])
+        ->where('pengembalian_id', $id)->first();
 
         // dd($datakembali);
-        return DataTables::of($datakembali)
-            ->addColumn('merk', function (PengembalianModels $dt) {
-                if ($dt->kembaliHasObjek->manajemenHasMerk) {
-                    return $dt->kembaliHasObjek->manajemenHasMerk->nama_data_merk;
-                }
-
-                return '';
-            })
-            ->addColumn('type', function (PengembalianModels $dk) {
-                if ($dk->kembaliHasObjek->manajemenHasType) {
-                    return $dk->kembaliHasObjek->manajemenHasType->nama_data_type;
-                }
-                return '';
-            })
-            ->addColumn('gedung', function (PengembalianModels $dg) {
-                if ($dg->kembaliHasTrs->trsHasGedung) {
-                    return $dg->kembaliHasTrs->trsHasGedung->nama_data_gedung;
-                }
-                return '';
-            })
-            ->addColumn('ruangan', function (PengembalianModels $dg) {
-                if ($dg->kembaliHasTrs->trsHasRuangan) {
-                    return $dg->kembaliHasTrs->trsHasRuangan->nama_data_ruangan;
-                }
-                return '';
-            })
-            ->addColumn('supplier', function (PengembalianModels $dg) {
-                if ($dg->kembaliHasObjek->manajemenHasSupplier) {
-                    return $dg->kembaliHasObjek->manajemenHasSupplier->supplier_name;
-                }
-                return '';
-            })
-            ->addColumn('kelompok', function (PengembalianModels $dg) {
-                if ($dg->kembaliHasTrs->trsHasKelompok) {
-                    return $dg->kembaliHasTrs->trsHasKelompok->nama_data_kelompok;
-                }
-                return '';
-                return '';
-            })
-
-            ->rawColumns(['details_url'])
-            ->addIndexColumn()
-            ->make(true);
+        return \view('transaksi/pengembalian.detail', compact('datakembali'));
 
     }
     public function save(Request $request){
@@ -231,6 +183,7 @@ class PengembalianController extends Controller
         // dd($getData);
         return \view('transaksi/pengembalian.delete',compact('getData'));
     }
+
 
     public function approve(Request $request,$id, $trs_id ){
           // update transaksi
