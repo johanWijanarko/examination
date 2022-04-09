@@ -439,8 +439,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/getPegawiKembali', [PengembalianController::class, 'getPegawiKembali'])->name('getPegawiKembali');
         Route::get('/getRekapKembali', [PengembalianController::class, 'getRekapKembali'])->name('getRekapKembali');
         Route::get('/getDataPengembalian', [PengembalianController::class, 'getDataPengembalian'])->name('getDataPengembalian');
-        Route::get('/detail/{id}/{trs_id}', [PengembalianController::class, 'detail'])->name('detailkembali');
-        Route::get('/edit/{id}/{trs_id}', [PengembalianController::class, 'edit'])->name('editKembali');
+        Route::get('/detail/{id}/{detail}', [PengembalianController::class, 'detail'])->name('detailkembali');
+        Route::get('/edit/{id}/{detail}', [PengembalianController::class, 'edit'])->name('editKembali');
         Route::post('/update/{id}', [PengembalianController::class, 'update'])->name('update_kembali');
     });
 

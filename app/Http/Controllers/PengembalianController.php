@@ -50,28 +50,25 @@ class PengembalianController extends Controller
         return DataTables::of($datakembali)
             ->addColumn('details_url', function(PengembalianModels $dp) {
                if ($dp) {
-                   $btn = '<button data-url="'.route("detailkembali",['id'=>$dp->pengembalian_id, 'trs_id'=>$dp->pengembalian_trs_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek">Detail</button>';
-                    $btn = $btn.'<a href="'.route("editKembali",['id'=>$dp->pengembalian_id, 'trs_id'=>$dp->pengembalian_trs_id]).'" class="edit btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
+                //    $btn = '<button data-url="'.route("detailkembali",['id'=>$dp->pengembalian_id, 'trs_detail_id'=>$dp->pengembalian_trs_detail_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek">Detail</button>';
+                //     $btn ='<a href="'.route("editKembali",['id'=>$dp->pengembalian_id, 'detail'=>$dp->pengembalian_trs_detail_id]).'" class="edit btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
+                //    return $btn;
+
+                   $btn = '<button data-url="'.route("detailkembali",['id'=>$dp->pengembalian_id, 'detail'=>$dp->pengembalian_trs_detail_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek">Detail</button>';
+                    $btn = $btn.'<a href="'.route("editKembali",['id'=>$dp->pengembalian_id, 'detail'=>$dp->pengembalian_trs_detail_id]).'" class="edit btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
                    return $btn;
                 }
                 return '';
             })
             ->addColumn('perangkat', function (PengembalianModels $dp) {
-                $jenisKembali = [ 
-                    '1' => 'Perangkat',
-                    '2' => 'Aplikasi',
-                    '3' => 'Peralatan Kantor',
-                    '4' => 'Inventaris'
-                ];
-                
-                if ($dp->pengembalian_data_id) {
-                    return $jenisKembali[$dp->pengembalian_data_id];
+                if ($dp->kembaliHasType) {
+                    return $dp->kembaliHasType->nama_data_type;
                 }
                 return '';
             })
             ->addColumn('objek', function (PengembalianModels $dt) {
                 if ($dt->kembaliHasObjek) {
-                    return $dt->kembaliHasObjek->data_manajemen_name;
+                    return $dt->kembaliHasObjek->data_name;
                 }
                 
                 return '';
@@ -289,23 +286,18 @@ class PengembalianController extends Controller
         
     }
 
-    public function edit($id, $trs_id){
-        $dataPegawai = PegawaiModels::get();
+    public function edit($id, $detail){
+        
         $datakondisi = KondisiModels::get();
-        $gedung = GedungModels::get();
-        $ruangan = RuanganModels::get();
-        $objekMutasi = DataManajemenModels::get();
+        $type = TypeKtegoryModels::get();
        
-        $datakembali = PengembalianModels::orderBy('pengembalian_id', 'desc')->with(['kembaliHasObjek', 'kembaliHasPegawai' => function($q){
-            $q->with('pegawaiHasBagian');
-            $q->with('pegawaiHasSubBagian');
-        }, 'kembaliHasKondisiSkrg', 'kembaliHasKondisiSblm','kembaliHasTrs'=> function($q) use ($trs_id){
-            $q->with('trsHasGedung');
-            $q->with('trsHasRuangan');
-            $q->where('trs_id', $trs_id);
-        }])->where('pengembalian_id', $id)->first();
-        return \view('transaksi/pengembalian.edit', \compact('dataPegawai', 'datakondisi','gedung', 'ruangan', 'datakembali', 'objekMutasi'));
-    //    dd($datakembali); 
+        $datakembali = PengembalianModels::orderBy('pengembalian_id', 'desc')->with(['kembaliHasObjek', 'kembaliHasPegawai', 'kembaliHasKondisiSkrg', 'kembaliHasKondisiSblm','kembaliHasTrs'])->where('pengembalian_id', $id)->first();
+
+        $getpegawai = PengembalianModels::with(['kembaliHasPegawai'])->where('pengembalian_data_id',$datakembali->pengembalian_data_id)->where('pengembalian_obejk_id',$datakembali->pengembalian_obejk_id)->get();
+        
+        $objekMutasi = StokModels::where('data_kategory_id', $datakembali->pengembalian_data_id)->get();
+        dd($datakembali); 
+        return \view('transaksi/pengembalian.edit', \compact('datakondisi', 'datakembali', 'objekMutasi', 'type', 'getpegawai'));
     }
 
     public function update(Request $request, $id)
