@@ -74,7 +74,7 @@
                                     <select class="form-control" id="pegawai" name="pegawai" required>
                                         <option value="{{old('pegawai')}}">Pilih Pegawai</option>
                                         @foreach ($getpegawai as $pgw)
-                                            <option {{ ($datakembali->pengembalian_pegawai_id == $pgw->kembaliHasPegawai->pegawai_id ) ? 'selected' : ''}}  value="{{$pgw->kembaliHasPegawai->pegawai_id}}" >{{$pgw->kembaliHasPegawai->pegawai_name}}
+                                            <option {{ ($datakembali->pengembalian_pegawai_id == $pgw->trsHasPegawai2->pegawai_id ) ? 'selected' : ''}}  value="{{$pgw->trsHasPegawai2->pegawai_id}}" >{{$pgw->trsHasPegawai2->pegawai_name}}
                                             </option>
                                         @endforeach
                                     </select>

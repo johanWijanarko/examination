@@ -315,8 +315,8 @@ class PengembalianController extends Controller
 
         $datakembali = PengembalianModels::orderBy('pengembalian_id', 'desc')->with(['kembaliHasObjek', 'kembaliHasPegawai', 'kembaliHasKondisiSkrg', 'kembaliHasKondisiSblm','kembaliHasTrs'])->where('pengembalian_id', $id)->first();
 
-        $getpegawai = PengembalianModels::with(['kembaliHasPegawai'])->where('pengembalian_data_id',$datakembali->pengembalian_data_id)->where('pengembalian_obejk_id',$datakembali->pengembalian_obejk_id)->get();
-
+        $getpegawai = DetailTransaksi::with(['trsHasPegawai2'])->where('trs_detail_data_stok_id',$datakembali->pengembalian_obejk_id)->get();
+        // dd($getpegawai);
         $objekMutasi = StokModels::where('data_kategory_id', $datakembali->pengembalian_data_id)->get();
         // dd($datakembali);
         return \view('transaksi/pengembalian.edit', \compact('datakondisi', 'datakembali', 'objekMutasi', 'type', 'getpegawai'));
