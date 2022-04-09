@@ -1,5 +1,5 @@
 @extends('layout.app',[
-    
+
 ])
 @section('content')
 <style>
@@ -53,7 +53,7 @@
                                         @foreach ($objekMutasi as $obj)
                                             <option {{ ($datakembali->pengembalian_obejk_id == $obj->data_stok_id ) ? 'selected' : ''}}  value="{{$obj->data_stok_id}}" >{{$obj->data_name}}
                                             </option>
-                                        @endforeach 
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -62,8 +62,8 @@
                                     <label class="col-form-label mandatory">Kondisi Saat diterima</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" name="kds_detail" id="kds_detail" class="form-control" placeholder="" readonly>
-                                    <input type="hidden" name="kds_detail_id" id="kds_detail_id" class="form-control" placeholder="" readonly>
+                                    <input type="text" name="kds_detail" id="kds_detail" value="{{ $datakembali->kembaliHasKondisiSblm->nama_data_kondisi }}" class="form-control" placeholder="" readonly>
+                                    <input type="hidden" name="kds_detail_id" id="kds_detail_id" value="{{ $datakembali->kembaliHasKondisiSblm->data_kondisi_id }}" class="form-control" placeholder="" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -76,9 +76,9 @@
                                         @foreach ($getpegawai as $pgw)
                                             <option {{ ($datakembali->pengembalian_pegawai_id == $pgw->kembaliHasPegawai->pegawai_id ) ? 'selected' : ''}}  value="{{$pgw->kembaliHasPegawai->pegawai_id}}" >{{$pgw->kembaliHasPegawai->pegawai_name}}
                                             </option>
-                                        @endforeach 
+                                        @endforeach
                                     </select>
-                                    <input type="hidden" name="trs_detail_id" id="trs_detail_id" class="form-control" placeholder="" readonly>
+                                    <input type="hidden" name="trs_detail_id" id="trs_detail_id" value="{{ $datakembali->pengembalian_trs_detail_id }}" class="form-control" placeholder="" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -86,7 +86,7 @@
                                     <label class="col-form-label mandatory">Jumlah Peminjaman</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" name="jmlPjm" id="jmlPjm" class="form-control" placeholder="" readonly>
+                                    <input type="text" name="jmlPjm" id="jmlPjm" value="{{ $datakembali->kembaliHasTrs->trs_detail_jumlah }}" class="form-control" placeholder="" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -97,18 +97,18 @@
                                     <select class="form-control" id="kondisi" name="kondisi" required>
                                         <option value="{{old('kondisi')}}">Pilih Kondisi</option>
                                         @foreach ($datakondisi as $kondisi)
-                                            <option value="{{ $kondisi->data_kondisi_id }}">{{ $kondisi->nama_data_kondisi }}</option>
+                                            <option {{ ($datakembali->pengembalian_kondisi_sekarang_id == $kondisi->data_kondisi_id ) ? 'selected' : ''}} value="{{ $kondisi->data_kondisi_id }}">{{ $kondisi->nama_data_kondisi }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                           
+
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Jumlah Pengembalian</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" name="jumlah_kembali" id="jumlah_kembali" class="form-control" placeholder="">
+                                    <input type="text" name="jumlah_kembali" id="jumlah_kembali" value="{{ $datakembali->pengembalian_jumlah }}" class="form-control" placeholder="">
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -116,7 +116,7 @@
                                     <label class="col-form-label mandatory">Keterangan pengembalian</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" name="ketkembali" id="ketkembali" class="form-control" placeholder="" >
+                                    <input type="text" name="ketkembali" id="ketkembali" value="{{ $datakembali->pengembalian_keterangan }}" class="form-control" placeholder="" >
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -151,7 +151,7 @@ $('#data_pengembalian').on('change', function () {
             $('#obj').empty();
                     $('#obj').append(new Option('- Pilih -', ''))
             $('#obj').trigger('change')
-            
+
             $.each(response, function (id, name) {
             // console.log(name)
                 $('#obj').append(new Option(name, id))
@@ -173,15 +173,15 @@ $('#obj').on('change', function () {
             $('#pegawai').empty();
                     $('#pegawai').append(new Option('- Pilih -', ''))
             $('#pegawai').trigger('change')
-            
+
             response.forEach(item => {
                 // $('#pegawai').append(new Option(item.pegawe_name, item.id_peg))
                 $('#pegawai').append(new Option(item.pegawe_name, item.id_peg+':'+item.stok_id))
                 // console.log(item.kondisi)
                 $('#kds_detail').val(item.kondisi)
                 $('#kds_detail_id').val(item.kondisi_id)
-                
-               
+
+
             });
         }
     })
@@ -199,18 +199,18 @@ $('#pegawai').on('change', function () {
             // console.log(response)
             $('#jmlPjm').val(response.trs_detail_jumlah)
             $('#trs_detail_id').val(response.trs_detail_id)
-           
+
         }
     })
 })
 
 var validate_stok = 0;
-    $('#jumlah_kembali').on('input',function(){   
+    $('#jumlah_kembali').on('input',function(){
         var jumlah= $(this).val();
         var jmlPjm = $('#jmlPjm').val()
-       
+
             if(parseInt(jumlah) > parseInt(jmlPjm)){
-                swal("Error!", 'Jumlah Pengambalian tidak boleh melebihi jumlah peminjaman') 
+                swal("Error!", 'Jumlah Pengambalian tidak boleh melebihi jumlah peminjaman')
                 $('#jumlah_kembali').val('')
                 validate_stok = 1;
                 return false

@@ -347,7 +347,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/delete/{id}', [Stokdata::class, 'delete'])->name('delete_stok');
     });
 
-   
+
 
     Route::group(['prefix' => 'm_data/data_lainnya'], function () {
         // perangkat
@@ -441,6 +441,8 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/getDataPengembalian', [PengembalianController::class, 'getDataPengembalian'])->name('getDataPengembalian');
         Route::get('/detail/{id}/{detail}', [PengembalianController::class, 'detail'])->name('detailkembali');
         Route::get('/edit/{id}/{detail}', [PengembalianController::class, 'edit'])->name('editKembali');
+        Route::get('/confrimApprove/{id}', [PengembalianController::class, 'confrimApprove'])->name('confrimApprove');
+        Route::get('/approve/{id}/{trs_detail_id}', [PengembalianController::class, 'approve'])->name('approveKembali');
         Route::post('/update/{id}', [PengembalianController::class, 'update'])->name('update_kembali');
     });
 

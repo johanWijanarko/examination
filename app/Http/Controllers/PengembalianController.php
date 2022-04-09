@@ -24,7 +24,7 @@ use Yajra\DataTables\Facades\DataTables;
 class PengembalianController extends Controller
 {
     public function index(Request $request)
-    {   
+    {
          return \view('transaksi/pengembalian.index');
     }
 
@@ -40,7 +40,7 @@ class PengembalianController extends Controller
 
     public function getDataPengembalian(Request $request)
     {
-        
+
         $datakembali = PengembalianModels::orderBy('pengembalian_id', 'desc')->with(['kembaliHasObjek', 'kembaliHasPegawai' => function($q){
             $q->with('pegawaiHasBagian');
             $q->with('pegawaiHasSubBagian');
@@ -50,13 +50,17 @@ class PengembalianController extends Controller
         return DataTables::of($datakembali)
             ->addColumn('details_url', function(PengembalianModels $dp) {
                if ($dp) {
-                //    $btn = '<button data-url="'.route("detailkembali",['id'=>$dp->pengembalian_id, 'trs_detail_id'=>$dp->pengembalian_trs_detail_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek">Detail</button>';
-                //     $btn ='<a href="'.route("editKembali",['id'=>$dp->pengembalian_id, 'detail'=>$dp->pengembalian_trs_detail_id]).'" class="edit btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
-                //    return $btn;
+                    $btn = '<button data-url="'.route("detailkembali",['id'=>$dp->pengembalian_id, 'detail'=>$dp->pengembalian_trs_detail_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-warning mr-1 btn-sm cek">Detail</button>';
+                    if($dp->pengembalian_status == 1){
 
-                   $btn = '<button data-url="'.route("detailkembali",['id'=>$dp->pengembalian_id, 'detail'=>$dp->pengembalian_trs_detail_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek">Detail</button>';
-                    $btn = $btn.'<a href="'.route("editKembali",['id'=>$dp->pengembalian_id, 'detail'=>$dp->pengembalian_trs_detail_id]).'" class="edit btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
-                   return $btn;
+                        $btn = $btn.'<a href="'.route("editKembali",['id'=>$dp->pengembalian_id, 'detail'=>$dp->pengembalian_trs_detail_id]).'" class="edit btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
+
+                        $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("confrimApprove",['id'=>$dp->pengembalian_id]).'" data-placement="top" title="Approve"  class="edit btn btn-success btn-sm" >Approve</a>';
+
+                        // $btn = $btn.'<a href="'.route("approveKembali",['id'=>$dp->pengembalian_id, 'trs_detail_id'=>$dp->pengembalian_trs_detail_id]).'" class="edit btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Approve">Approve</a>';
+                    return $btn;
+                    }
+                    return $btn;
                 }
                 return '';
             })
@@ -70,7 +74,7 @@ class PengembalianController extends Controller
                 if ($dt->kembaliHasObjek) {
                     return $dt->kembaliHasObjek->data_name;
                 }
-                
+
                 return '';
             })
             ->addColumn('pegawai', function (PengembalianModels $dk) {
@@ -133,7 +137,7 @@ class PengembalianController extends Controller
                 if ($dt->kembaliHasObjek->manajemenHasMerk) {
                     return $dt->kembaliHasObjek->manajemenHasMerk->nama_data_merk;
                 }
-                
+
                 return '';
             })
             ->addColumn('type', function (PengembalianModels $dk) {
@@ -167,7 +171,7 @@ class PengembalianController extends Controller
                 return '';
                 return '';
             })
-            
+
             ->rawColumns(['details_url'])
             ->addIndexColumn()
             ->make(true);
@@ -179,7 +183,7 @@ class PengembalianController extends Controller
         $pegawai_id = (int)$data[0];
         $stok_id = (int)$data[1];
 
-         $request->validate([
+        $request->validate([
             'data_pengembalian' => 'required',
             'obj' => 'required',
             'pegawai' => 'required',
@@ -191,7 +195,7 @@ class PengembalianController extends Controller
             'pegawai.required' => 'Pegawai Sekarang tidak boleh kosong!',
             'kondisi.required' => 'Kondisi tidak boleh kosong!',
         ]);
-        
+
         $save = [
             'pengembalian_data_id'=> $request->data_pengembalian,
             'pengembalian_obejk_id'=> $request->obj,
@@ -203,6 +207,7 @@ class PengembalianController extends Controller
             'pengembalian_pic_id'=> Auth::user()->id,
             'pengembalian_tgl'=> Carbon::today(),
             'pengembalian_jumlah' =>$request->jumlah_kembali,
+
         ];
         $kembali =PengembalianModels::create($save);
 
@@ -211,36 +216,53 @@ class PengembalianController extends Controller
         $query = end($query);
         $this->save_log('tambah transaksi pengembalian' ,json_encode($query));
 
-        
+
         $product = StokModels::find($request->obj);
         $product->decrement('data_dipakai', $request->jumlah_kembali);
         $product->increment('data_jumlah', $request->jumlah_kembali);
 
-        // update transaksi 
-        $detailTrs = DetailTransaksi::find($request->trs_detail_id);
-        $jumlahPinjam = $detailTrs->trs_detail_jumlah;
-        
-        if($jumlahPinjam > 0 ){
-            $detailTrs->decrement('trs_detail_jumlah', $request->jumlah_kembali);
-        }
-
-        $detailTrs_ = DetailTransaksi::find($request->trs_detail_id);
-        $jumlahPinjam_ = $detailTrs_->trs_detail_jumlah;
-        if($jumlahPinjam_ == 0){
-            $kembali= [
-                'trs_detail_status'=>4
-            ];
-            $updatetrans =DetailTransaksi::where('trs_detail_id', $request->trs_detail_id)->update($kembali);
-        }
-       
 
         Alert::success('Success', 'Data berhasil di Simpan');
         return redirect('transaksi_data/pengembalian');
     }
 
+    public function confrimApprove($id){
+        $getData = PengembalianModels::find($id);
+        // dd($getData);
+        return \view('transaksi/pengembalian.delete',compact('getData'));
+    }
+
+    public function approve(Request $request,$id, $trs_id ){
+          // update transaksi
+        //   dd($trs_id);
+          $detailTrs = DetailTransaksi::find($trs_id);
+          $jumlahPinjam = $detailTrs->trs_detail_jumlah;
+
+          $jmlKembali = PengembalianModels::find($id);
+          $jml = $jmlKembali->pengembalian_jumlah;
+
+          if($jumlahPinjam > 0 ){
+              $detailTrs->decrement('trs_detail_jumlah', $jml);
+          }
+
+          $detailTrs_ = DetailTransaksi::find($trs_id);
+          $jumlahPinjam_ = $detailTrs_->trs_detail_jumlah;
+          if($jumlahPinjam_ == 0){
+              $kembali= [
+                  'trs_detail_status'=>4
+              ];
+              $updatetrans =DetailTransaksi::where('trs_detail_id', $request->trs_detail_id)->update($kembali);
+          }
+
+        $kembaliUpdate =PengembalianModels::where('pengembalian_id', $id)->update([ 'pengembalian_status'=> 0 ]);
+
+        Alert::success('Success', 'Data berhasil di Approve');
+        return redirect('transaksi_data/pengembalian');
+    }
+
     public function getObejkKembali(Request $request)
     {
-        
+
         $getObejkKembali = StokModels::where('data_kategory_id', $request->id)
         ->orderBy('data_stok_id', 'desc')
         ->pluck('data_name', 'data_stok_id');
@@ -265,7 +287,7 @@ class PengembalianController extends Controller
                 'pegawe_name' => $p->trsHasPegawai2->pegawai_name,
             ];
         });
-       
+
             // dd($getPegawiMutasi);
         return response()->json($getPegawiMutasi);
     }
@@ -283,37 +305,26 @@ class PengembalianController extends Controller
         ->first();
 
        return response()->json($getRekapMutasi_);
-        
+
     }
 
     public function edit($id, $detail){
-        
+
         $datakondisi = KondisiModels::get();
         $type = TypeKtegoryModels::get();
-       
+
         $datakembali = PengembalianModels::orderBy('pengembalian_id', 'desc')->with(['kembaliHasObjek', 'kembaliHasPegawai', 'kembaliHasKondisiSkrg', 'kembaliHasKondisiSblm','kembaliHasTrs'])->where('pengembalian_id', $id)->first();
 
         $getpegawai = PengembalianModels::with(['kembaliHasPegawai'])->where('pengembalian_data_id',$datakembali->pengembalian_data_id)->where('pengembalian_obejk_id',$datakembali->pengembalian_obejk_id)->get();
-        
+
         $objekMutasi = StokModels::where('data_kategory_id', $datakembali->pengembalian_data_id)->get();
-        dd($datakembali); 
+        // dd($datakembali);
         return \view('transaksi/pengembalian.edit', \compact('datakondisi', 'datakembali', 'objekMutasi', 'type', 'getpegawai'));
     }
 
     public function update(Request $request, $id)
     {
-        $data = explode(":", $request->pegawai);
-        
-        if(isset($data[1])){
-            $trs_id = (int)$data[1];
-        }else{
-            $trs_id =null;
-        }
-        if(isset($data[0])){
-            $pegawai_id = (int)$data[0];
-        }else{
-            $pegawai_id = '';
-        }
+        // dd($request->all());
 
         $request->validate([
             'data_pengembalian' => 'required',
@@ -327,33 +338,22 @@ class PengembalianController extends Controller
             'pegawai.required' => 'Pegawai Sekarang tidak boleh kosong!',
             'kondisi.required' => 'Kondisi tidak boleh kosong!',
         ]);
-        if($trs_id){
-            $save = [
-                'pengembalian_data_id'=> $request->data_pengembalian,
-                'pengembalian_obejk_id'=> $request->obj,
-                'pengembalian_pegawai_id'=> $pegawai_id,
-                'pengembalian_kondisi_sebelum_id'=> $request->kds_detail_id,
-                'pengembalian_kondisi_sekarang_id'=> $request->kondisi,
-                'pengembalian_keterangan'=> $request->ketkembali,
-                'pengembalian_trs_id'=> $trs_id,
-                'pengembalian_pic_id'=> Auth::user()->id,
-                'pengembalian_tgl'=> Carbon::today(),
-            ];
-            $kembali =PengembalianModels::where('pengembalian_id', $id)->update($save);
-        }else{
-            $save = [
-                'pengembalian_data_id'=> $request->data_pengembalian,
-                'pengembalian_obejk_id'=> $request->obj,
-                'pengembalian_pegawai_id'=> $pegawai_id,
-                'pengembalian_kondisi_sebelum_id'=> $request->kds_detail_id,
-                'pengembalian_kondisi_sekarang_id'=> $request->kondisi,
-                'pengembalian_keterangan'=> $request->ketkembali,
-                // 'pengembalian_trs_id'=> $trs_id,
-                'pengembalian_pic_id'=> Auth::user()->id,
-                'pengembalian_tgl'=> Carbon::today(),
-            ];
-            $kembali =PengembalianModels::where('pengembalian_id', $id)->update($save);
-        }
+
+        $save = [
+            'pengembalian_data_id'=> $request->data_pengembalian,
+            'pengembalian_obejk_id'=> $request->obj,
+            'pengembalian_pegawai_id'=> $request->pegawai,
+            'pengembalian_kondisi_sebelum_id'=> $request->kds_detail_id,
+            'pengembalian_kondisi_sekarang_id'=> $request->kondisi,
+            'pengembalian_keterangan'=> $request->ketkembali,
+            'pengembalian_trs_detail_id'=> $request->trs_detail_id,
+            'pengembalian_pic_id'=> Auth::user()->id,
+            'pengembalian_tgl'=> Carbon::today(),
+            'pengembalian_jumlah' =>$request->jumlah_kembali,
+
+        ];
+
+        $kembali =PengembalianModels::where('pengembalian_id', $id)->update($save);
 
         $cek = \Log::channel('database')->info($kembali);
         $query = DB::getQueryLog();
@@ -362,7 +362,7 @@ class PengembalianController extends Controller
 
         Alert::success('Success', 'Data berhasil di Simpan');
         return redirect('transaksi_data/pengembalian');
-       
+
     }
 
 }

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\DetailTransaksi;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PengembalianModels extends Model
 {
@@ -29,7 +30,7 @@ class PengembalianModels extends Model
         return $this->belongsTo(KondisiModels::class, 'pengembalian_kondisi_sebelum_id', 'data_kondisi_id');
     }
     public function kembaliHasTrs(){
-        return $this->belongsTo(TransaksiDataModel::class, 'pengembalian_trs_id', 'trs_id');
+        return $this->belongsTo(DetailTransaksi::class, 'pengembalian_trs_detail_id', 'trs_detail_id');
     }
 }
 
