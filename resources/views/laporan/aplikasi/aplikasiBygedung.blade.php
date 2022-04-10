@@ -1,5 +1,5 @@
 @extends('layout.app',[
-    
+
 ])
 @section('content')
 <style>
@@ -17,7 +17,7 @@
         <div class="row">
             <div class="col-lg-12 mt-4" style="font-size: 12px !important">
                 <form action="{{ route('aplikasiPergedung') }}" action="get">
-                    <div class="form-group row">
+                <div class="form-group row">
                     <label for="inputEmail3" class="col-sm-3 mt-2">*) Pilih Gedung</label>
                     <div class="col-sm-4">
                         <select class="form-control" id="gedung" name="gedung">
@@ -74,12 +74,12 @@
                         <tr>
                             <td>{{ $i+1 }}</td>
                             <td>{{ $apl->trsHasData->data_manajemen_name }}</td>
-                            
+
                             <td>{{ $apl->trsHasPegawai->pegawai_name }}</td>
                             <td>{{ $apl->trsHasBagian->nama_bagian }}</td>
                             <td>{{ $apl->trsHasSubBagian->sub_bagian_nama }}</td>
                             @php
-                                 $status = [ 
+                                 $status = [
                                     '1' => 'Dipakai',
                                     '2' => 'Dipinjam',
                                     '3' => 'Sedang diperbaiki',
@@ -112,7 +112,7 @@
 @endsection
 @push('page-script')
 
-<script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script> 
+<script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
 
 <script type="text/javascript">
     $(function () {
@@ -123,7 +123,7 @@
             // var dt = new Date(selected);
             // dt.setDate(dt.getDate() + 1);
             // $("#end").datepicker("option", "minDate", dt);
-             
+
         }
     });
     $("#end").datepicker({

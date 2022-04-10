@@ -30,6 +30,7 @@ use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\RuanganController;
 use App\Http\Controllers\DataMerkController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\LaporanAllNominatif;
 use App\Http\Controllers\LaporanPengembalian;
 use App\Http\Controllers\PerbaikanController;
 use App\Http\Controllers\SubBagianController;
@@ -477,186 +478,14 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::group(['prefix' => 'laporan_nominatif/'], function () {
-        Route::get('/lap_perangkat', [LaporanPerangkat::class, 'perangkat'])->name('perangkat');
-        Route::get('/lap_perangkat_excel', [LaporanPerangkat::class, 'perangkat_excel'])->name('perangkat_excel');
-        Route::get('/lap_prangkat_gedung', [LaporanPerangkat::class, 'perangkatPergedung'])->name('perangkatPergedung');
-        Route::get('/perangkatPergedung_excel', [LaporanPerangkat::class, 'perangkatPergedung_excel'])->name('perangkatPergedung_excel');
-        Route::get('/lap_prangkat_ruang', [LaporanPerangkat::class, 'perangkatPerRuangan'])->name('perangkatPerRuangan');
-        Route::get('/perangkatPerRuangan_excel', [LaporanPerangkat::class, 'perangkatPerRuangan_excel'])->name('perangkatPerRuangan_excel');
-        Route::get('/lap_prangkat_kon', [LaporanPerangkat::class, 'perangkatPerKondisi'])->name('perangkatPerKondisi');
-        Route::get('/perangkatPerKondisi_excel', [LaporanPerangkat::class, 'perangkatPerKondisi_excel'])->name('perangkatPerKondisi_excel');
-
-
-        // aplikasi
-        Route::get('/lap_aplikasi', [AplikasiLaporan::class, 'aplikasi'])->name('aplikasi_laporan');
-        Route::get('/lap_aplikasi_excel', [AplikasiLaporan::class, 'aplikasi_excel'])->name('aplikasi_excel');
-        Route::get('/lap_apl_gedung', [AplikasiLaporan::class, 'aplikasiPergedung'])->name('aplikasiPergedung');
-        Route::get('/aplikasiPergedung_excel', [AplikasiLaporan::class, 'aplikasiPergedung_excel'])->name('aplikasiPergedung_excel');
-        Route::get('/lap_apl_ruangan', [AplikasiLaporan::class, 'aplikasiPerRuangan'])->name('aplikasiPerRuangan');
-        Route::get('/aplikasiPerRuangan_excel', [AplikasiLaporan::class, 'aplikasiPerRuangan_excel'])->name('aplikasiPerRuangan_excel');
-        Route::get('/lap_apl_kon', [AplikasiLaporan::class, 'aplikasiPerKondisi'])->name('aplikasiPerKondisi');
-        Route::get('/aplikasiPerKondisi_excel', [AplikasiLaporan::class, 'aplikasiPerKondisi_excel'])->name('aplikasiPerKondisi_excel');
-
-
-        // alat kantor
-        Route::get('/lap_alat_kantor', [LaporanAlatKantor::class, 'alatKantor'])->name('laporan_alatKantor');
-        Route::get('/lap_alatKantor_excel', [LaporanAlatKantor::class, 'alatkantor_excel'])->name('alatkantor_excel');
-        Route::get('/lap_alat_gedung', [LaporanAlatKantor::class, 'alatKantorPergedung'])->name('alatKantorPergedung');
-        Route::get('/alatKantorPergedung_excel', [LaporanAlatKantor::class, 'alatKantorPergedung_excel'])->name('alatKantorPergedung_excel');
-        Route::get('/lap_alat_ruang', [LaporanAlatKantor::class, 'alatKantorPerRuangan'])->name('alatKantorPerRuangan');
-        Route::get('/alatKantorPerRuangan_excel', [LaporanAlatKantor::class, 'alatKantorPerRuangan_excel'])->name('alatKantorPerRuangan_excel');
-        Route::get('/lap_alat_kondisi', [LaporanAlatKantor::class, 'alatKantorPerKondisi'])->name('alatKantorPerKondisi');
-        Route::get('/alatKantorPerKondisi_excel', [LaporanAlatKantor::class, 'alatKantorPerKondisi_excel'])->name('alatKantorPerKondisi_excel');
-
-
-        // LaporanInventaris
-
-        Route::get('/lap_inv', [LaporanInventaris::class, 'inventaris'])->name('lap_inv');
-        Route::get('/lap_inventaris_excel', [LaporanInventaris::class, 'inventaris_excel'])->name('inventaris_excel');
-        Route::get('/lap_inv_gedung', [LaporanInventaris::class, 'inventarisPergedung'])->name('inventarisPergedung');
-        Route::get('/inventarisPergedung_excel', [LaporanInventaris::class, 'inventarisPergedung_excel'])->name('inventarisPergedung_excel');
-        Route::get('/lap_inv_ruang', [LaporanInventaris::class, 'inventarisPerRuangan'])->name('inventarisPerRuangan');
-        Route::get('/inventarisPerRuangan_excel', [LaporanInventaris::class, 'inventarisPerRuangan_excel'])->name('inventarisPerRuangan_excel');
-        Route::get('/lap_inv_kon', [LaporanInventaris::class, 'inventarisPerKondisi'])->name('inventarisPerKondisi');
-        Route::get('/inventarisPerKondisi_excel', [LaporanInventaris::class, 'inventarisPerKondisi_excel'])->name('inventarisPerKondisi_excel');
-    });
-
-    Route::group(['prefix' => 'laporan_mutasi/'], function () {
-        Route::get('/mut_prangkat', [LaporanMutasi::class, 'index'])->name('mut_prangkat');
-        Route::get('/mut_prangkat_excel', [LaporanMutasi::class, 'mut_prangkat_excel'])->name('mut_prangkat_excel');
-        Route::get('/mut_prangkat_gedung', [LaporanMutasi::class, 'mut_prangkat_gedung'])->name('mut_prangkat_gedung');
-        Route::get('/mut_prangkat_gedung_excel', [LaporanMutasi::class, 'mut_prangkat_gedung_excel'])->name('mut_prangkat_gedung_excel');
-        Route::get('/mut_prangkat_ruang', [LaporanMutasi::class, 'mut_prangkat_ruangan'])->name('mut_prangkat_ruangan');
-        Route::get('/mut_prangkat_ruangan_excel', [LaporanMutasi::class, 'mut_prangkat_ruangan_excel'])->name('mut_prangkat_ruangan_excel');
-
-        // aplikasi
-        Route::get('/mut_aplikasi', [LaporanMutasi::class, 'aplikasi'])->name('mut_aplikasi');
-        Route::get('/mut_aplikasi_excel', [LaporanMutasi::class, 'mut_aplikasi_excel'])->name('mut_aplikasi_excel');
-        Route::get('/mut_apl_gedung', [LaporanMutasi::class, 'mut_aplikasi_gedung'])->name('mut_aplikasi_gedung');
-        Route::get('/mut_aplikasi_gedung_excel', [LaporanMutasi::class, 'mut_aplikasi_gedung_excel'])->name('mut_aplikasi_gedung_excel');
-        Route::get('/mut_apl_ruang', [LaporanMutasi::class, 'mut_aplikasi_ruangan'])->name('mut_aplikasi_ruangan');
-        Route::get('/mut_aplikasi_ruangan_excel', [LaporanMutasi::class, 'mut_aplikasi_ruangan_excel'])->name('mut_aplikasi_ruangan_excel');
-
-
-        // aplikasi
-        Route::get('/mut_atk', [LaporanMutasi::class, 'AlatKantor'])->name('mut_AlatKantor');
-        Route::get('/mut_AlatKantor_excel', [LaporanMutasi::class, 'mut_AlatKantor_excel'])->name('mut_AlatKantor_excel');
-        Route::get('/mut_atk_gedung', [LaporanMutasi::class, 'mut_AlatKantor_gedung'])->name('mut_AlatKantor_gedung');
-        Route::get('/mut_AlatKantor_gedung_excel', [LaporanMutasi::class, 'mut_AlatKantor_gedung_excel'])->name('mut_AlatKantor_gedung_excel');
-        Route::get('/mut_atk_ruang', [LaporanMutasi::class, 'mut_AlatKantor_ruangan'])->name('mut_AlatKantor_ruangan');
-        Route::get('/mut_AlatKantor_ruangan_excel', [LaporanMutasi::class, 'mut_AlatKantor_ruangan_excel'])->name('mut_AlatKantor_ruangan_excel');
-
-        // inventaris
-        Route::get('/mut_inv', [LaporanMutasi::class, 'Inv'])->name('mut_Inv');
-        Route::get('/mut_Inv_excel', [LaporanMutasi::class, 'mut_Inv_excel'])->name('mut_Inv_excel');
-        Route::get('/mut_inv_gedung', [LaporanMutasi::class, 'mut_Inv_gedung'])->name('mut_Inv_gedung');
-        Route::get('/mut_Inv_gedung_excel', [LaporanMutasi::class, 'mut_Inv_gedung_excel'])->name('mut_Inv_gedung_excel');
-        Route::get('/mut_inv_ruang', [LaporanMutasi::class, 'mut_Inv_ruangan'])->name('mut_Inv_ruangan');
-        Route::get('/mut_Inv_ruangan_excel', [LaporanMutasi::class, 'mut_Inv_ruangan_excel'])->name('mut_Inv_ruangan_excel');
+        Route::get('/lap_transaksi', [LaporanAllNominatif::class, 'laporanTransaksi'])->name('laporanTransaksi');
+        Route::get('/lap_mutasi', [LaporanAllNominatif::class, 'laporanMutasi'])->name('laporanMutasi');
+        Route::get('/lap_peminjaman', [LaporanAllNominatif::class, 'laporanPeminjaman'])->name('laporanPeminjaman');
+        Route::get('/lap_pengembalian', [LaporanAllNominatif::class, 'laporanPengembalian'])->name('laporanPengembalian');
+        Route::get('/lap_perbaikan', [LaporanAllNominatif::class, 'laporanPerbaikan'])->name('laporanPerbaikan');
     });
 
 
-    Route::group(['prefix' => 'lap_pengembalian/'], function () {
-        // perangkat
-        Route::get('/kem_prangkat', [LaporanPengembalian::class, 'index'])->name('kem_prangkat');
-        Route::get('/kem_prangkat_excel', [LaporanPengembalian::class, 'kem_prangkat_excel'])->name('kem_prangkat_excel');
-        Route::get('/kem_prangkat_gedung', [LaporanPengembalian::class, 'kem_prangkat_gedung'])->name('kem_prangkat_gedung_');
-        Route::get('/kem_prangkat_gedung_excel', [LaporanPengembalian::class, 'kem_prangkat_gedung_excel'])->name('kem_prangkat_gedung_excel');
-        Route::get('/kem_prangkat_ruang', [LaporanPengembalian::class, 'kem_prangkat_ruang'])->name('kem_prangkat_ruang');
-        Route::get('/kem_prangkat_ruang_excel', [LaporanPengembalian::class, 'kem_prangkat_ruang_excel'])->name('kem_prangkat_ruang_excel');
-
-        // aplikasi
-         Route::get('/kem_aplikasi', [LaporanPengembalian::class, 'aplikasi'])->name('kem_aplikasi');
-        Route::get('/kem_aplikasi_excel', [LaporanPengembalian::class, 'kem_aplikasi_excel'])->name('kem_aplikasi_excel');
-        Route::get('/kem_aplikasi_gedung', [LaporanPengembalian::class, 'kem_aplikasi_gedung'])->name('kem_aplikasi_gedung_');
-        Route::get('/kem_aplikasi_gedung_excel', [LaporanPengembalian::class, 'kem_aplikasi_gedung_excel'])->name('kem_aplikasi_gedung_excel');
-        Route::get('/kem_aplikasi_ruang', [LaporanPengembalian::class, 'kem_aplikasi_ruang'])->name('kem_aplikasi_ruang');
-        Route::get('/kem_aplikasi_ruang_excel', [LaporanPengembalian::class, 'kem_aplikasi_ruang_excel'])->name('kem_aplikasi_ruang_excel');
-
-
-       // kembali
-        Route::get('/kem_atk', [LaporanPengembalian::class, 'atk'])->name('kem_atk');
-        Route::get('/kem_atk_excel', [LaporanPengembalian::class, 'kem_atk_excel'])->name('kem_atk_excel');
-        Route::get('/kem_atk_gedung', [LaporanPengembalian::class, 'kem_atk_gedung'])->name('kem_atk_gedung_');
-        Route::get('/kem_atk_gedung_excel', [LaporanPengembalian::class, 'kem_atk_gedung_excel'])->name('kem_atk_gedung_excel');
-        Route::get('/kem_atk_ruang', [LaporanPengembalian::class, 'kem_atk_ruang'])->name('kem_atk_ruang');
-        Route::get('/kem_atk_ruang_excel', [LaporanPengembalian::class, 'kem_atk_ruang_excel'])->name('kem_atk_ruang_excel');
-
-
-        // inv
-         Route::get('/kem_inv', [LaporanPengembalian::class, 'inv'])->name('kem_inv');
-        Route::get('/kem_inv_excel', [LaporanPengembalian::class, 'kem_inv_excel'])->name('kem_inv_excel');
-        Route::get('/kem_inv_gedung', [LaporanPengembalian::class, 'kem_inv_gedung'])->name('kem_inv_gedung_');
-        Route::get('/kem_inv_gedung_excel', [LaporanPengembalian::class, 'kem_inv_gedung_excel'])->name('kem_inv_gedung_excel');
-        Route::get('/kem_inv_ruang', [LaporanPengembalian::class, 'kem_inv_ruang'])->name('kem_inv_ruang');
-        Route::get('/kem_inv_ruang_excel', [LaporanPengembalian::class, 'kem_inv_ruang_excel'])->name('kem_inv_ruang_excel');
-    });
-
-
-    // RekapitulasiData
-
-    Route::group(['prefix' => 'lap_rekap/'], function () {
-
-         Route::get('/rekap_lap_gedung', [RekapitulasiData::class, 'rekapPerangkatGedung'])->name('rekapPerangkatGedung');
-         Route::get('/rekap_lap_gedung_excel', [RekapitulasiData::class, 'rekapPerangkatGedungExcel'])->name('rekapPerangkatGedungExcel');
-         Route::get('/rekap_perangkat_ruang', [RekapitulasiData::class, 'rekapPerangkatRuang'])->name('rekapPerangkatRuang');
-         Route::get('/rekap_perangkat_ruang_excel', [RekapitulasiData::class, 'rekapPerangkatRuangExcel'])->name('rekapPerangkatRuangExcel');
-
-         Route::get('/rekap_lap_apl_gedung', [RekapitulasiData::class, 'rekapAplGedung'])->name('rekapAplGedung');
-         Route::get('/rekap_lap_apl_gedung_excel', [RekapitulasiData::class, 'rekapAplGedungExcel'])->name('rekapAplGedungExcel');
-         Route::get('/rekap_apl_ruang', [RekapitulasiData::class, 'rekapAplRuang'])->name('rekapAplRuang');
-         Route::get('/rekap_apl_ruang_excel', [RekapitulasiData::class, 'rekapAplRuangExcel'])->name('rekapAplRuangExcel');
-
-         Route::get('/rekap_atk_gedung', [RekapitulasiData::class, 'rekapAtkGedung'])->name('rekapAtkGedung');
-         Route::get('/rekap_atk_gedung_excel', [RekapitulasiData::class, 'rekapAtkGedungExcel'])->name('rekapAtkGedungExcel');
-         Route::get('/rekap_atk_ruang', [RekapitulasiData::class, 'rekapAtkRuang'])->name('rekapAtkRuang');
-         Route::get('/rekap_atk_ruang_excel', [RekapitulasiData::class, 'rekapAtkRuangExcel'])->name('rekapAtkRuangExcel_');
-
-         Route::get('/rekap_inv_gedung', [RekapitulasiData::class, 'rekapInvGedung'])->name('rekapInvGedung');
-         Route::get('/rekap_inv_gedung_excel', [RekapitulasiData::class, 'rekapInvGedungExcel'])->name('rekapInvGedungExcel');
-         Route::get('/rekap_inv_ruang', [RekapitulasiData::class, 'rekapInvRuang'])->name('rekapInvRuang');
-         Route::get('/rekap_inv_ruang_excel', [RekapitulasiData::class, 'rekapInvRuangExcel'])->name('rekapInvRuangExcel_');
-
-         Route::get('/rekap_mut_prangkat', [RekapitulasiData::class, 'mutasiperangkat'])->name('mutasiperangkat');
-         Route::get('/rekap_mut_prangkat_excel', [RekapitulasiData::class, 'mutasiperangkatExcel'])->name('mutasiperangkatExcel');
-         Route::get('/rekap_mut_aplikasi', [RekapitulasiData::class, 'mutasiaplikasi'])->name('mutasiaplikasi');
-         Route::get('/rekap_mut_aplikasi_excel', [RekapitulasiData::class, 'mutasiaplikasiExcel'])->name('mutasiaplikasiExcel');
-         Route::get('/rekap_mut_atk', [RekapitulasiData::class, 'mutasiatk'])->name('mutasiatk');
-         Route::get('/rekap_mut_atk_excel', [RekapitulasiData::class, 'mutasiatkExcel'])->name('mutasiatkExcel');
-         Route::get('/rekap_mut_inv', [RekapitulasiData::class, 'mutasiInv'])->name('rekap_mut_inv');
-         Route::get('/rekap_mut_inv_excel', [RekapitulasiData::class, 'mutasiInvExcel'])->name('mutasiInvExcel');
-
-
-         Route::get('/rekap_kembali_prkt', [RekapitulasiData::class, 'kem_prangkat_perangkat'])->name('kem_prangkat_rekap');
-         Route::get('/rekap_kembali_prkt_excel', [RekapitulasiData::class, 'kem_prangkat_excel'])->name('kem_prangkat_excel');
-         Route::get('/rekap_kembali_apl', [RekapitulasiData::class, 'rekap_kem_aplikasi'])->name('rekap_kem_aplikasi');
-         Route::get('/rekap_kembali_apl_excel', [RekapitulasiData::class, 'rekap_kem_aplikasi_excel'])->name('rekap_kem_aplikasi_excel');
-         Route::get('/rekap_kembali_atk', [RekapitulasiData::class, 'rekap_kem_atk'])->name('rekap_kem_atk');
-         Route::get('/rekap_kembali_atk_excel', [RekapitulasiData::class, 'rekap_kem_atkExcel'])->name('rekap_kem_atkExcel');
-         Route::get('/rekap_kmbali_inv', [RekapitulasiData::class, 'rekap_kem_inv'])->name('rekap_kem_inv');
-         Route::get('/rekap_kmbali_inv_excel', [RekapitulasiData::class, 'rekap_kem_invExcel'])->name('rekap_kem_invExcel');
-
-        });
-    Route::group(['prefix' => 'lap_grafik/'], function () {
-
-        Route::get('/grafik_prkt_gedung', [LaporanGrafik::class, 'grafik_prkt_gedung'])->name('grafik_prkt_gedung');
-        Route::get('/grafik_prkt_ruang', [LaporanGrafik::class, 'grafik_prkt_ruang'])->name('grafik_prkt_ruang');
-        Route::get('/grafik_apl_gedung', [LaporanGrafik::class, 'grafik_apl_gedung'])->name('grafik_apl_gedung');
-        Route::get('/grafik_apl_ruang', [LaporanGrafik::class, 'grafik_apl_ruang'])->name('grafik_apl_ruang');
-        Route::get('/grafik_atk_gedung', [LaporanGrafik::class, 'grafik_atk_gedung'])->name('grafik_atk_gedung');
-        Route::get('/grafik_atk_ruang', [LaporanGrafik::class, 'grafik_atk_ruang'])->name('grafik_atk_ruang');
-        Route::get('/grafik_inv_gedung', [LaporanGrafik::class, 'grafik_inv_gedung'])->name('grafik_inv_gedung');
-        Route::get('/grafik_inv_ruang', [LaporanGrafik::class, 'grafik_inv_ruang'])->name('grafik_inv_ruang');
-        Route::get('/grafik_mut_prkt', [LaporanGrafik::class, 'grafik_mut_prkt'])->name('grafik_mut_prkt');
-        Route::get('/grafik_mut_apl', [LaporanGrafik::class, 'grafik_mut_apl'])->name('grafik_mut_apl');
-        Route::get('/grafik_mut_atk', [LaporanGrafik::class, 'grafik_mut_atk'])->name('grafik_mut_atk');
-        Route::get('/grafik_mut_inv', [LaporanGrafik::class, 'grafik_mut_inv'])->name('grafik_mut_inv');
-
-        Route::get('/grafik_kembali_prkt', [LaporanGrafik::class, 'grafik_kembali_prkt'])->name('grafik_kembali_prkt');
-        Route::get('/grafik_kembali_apl', [LaporanGrafik::class, 'grafik_kembali_apl'])->name('grafik_kembali_apl');
-        Route::get('/grafik_kembali_atk', [LaporanGrafik::class, 'grafik_kembali_atk'])->name('grafik_kembali_atk');
-        Route::get('/grafik_kembali_inv', [LaporanGrafik::class, 'grafik_kembali_inv'])->name('grafik_kembali_inv');
-    });
 
 
     // ubah password cek
