@@ -58,8 +58,8 @@ class MutasiController extends Controller
                 return '';
             })
             ->addColumn('ObjekMutasi', function (MutasiModels $dp) {
-                if ($dp->MutasiHasType) {
-                    return $dp->MutasiHasType->data_name;
+                if ($dp->MutasiHasStok) {
+                    return $dp->MutasiHasStok->data_name;
                 }
                 return '';
             })

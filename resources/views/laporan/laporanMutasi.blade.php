@@ -17,62 +17,72 @@
         <div class="row">
             <div class="col-lg-12 mt-4" style="font-size: 12px !important">
                 <form action="" action="get">
-                <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-3 mt-2">*) Periode Laporan</label>
-                    <div class="col-sm-3">
-                        <input type="text"  placeholder="Start Date" name="start" id="start" autocomplete="off" class="form-control">
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-3 mt-2">*) Periode Laporan</label>
+                        <div class="col-sm-3">
+                            <input type="text"  placeholder="Start Date" name="start" id="start" autocomplete="off" class="form-control">
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" placeholder="End Date" name="end" id="end" autocomplete="off" class="form-control">
+                        </div>
                     </div>
-                    <div class="col-sm-3">
-                        <input type="text" placeholder="End Date" name="end" id="end" autocomplete="off" class="form-control">
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-3 mt-2">*) Pilih Gedung</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="gedung" name="gedung">
+                                <option value="">All</option>
+                                @foreach ($gedung as $gdg)
+                                    <option value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-3 mt-2">*) Pilih Kondisi</label>
-                    <div class="col-sm-4">
-                        <select class="form-control" id="kondisi" name="kondisi">
-                            {{-- <option value="{{old('kondisi')}}">Pilih Kondisi</option>
-                            <option value="">All</option>
-                            @foreach ($kondisi as $kon)
-                                <option value="{{ $kon->data_kondisi_id }}">{{ $kon->nama_data_kondisi }}</option>
-                            @endforeach --}}
-                        </select>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-3 mt-2">*) Pilih Ruangan</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="ruangan" name="ruangan">
+                                <option value="{{old('ruangan')}}">Pilih Ruangan</option>
+                                <option value="">All</option>
+                                @foreach ($ruangan as $ru)
+                                    <option value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-3 mt-2">*) Pilih Gedung</label>
-                    <div class="col-sm-4">
-                        <select class="form-control" id="gedung" name="gedung">
-                            {{-- <option value="">All</option>
-                            @foreach ($gedung as $gdg)
-                                <option value="{{ $gdg->data_gedung_id }}">{{ $gdg->nama_data_gedung }}</option>
-                            @endforeach --}}
-                        </select>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-3 mt-2">*)Pilih Type / Kategory</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="type" name="type">
+                                <option value="{{old('type')}}">Pilih Type</option>
+                                <option value="">All</option>
+                                @foreach ($type as $ty)
+                                    <option value="{{ $ty->data_type_id }}">{{ $ty->nama_data_type }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-3 mt-2">*) Pilih Ruangan</label>
-                    <div class="col-sm-4">
-                        <select class="form-control" id="ruangan" name="ruangan">
-                            {{-- <option value="{{old('ruangan')}}">Pilih Ruangan</option>
-                            <option value="">All</option>
-                            @foreach ($ruangan as $ru)
-                                <option value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
-                            @endforeach --}}
-                        </select>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-3 mt-2">*)Pilih Status</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="status" name="status">
+                                <option value="{{old('status')}}">Pilih Status</option>
+                                <option value="">All</option>
+                                <option value="1">Dipakai</option>
+                                <option value="2">Dipinjam</option>
+                                <option value="3">Sedang diperbaiki</option>
+                                <option value="4">Dikembalikan</option>
+                                <option value="5">Dimutasi</option>
+                                <option value="6">Selesai diperbaikai</option>
+                                <option value="7">Tidak dapat diperbaik</option>
+
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-3 mt-2">*)Pilih Type / Kategory</label>
-                    <div class="col-sm-4">
-                        <select class="form-control" id="ruangan" name="ruangan">
-                            {{-- <option value="{{old('ruangan')}}">Pilih Ruangan</option>
-                            <option value="">All</option>
-                            @foreach ($ruangan as $ru)
-                                <option value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
-                            @endforeach --}}
-                        </select>
+                    <div class="form-group row">
+                        <div class="col-sm-12" style="text-align: center !important">
+                            <button type="submit" class="btn btn-info">Show</button>
+                        </div>
                     </div>
-                </div>
                 <div class="form-group row">
                     <div class="col-sm-12" style="text-align: center !important">
                         <button type="submit" class="btn btn-info">Show</button>
@@ -96,28 +106,36 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Type / Kategory </th>
-                        <th>Objek Transaksi </th>
-                        <th>Nama Pegawai</th>
+                        <th>Type / Kategory</th>
+                        <th>Objek Mutasi</th>
+                        <th>Mutasi Dari</th>
+                        <th>Penerima Mutasi </th>
                         <th>Bagian</th>
                         <th>Sub Bagian</th>
-                        <th>Status</th>
-                        <th>Keterangan</th>
+                        <th>Gedung</th>
+                        <th>Ruangan</th>
+                        <th>Kondisi Saat Ini</th>
+                        <th>Tanggal Mutasi</th>
+                        <th>Keterangan Mutasi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @foreach ($aplikasi as $i=> $apl) --}}
+                    @foreach ($getMutasi as $i=> $mut)
                         <tr>
-                            <td></td>
-                            <td></td>
-
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{ ++$i }}</td>
+                            <td>{{ $mut->MutasiHasType->nama_data_type }}</td>
+                            <td>{{ $mut->MutasiHasStok->data_name }}</td>
+                            <td>{{ $mut->MutasiHasDetail->DetailMutasiHasPegawai->pegawai_name }}</td>
+                            <td>{{ $mut->MutasiHasPegawai->pegawai_name }}</td>
+                            <td>{{ $mut->MutasiHasPegawai->pegawaiHasBagian->nama_bagian ?? '' }}</td>
+                            <td>{{ $mut->MutasiHasPegawai->pegawaiHasSubBagian->sub_bagian_nama ?? '' }}</td>
+                            <td>{{ $mut->MutasiHasGedung->nama_data_gedung }}</td>
+                            <td>{{ $mut->MutasiHasRuangan->nama_data_ruangan }}</td>
+                            <td>{{ $mut->mutasiHasKondisi->nama_data_kondisi }}</td>
+                            <td>{{ $mut->mutasi_tgl }}</td>
+                            <td>{{ $mut->mutasi_keterangan }}</td>
                         </tr>
-                    {{-- @endforeach --}}
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -126,6 +144,10 @@
                 {{ csrf_field() }}
                 <input type="hidden" value="{{ request()->start }}" name="start">
                 <input type="hidden" value="{{ request()->end }}" name="end">
+                <input type="hidden" value="{{ request()->gedung }}" name="gedung">
+                <input type="hidden" value="{{ request()->ruangan }}" name="ruangan">
+                <input type="hidden" value="{{ request()->type }}" name="type">
+                <input type="hidden" value="{{ request()->status }}" name="status">
                 <div class="d-flex justify-content-center">
                     <button type="" id="excel" class="btn btn-info">Excel</button>
                 </div>

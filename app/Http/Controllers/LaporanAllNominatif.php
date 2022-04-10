@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\GedungModels;
+use App\Models\MutasiModels;
 use Illuminate\Http\Request;
 use App\Models\RuanganModels;
 use App\Models\DetailTransaksi;
@@ -83,7 +84,18 @@ class LaporanAllNominatif extends Controller
     }
 
     public function laporanMutasi(Request $request){
-        return view('laporan.laporanMutasi');
+        $type = TypeKtegoryModels::get();
+        $ruangan = RuanganModels::get();
+        $gedung = GedungModels::get();
+
+        $getMutasi = MutasiModels::with(['MutasiHasPegawai'=>function ($q){
+            $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+        }, 'mutasiHasKondisi', 'MutasiHasDetail'=> function($q){
+            $q->with(['DetailMutasiHasPegawai'=> function ($q){
+                $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+            }]);
+        }, 'MutasiHasGedung', 'MutasiHasRuangan', 'MutasiHasType'])->get();
+        return view('laporan.laporanMutasi', compact('getMutasi', 'type', 'ruangan', 'gedung'));
     }
 
     public function laporanPeminjaman(Request $request){

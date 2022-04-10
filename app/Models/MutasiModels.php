@@ -23,7 +23,7 @@ class MutasiModels extends Model
     }
 
      public function MutasiHasType(){
-        return $this->belongsTo(StokModels::class, 'mutasi_data_id', 'data_kategory_id');
+        return $this->belongsTo(TypeKtegoryModels::class, 'mutasi_data_id', 'data_type_id');
     }
     public function mutasiHasdetail(){
         return $this->belongsTo(MutasiHasDetail::class, 'mutasi_id', 'detail_mutasi_id');
