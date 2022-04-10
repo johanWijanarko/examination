@@ -23,9 +23,9 @@ class StokModels extends Model
     }
 
     public function stokHasKondisi(){
-        return $this->belongsTo(KondisiModels::class, 'data_kondisi_id', 'data_kondisi_id');   
+        return $this->belongsTo(KondisiModels::class, 'data_kondisi_id', 'data_kondisi_id');
     }
-    
+
     public function stokHasSupplier(){
         return $this->belongsTo(SupplierModels::class, 'data_supplier_id', 'supplier_id');
     }

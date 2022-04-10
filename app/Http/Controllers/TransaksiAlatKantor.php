@@ -59,7 +59,7 @@ class TransaksiAlatKantor extends Controller
                         if($detail->trsHasStok2){
                             return $detail->trsHasStok2->data_name;
                         }
-                       
+
                     }
                     // return $dp->trsHasStok2->data_name;
                 }
@@ -69,14 +69,14 @@ class TransaksiAlatKantor extends Controller
                 $detail_='';
                 if ($dp->trsDetail) {
                     foreach ($dp->trsDetail as $key_1 => $detail) {
-                        
+
                         if($detail->hasManyPegawai){
                             $angka = $key_1+1;
                             foreach ($detail->hasManyPegawai as $key => $value) {
                                 $detail_ .= $angka.'. '.$value->pegawai_name.'<br>';
                             }
                         }
-                       
+
                     }
                     // return $dp->trsHasStok2->data_name;
                 }
@@ -89,6 +89,8 @@ class TransaksiAlatKantor extends Controller
                     '3' => 'Sedang diperbaiki',
                     '4' => 'Dikembalikan',
                     '5' => 'Dimutasi',
+                    '6' => 'Selesai diperbaikai',
+                    '7' => 'Tidak dapat diperbaik',
                 ];
 
                 $detail_2='';
@@ -97,9 +99,9 @@ class TransaksiAlatKantor extends Controller
                         $angka = $key_1+1;
                         $detail_2 .=  $angka.'. '.$status[$detail->trs_detail_status].'<br>';
                     }
-                    
+
                 }
-               
+
                 return $detail_2;
             })
             ->addColumn('keterangan', function (TransaksiModels $dp) {
@@ -271,10 +273,10 @@ class TransaksiAlatKantor extends Controller
             foreach ($checkFile as $key => $file) {
                 if(!in_array($file, $getOld)){
                     $getDelete =DetailTransaksi::where('trs_detail_id',$file)->first();
-                       
+
                         $getDelete->delete();
                     }
-                }  
+                }
 
                 $data2 = array();
                 if ($request->perangkat_insert) {
@@ -285,14 +287,14 @@ class TransaksiAlatKantor extends Controller
                         $data2[$key]['trs_detail_gedung_id'] = $request->gedung_insert[$key];
                         $data2[$key]['trs_detail_ruangan_id'] = $request->ruangan_insert[$key];
                         $data2[$key]['trs_detail_jumlah'] = $request->jml_insert[$key];
-        
+
                         $stok = StokModels::whereIn('data_stok_id',[$request->perangkat_insert[$key]]);
                         $stok->decrement('data_jumlah', $request->jml_insert[$key]);
-        
+
                         $stok = StokModels::whereIn('data_stok_id',[$request->perangkat_insert[$key]]);
                         $stok->increment('data_dipakai', $request->jml_insert[$key]);
                     }
-        
+
                     $save_detail = DB::table('trs_detail')->insert($data2);
                 }
 

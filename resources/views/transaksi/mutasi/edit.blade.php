@@ -1,5 +1,5 @@
 @extends('layout.app',[
-    
+
 ])
 @section('content')
 <style>
@@ -64,7 +64,7 @@
                                         @foreach ($objekMutasi as $obj)
                                             <option {{ ($editMutasi->mutasi_objek_id == $obj->data_stok_id ) ? 'selected' : ''}}  value="{{$obj->data_stok_id}}" >{{$obj->data_name}}
                                             </option>
-                                        @endforeach 
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -78,12 +78,12 @@
                                         @foreach ($dataPegawai as $pgw)
                                             <option {{ ($editMutasi->MutasiHasDetail->detail_mutasi_pegawai_id == $pgw->pegawai_id ) ? 'selected' : ''}}  value="{{$pgw->pegawai_id}}" >{{$pgw->pegawai_name}}
                                             </option>
-                                        @endforeach 
+                                        @endforeach
                                     </select>
-                                    
+
                                 </div>
                             </div>
-                            
+
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Ke Pegawai</label>
@@ -94,11 +94,11 @@
                                         @foreach ($dataPegawai as $pgw)
                                             <option {{ ($editMutasi->mutasi_pegawai_id == $pgw->pegawai_id ) ? 'selected' : ''}}  value="{{$pgw->pegawai_id}}" >{{$pgw->pegawai_name}}
                                             </option>
-                                        @endforeach 
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Gedung</label>
@@ -110,7 +110,7 @@
                                             <option {{ ($editMutasi->mutasi_gedung_id == $gdg->data_gedung_id ) ? 'selected' : ''}}  value="{{$gdg->data_gedung_id}}" >{{$gdg->nama_data_gedung}}
                                             </option>
                                         @endforeach
-                                        
+
                                     </select>
                                 </div>
                             </div>
@@ -157,8 +157,9 @@
 @push('page-script')
 <script>
 $(document).ready(function() {
-    $(' #pegawaian, #kePegawai, #gedung, #ruangan, #kondisi').select2();
-    $('#typeMutasi, #pegawai,  #obj').prop('readonly', true);
+    $(' #pegawaian, #kePegawai, #gedung, #ruangan, #kondisi, #pegawai').select2();
+    $('#typeMutasi,  #obj').prop("disabled", true)
+
 });
 
 $('#typeMutasi').on('change', function () {
@@ -173,7 +174,7 @@ $('#typeMutasi').on('change', function () {
             $('#obj').empty();
                     $('#obj').append(new Option('- Pilih -', ''))
             $('#obj').trigger('change')
-            
+
             $.each(response, function (id, name) {
             // console.log(name)
                 $('#obj').append(new Option(name, id))
@@ -194,13 +195,13 @@ $('#obj').on('change', function () {
             $('#pegawai').empty();
             $('#pegawai').append(new Option('- Pilih -', ''))
             $('#pegawai').trigger('change')
-            
+
             response.forEach(item => {
                 console.log(item)
                 $('#pegawai').append(new Option(item.pegawe_name, item.id_peg+':'+item.id));
             });
         }
     })
-});    
+});
 </script>
 @endpush

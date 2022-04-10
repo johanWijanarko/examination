@@ -1,5 +1,5 @@
 @extends('layout.app',[
-    
+
 ])
 @section('content')
 <style>
@@ -16,7 +16,7 @@
                     <div class="card-body">
                         {{-- <div class="col-xs-12 col-sm-12 col-md-12"> --}}
                         <h4 class="card-title">Edit Peminjaman</h4>
-                        
+
                         @if ($errors->any())
                             <div class="alert alert-danger">
                                 <ul>
@@ -78,8 +78,8 @@
                                     <input type="text" name="jumlah_pinjam" id="jumlah_pinjam" value="{{ $getDataPinjaman->peminjaman_jumlah }}" class="form-control" placeholder="" readonly>
                                 </div>
                             </div>
-                           
-                            
+
+
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Nama Pegawai</label>
@@ -90,11 +90,11 @@
                                         @foreach ($dataPegawai as $pgw)
                                             <option {{ ($getDataPinjaman->peminjaman_pegawai_id == $pgw->pegawai_id ) ? 'selected' : ''}}  value="{{$pgw->pegawai_id}}" >{{$pgw->pegawai_name}}
                                             </option>
-                                        @endforeach 
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
-                           
+
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Gedung</label>
@@ -122,7 +122,7 @@
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Tanggal Peminjaman</label>
@@ -174,7 +174,7 @@ $('#data_peminjaman').on('change', function () {
             $('#obj').empty();
                     $('#obj').append(new Option('- Pilih -', ''))
             $('#obj').trigger('change')
-            
+
             $.each(response, function (id, name) {
             // console.log(name)
                 $('#obj').append(new Option(name, id))
@@ -199,17 +199,17 @@ $('#data_peminjaman').on('change', function () {
         })
     });
     var validate_stok = 0;
-    $('#jumlah_pinjam').on('input',function(){   
+    $('#jumlah_pinjam').on('input',function(){
         var jumlah= $(this).val();
         var stok = $('#jumlah').val()
-       
+
             if(parseInt(jumlah) > parseInt(stok)){
-                swal("Error!", 'Jumlah Pinjam tidak boleh melebihi jumlah stok') 
+                swal("Error!", 'Jumlah Pinjam tidak boleh melebihi jumlah stok')
                 $('#jumlah_pinjam').val('')
                 validate_stok = 1;
                 return false
             }
     });
-    
+
 </script>
 @endpush

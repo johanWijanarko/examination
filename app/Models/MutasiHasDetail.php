@@ -16,7 +16,7 @@ class MutasiHasDetail extends Model
     {
         return $this->belongsTo(PegawaiModels::class, 'detail_mutasi_pegawai_id', 'pegawai_id');
     }
-   
+
     public function DetailMutasiHasGedung()
     {
         return $this->belongsTo(GedungModels::class, 'detail_mutasi_gedung_id', 'data_gedung_id');

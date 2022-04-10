@@ -28,7 +28,7 @@ use Yajra\DataTables\Facades\DataTables;
 class TransaksiInvController extends Controller
 {
     public function index(){
-       
+
         return \view('transaksi/inventaris.index');
     }
 
@@ -47,7 +47,7 @@ class TransaksiInvController extends Controller
         ->orderBy('trs_id', 'asc')->where('trs_status_id',1)
         ->get();
 
-       
+
         return DataTables::of($trsInv)
             ->addColumn('details_url', function(TransaksiModels $dp) {
                if ($dp->trs_id) {
@@ -63,7 +63,7 @@ class TransaksiInvController extends Controller
                         if($detail->trsHasStok2){
                             return $detail->trsHasStok2->data_name;
                         }
-                       
+
                     }
                 }
                 return '';
@@ -72,14 +72,14 @@ class TransaksiInvController extends Controller
                 $detail_='';
                 if ($dp->trsDetail) {
                     foreach ($dp->trsDetail as $key_1 => $detail) {
-                        
+
                         if($detail->hasManyPegawai){
                             $angka = $key_1+1;
                             foreach ($detail->hasManyPegawai as $key => $value) {
                                 $detail_ .= $angka.'. '.$value->pegawai_name.'<br>';
                             }
                         }
-                       
+
                     }
                 }
                 return $detail_;
@@ -91,6 +91,8 @@ class TransaksiInvController extends Controller
                     '3' => 'Sedang diperbaiki',
                     '4' => 'Dikembalikan',
                     '5' => 'Dimutasi',
+                    '6' => 'Selesai diperbaikai',
+                    '7' => 'Tidak dapat diperbaik',
                 ];
 
                 $detail_2='';
@@ -99,9 +101,9 @@ class TransaksiInvController extends Controller
                         $angka = $key_1+1;
                         $detail_2 .=  $angka.'. '.$status[$detail->trs_detail_status].'<br>';
                     }
-                    
+
                 }
-               
+
                 return $detail_2;
             })
             ->addColumn('keterangan', function (TransaksiModels $dp) {
@@ -144,7 +146,7 @@ class TransaksiInvController extends Controller
         $countTrs = TransaksiDataModel::all()->count()+1;
         $getKodeTrs = 'TRS-INV-' . $countTrs .'';
 
-        
+
         return \view('transaksi/inventaris.tambah', \compact('dataPegawai','gedung','ruangan' ,'dataInv', 'getKodeTrs'));
     }
 
@@ -166,10 +168,10 @@ class TransaksiInvController extends Controller
             'kondisi' => $kondisi,
             'gedung' => $gedung,
             'ruangan' => $ruangan,
-            'supplier' => $supplier, 
+            'supplier' => $supplier,
             'getInv' => $getInv
         ]);
-            
+
     }
 
     public function save(Request $request)
@@ -235,7 +237,7 @@ class TransaksiInvController extends Controller
         $dataPegawai = PegawaiModels::get();
         $gedung = GedungModels::get();
         $ruangan = RuanganModels::get();
-        
+
         //  dd($trsInv->trsHasData);
         return \view('transaksi/inventaris.edit', \compact('dataInv', 'dataPegawai', 'detail', 'gedung', 'ruangan'));
     }
@@ -268,10 +270,10 @@ class TransaksiInvController extends Controller
             foreach ($checkFile as $key => $file) {
                 if(!in_array($file, $getOld)){
                     $getDelete =DetailTransaksi::where('trs_detail_id',$file)->first();
-                       
+
                         $getDelete->delete();
                     }
-                }  
+                }
 
                 $data2 = array();
                 if ($request->inventaris_insert) {
@@ -282,14 +284,14 @@ class TransaksiInvController extends Controller
                         $data2[$key]['trs_detail_gedung_id'] = $request->gedung_insert[$key];
                         $data2[$key]['trs_detail_ruangan_id'] = $request->ruangan_insert[$key];
                         $data2[$key]['trs_detail_jumlah'] = $request->jml_insert[$key];
-        
+
                         $stok = StokModels::whereIn('data_stok_id',[$request->inventaris_insert[$key]]);
                         $stok->decrement('data_jumlah', $request->jml_insert[$key]);
-        
+
                         $stok = StokModels::whereIn('data_stok_id',[$request->inventaris_insert[$key]]);
                         $stok->increment('data_dipakai', $request->jml_insert[$key]);
                     }
-        
+
                     $save_detail = DB::table('trs_detail')->insert($data2);
                 }
 

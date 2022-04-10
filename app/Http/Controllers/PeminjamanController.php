@@ -53,7 +53,7 @@ class PeminjamanController extends Controller
                 if ($dt->peminjamanHasObjek) {
                     return $dt->peminjamanHasObjek->data_name;
                 }
-                
+
                 return '';
             })
              ->addColumn('pegawai', function (PeminjamanModels $dk) {
@@ -96,21 +96,21 @@ class PeminjamanController extends Controller
                 if ($dt->peminjamanHasObjek->stokHasKondisi) {
                     return $dt->peminjamanHasObjek->stokHasKondisi->nama_data_kondisi;
                 }
-                
+
                 return '';
             })
             ->addColumn('merk', function (PeminjamanModels $dt) {
                 if ($dt->peminjamanHasObjek->stokHasMerk) {
                     return $dt->peminjamanHasObjek->stokHasMerk->nama_data_merk;
                 }
-                
+
                 return '';
             })
             ->addColumn('supp', function (PeminjamanModels $dt) {
                 if ($dt->peminjamanHasObjek->stokHasSupplier) {
                     return $dt->peminjamanHasObjek->stokHasSupplier->supplier_name;
                 }
-                
+
                 return '';
             })
             ->rawColumns([ 'gedung', 'ruangan', 'kondisi', 'merk', 'supp'])
@@ -128,7 +128,7 @@ class PeminjamanController extends Controller
         $countTrs = TransaksiDataModel::all()->count()+1;
         $getKodeTrs = 'TRS-PJM-' . $countTrs .'';
 
-        
+
         return \view('transaksi/peminjaman.tambah', \compact('ruangan' ,'gedung' ,'dataPegawai','dataPerangkat', 'getKodeTrs', 'type'));
     }
 
@@ -137,16 +137,14 @@ class PeminjamanController extends Controller
         $getObejkPeminjam = StokModels::where('data_kategory_id', $request->id)
         ->orderBy('data_stok_id', 'desc')
         ->pluck('data_name', 'data_stok_id');
-            
+
         return response()->json($getObejkPeminjam);
     }
     public function getPinjam(Request $request)
     {
         $getPinjam =StokModels::where('data_stok_id', $request->get('id'))->first();
-
-         
         return response()->json($getPinjam);
-            
+
     }
 
     public function getPegawai(Request $request)
@@ -165,7 +163,7 @@ class PeminjamanController extends Controller
             'ruangan' => 'required',
             'tglPinjam' => 'required',
             'keterangan' => 'required',
-            
+
         ],
         [
             'data_peminjaman.required' => 'Data Peminjam tidak boleh kosong!',
@@ -181,7 +179,7 @@ class PeminjamanController extends Controller
         ///////////////////////////////////////////////////////////////////////
 
         $save_ = [
-           
+
             'peminjaman_kode'=> $request->kode_pinjam,
             'peminjamanType'=> $request->data_peminjaman,
             'peminjaman_obejk_id'=> $request->obj,
@@ -192,7 +190,7 @@ class PeminjamanController extends Controller
             'peminjaman_tanggal'=> $request->tglPinjam,
             'peminjaman_pic_id'=> Auth::user()->id,
             'peminjaman_jumlah'=> $request->jumlah_pinjam,
-            
+
         ];
 
         $savePinjam =PeminjamanModels::create($save_);
@@ -223,8 +221,8 @@ class PeminjamanController extends Controller
             'trs_detail_pinjam_id' => $savePinjam->peminjaman_id,
         ];
         $saveTransaksi =DetailTransaksi::create($saveTrs);
-        
-       
+
+
         if($request->data_peminjaman == 3){
             $product =  StokModels::where('data_stok_id',$request->jumlah_pinjam);
             $product->increment('data_dipakai', $request->jumlah_pinjam);
@@ -255,7 +253,7 @@ class PeminjamanController extends Controller
 
         $getObejkPeminjam = StokModels::where('data_jumlah', '>', 0)->where('data_stok_id', $getDataPinjaman->peminjaman_obejk_id)->get();
         $dataPegawai = PegawaiModels::get();
-        
+
         $type = TypeKtegoryModels::get();
         $gedung = GedungModels::get();
         $ruangan = RuanganModels::get();
@@ -266,17 +264,14 @@ class PeminjamanController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            
             'pegawai' => 'required',
             'gedung' => 'required',
             'ruangan' => 'required',
             'tglPinjam' => 'required',
             'keterangan' => 'required',
-            
+
         ],
         [
-            
-           
             'pegawai.required' => 'Nama Pegawai tidak boleh kosong!',
             'gedung.required' => 'Gedung tidak boleh kosong!',
             'ruangan.required' => 'Ruangan tidak boleh kosong!',
@@ -286,15 +281,12 @@ class PeminjamanController extends Controller
         ]);
 
         $save = [
-
             'peminjaman_pegawai_id'=> $request->pegawai,
             'peminjaman_gedung_id'=> $request->gedung,
             'peminjaman_ruangan_id'=> $request->ruangan,
             'peminjaman_keterangan'=> $request->keterangan,
             'peminjaman_tanggal'=> $request->tglPinjam,
             'peminjaman_pic_id'=> Auth::user()->id,
-           
-            
         ];
         $update =PeminjamanModels::where('peminjaman_id', $id)->update($save);
 
