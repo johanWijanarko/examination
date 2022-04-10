@@ -2,12 +2,84 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GedungModels;
 use Illuminate\Http\Request;
+use App\Models\RuanganModels;
+use App\Models\DetailTransaksi;
+use App\Models\TypeKtegoryModels;
 
 class LaporanAllNominatif extends Controller
 {
     public function laporanTransaksi(Request $request){
-        return view('laporan.laporanTransaksi');
+        $type = TypeKtegoryModels::get();
+        $ruangan = RuanganModels::get();
+        $gedung = GedungModels::get();
+        if ($request->all()) {
+            $laporan = DetailTransaksi::with(['trsHasStok2' => function($q){
+                $q->with(['stokHasType']);
+            }, 'trsHasPegawai2' => function ($q){
+                $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+            }, 'mainTransaksi'])
+            ->whereHas('trsHasStok2', function ($q) use ($request) {
+                $q->whereHas('stokHasType', function ($q) use ($request) {
+                    $q->when($request->type, function ($q) use ($request) {
+                        $q->where('data_type_id', $request->type);
+                    });
+                });
+            })
+            ->when($request->start || $request->end, function ($q) use ($request) {
+                $q->whereBetween('trs_detail_date',[ date('Y-m-d',strtotime($request->start)) , date('Y-m-d',strtotime($request->end))]);
+            })
+            ->when($request->ruangan, function ($q) use ($request) {
+                $q->where('trs_detail_ruangan_id', $request->ruangan);
+            })
+            ->when($request->gedung, function ($q) use ($request) {
+                $q->where('trs_detail_gedung_id', $request->gedung);
+            })
+            ->when($request->status, function ($q) use ($request) {
+                $q->where('trs_detail_status', $request->status);
+            })
+            ->get();
+            return view('laporan.laporanTransaksi', compact('laporan', 'type', 'ruangan', 'gedung'));
+        }
+        $laporan=[];
+        return view('laporan.laporanTransaksi', compact('laporan', 'type', 'ruangan', 'gedung'));
+
+        // dd($laporan);
+    }
+
+    public function laporanTransaksiExcel(Request $request){
+        $type = TypeKtegoryModels::get();
+        $ruangan = RuanganModels::get();
+        $gedung = GedungModels::get();
+
+            $laporan = DetailTransaksi::with([ 'trsHasGedung', 'trsHasRuangan','trsHasStok2' => function($q){
+                $q->with(['stokHasType']);
+            }, 'trsHasPegawai2' => function ($q){
+                $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+            }, 'mainTransaksi'])
+            ->whereHas('trsHasStok2', function ($q) use ($request) {
+                $q->whereHas('stokHasType', function ($q) use ($request) {
+                    $q->when($request->type, function ($q) use ($request) {
+                        $q->where('data_type_id', $request->type);
+                    });
+                });
+            })
+            ->when($request->start || $request->end, function ($q) use ($request) {
+                $q->whereBetween('trs_detail_date',[ date('Y-m-d',strtotime($request->start)) , date('Y-m-d',strtotime($request->end))]);
+            })
+            ->when($request->ruangan, function ($q) use ($request) {
+                $q->where('trs_detail_ruangan_id', $request->ruangan);
+            })
+            ->when($request->gedung, function ($q) use ($request) {
+                $q->where('trs_detail_gedung_id', $request->gedung);
+            })
+            ->when($request->status, function ($q) use ($request) {
+                $q->where('trs_detail_status', $request->status);
+            })
+            ->get();
+            // dd($laporan);
+        return view('laporan.laporanTransaksiExcel',compact('laporan', 'type', 'ruangan', 'gedung'));
     }
 
     public function laporanMutasi(Request $request){

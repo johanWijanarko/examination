@@ -26,6 +26,13 @@ class PegawaiModels extends Model
         return $this->hasOne(SubBagianModels::class, 'sub_bagian_id', 'pegawai_sub_bagian_id');
     }
 
-    
+    public function pegawaiHasBagian2()
+    {
+        return $this->belongsTo(ParBagianModels::class, 'pegawai_bagian_id', 'bagian_id');
+    }
+    public function pegawaiHasSubBagian2()
+    {
+        return $this->belongsTo(SubBagianModels::class, 'pegawai_sub_bagian_id', 'sub_bagian_id');
+    }
 
 }
