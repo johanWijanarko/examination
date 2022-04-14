@@ -7,7 +7,7 @@
 
 <footer class="main-footer">
     <div class="footer-left">
-        Copyright &copy; <a href="">Kementerian Pertahanan Republik Indonesia</a> 2022
+        Copyright &copy; <a href="">Joan Wijanarko</a> 2022
     </div>
     <div class="footer-right">
         2.3.0
