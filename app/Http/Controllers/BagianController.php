@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ParBagianModels;
+use App\Models\PegawaiModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -92,15 +93,22 @@ class BagianController extends Controller
     }
 
     public function delete($id){
-        
-        $getDataBagian = ParBagianModels::where('bagian_id',$id)->delete();
+        $checkBagian = PegawaiModels::where('pegawai_bagian_id', $id)->count();
+        // dd($checBagian);
+        if($checkBagian){
+            Alert::error('Upsss', 'Data sedang di pakai di modul Pegawai');
+            return redirect('m_inventaris/bagian');
+        }else{
+            $getDataBagian = ParBagianModels::where('bagian_id',$id)->delete();
 
-        $cek = \Log::channel('database')->info($getDataBagian);
-        $query = DB::getQueryLog();
-        $query = end($query);
-        $this->save_log('delete bagian' ,json_encode($query ));
+            $cek = \Log::channel('database')->info($getDataBagian);
+            $query = DB::getQueryLog();
+            $query = end($query);
+            $this->save_log('delete bagian' ,json_encode($query ));
 
-        Alert::success('Success', 'Data berhasil di Hapus');
-        return redirect('m_inventaris/bagian');
+            Alert::success('Success', 'Data berhasil di Hapus');
+            return redirect('m_inventaris/bagian');
+        }
+
     }
 }

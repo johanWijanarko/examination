@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\GedungModels;
 use Illuminate\Http\Request;
+use App\Models\TransaksiModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -104,15 +105,26 @@ class GedungController extends Controller
     }
 
     public function delete($id){
-        
-        $getDatagedung = GedungModels::where('data_gedung_id',$id)->delete();
 
-        $cek = \Log::channel('database')->info($getDatagedung);
-        $query = DB::getQueryLog();
-        $query = end($query);
-        $this->save_log('delete data gedung' ,json_encode($query));
+        $countGedung= TransaksiModels::where('trs_gedung_id', $id)->count();
+        // dd($countGedung);
+        if($countGedung){
 
-        Alert::success('Success', 'Data berhasil di Hapus');
-        return redirect('m_inventaris/gedung');
+            Alert::error('Upsss', 'Data sedang di pakai di modul transaksi');
+            return redirect('m_inventaris/gedung');
+
+        }else{
+
+            $getDatagedung = GedungModels::where('data_gedung_id',$id)->delete();
+
+            $cek = \Log::channel('database')->info($getDatagedung);
+            $query = DB::getQueryLog();
+            $query = end($query);
+            $this->save_log('delete data gedung' ,json_encode($query));
+
+            Alert::success('Success', 'Data berhasil di Hapus');
+            return redirect('m_inventaris/gedung');
+        }
+
     }
 }

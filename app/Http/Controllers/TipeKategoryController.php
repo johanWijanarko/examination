@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\StokModels;
 use Illuminate\Http\Request;
 use App\Models\TypeKtegoryModels;
 use Illuminate\Support\Facades\DB;
@@ -106,15 +107,25 @@ class TipeKategoryController extends Controller
     }
 
     public function delete($id){
-        
-        $getDatamerk = TypeKtegoryModels::where('data_type_id',$id)->delete();
+        $countMerk = StokModels::where('data_kategory_id', $id)->count();
+        if($countMerk){
 
-        $cek = \Log::channel('database')->info($getDatamerk);
-        $query = DB::getQueryLog();
-        $query = end($query);
-        $this->save_log('delete data type' ,json_encode($query));
+            Alert::error('Upsss', 'Data sedang di pakai di modul stok data');
+            return redirect('m_inventaris/data_kategori');
 
-        Alert::success('Success', 'Data berhasil di Hapus');
-        return redirect('m_inventaris/data_kategori');
+        }else{
+
+            $getDatamerk = TypeKtegoryModels::where('data_type_id',$id)->delete();
+
+            $cek = \Log::channel('database')->info($getDatamerk);
+            $query = DB::getQueryLog();
+            $query = end($query);
+            $this->save_log('delete data type' ,json_encode($query));
+
+            Alert::success('Success', 'Data berhasil di Hapus');
+            return redirect('m_inventaris/data_kategori');
+
+        }
+
     }
 }

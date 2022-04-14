@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\PegawaiModels;
 use App\Models\ParBagianModels;
 use App\Models\SubBagianModels;
 use Illuminate\Support\Facades\DB;
@@ -124,15 +125,26 @@ class SubBagianController extends Controller
     }
 
     public function delete($id){
-        
-        $getDataBagian = SubBagianModels::where('sub_bagian_id',$id)->delete();
+        // dd($id);
+        $checkSubBagian = PegawaiModels::where('pegawai_sub_bagian_id', $id)->count();
 
-        $cek = \Log::channel('database')->info($getDataBagian);
-        $query = DB::getQueryLog();
-        $query = end($query);
-        $this->save_log('delete data subbagian' ,json_encode($query));
+        if($checkSubBagian){
 
-        Alert::success('Success', 'Data berhasil di Hapus');
-        return redirect('m_inventaris/sub_bagian');
+            Alert::error('Upsss', 'Data sedang di pakai di modul Pegawai');
+            return redirect('m_inventaris/sub_bagian');
+
+        }else{
+
+            $getDataBagian = SubBagianModels::where('sub_bagian_id',$id)->delete();
+
+            $cek = \Log::channel('database')->info($getDataBagian);
+            $query = DB::getQueryLog();
+            $query = end($query);
+            $this->save_log('delete data subbagian' ,json_encode($query));
+
+            Alert::success('Success', 'Data berhasil di Hapus');
+            return redirect('m_inventaris/sub_bagian');
+        }
+
     }
 }

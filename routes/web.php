@@ -225,7 +225,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/bagianEdit{id}', [BagianController::class, 'edit'])->name('bagianEdit');
         Route::post('/bagianUpdate', [BagianController::class, 'update'])->name('bagianUpdate');
         Route::get('/confrimdelbag{id}', [BagianController::class, 'confrimDelete'])->name('confrimdelbag');
-        Route::get('/deletebagian{id}', [BagianController::class, 'delete'])->name('deletebagian');
+        Route::get('/deletebagian/{id}', [BagianController::class, 'delete'])->name('deletebagian');
 
 
          // sub bagian
@@ -236,7 +236,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/getBagianselected{id}', [SubBagianController::class, 'getBagianselected'])->name('getBagianselected');
         Route::post('/subBagianUpdate', [SubBagianController::class, 'update'])->name('subBagianUpdate');
         Route::get('/confrimdelsubbag{id}', [SubBagianController::class, 'confrimdelsubbag'])->name('confrimdelsubbag');
-        Route::get('/deletebagiansub{id}', [SubBagianController::class, 'delete'])->name('deletebagiansub');
+        Route::get('/deletebagiansub/{id}', [SubBagianController::class, 'delete'])->name('deletebagiansub');
 
 
         // DataMerkController\
@@ -247,7 +247,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/data_merk_edit{id}', [DataMerkController::class, 'edit'])->name('data_merk_edit');
         Route::post('/data_Merk_update', [DataMerkController::class, 'update'])->name('data_Merk_update');
         Route::get('/confrimdelMerk{id}', [DataMerkController::class, 'confrimDelete'])->name('confrimdelMerk');
-        Route::get('/deleteMerk{id}', [DataMerkController::class, 'delete'])->name('deleteMerk');
+        Route::get('/deleteMerk/{id}', [DataMerkController::class, 'delete'])->name('deleteMerk');
 
 
         // TipeKategoryController

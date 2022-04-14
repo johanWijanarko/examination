@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\RuanganModels;
+use App\Models\TransaksiModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -104,15 +105,27 @@ class RuanganController extends Controller
     }
 
     public function delete($id){
-        
-        $getDataRuangan = RuanganModels::where('data_ruangan_id',$id)->delete();
 
-        $cek = \Log::channel('database')->info($getDataRuangan);
-        $query = DB::getQueryLog();
-        $query = end($query);
-        $this->save_log('delete data ruang' ,json_encode($query));
+        $countRuangan= TransaksiModels::where('trs_ruang_id', $id)->count();
+        // dd($countGedung);
+        if($countRuangan){
 
-        Alert::success('Success', 'Data berhasil di Hapus');
-        return redirect('m_inventaris/ruangan');
+            Alert::error('Upsss', 'Data sedang di pakai di modul transaksi');
+            return redirect('m_inventaris/ruangan');
+
+        }else{
+
+            $getDataRuangan = RuanganModels::where('data_ruangan_id',$id)->delete();
+
+            $cek = \Log::channel('database')->info($getDataRuangan);
+            $query = DB::getQueryLog();
+            $query = end($query);
+            $this->save_log('delete data ruang' ,json_encode($query));
+
+            Alert::success('Success', 'Data berhasil di Hapus');
+            return redirect('m_inventaris/ruangan');
+
+        }
+
     }
 }

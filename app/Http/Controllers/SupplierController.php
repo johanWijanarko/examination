@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kabupaten;
+use App\Models\StokModels;
 use Illuminate\Http\Request;
 use App\Models\ProvinsiModels;
 use App\Models\SupplierModels;
@@ -18,7 +19,7 @@ class SupplierController extends Controller
         $provinsis = DB::table('par_provinsi')->select('id', 'name')->orderBy('name', 'asc')->get();
         return view('master_inventaris/supplier.index' , compact('provinsis'));
     }
-    
+
 
     public function get_data_supplier(Request $request){
         $DataSupplier = SupplierModels::with('supplierhasProvinsi','supplierhaskabupaten')
@@ -93,7 +94,7 @@ class SupplierController extends Controller
         return response()->json($getDataSupplier);
         // dd($getDataSupplier);
     }
-    
+
     public function get_kabupaten_sup(Request $request)
     {
         $get_kabupaten = DB::table('par_kabupaten')
@@ -131,7 +132,7 @@ class SupplierController extends Controller
 
         return $output;
     }
-    
+
     public function update(Request $request){
         // dd($request->all());
         $save = [
@@ -172,15 +173,25 @@ class SupplierController extends Controller
     }
 
     public function delete($id){
-        
-        $getDataSupplier = SupplierModels::where('supplier_id',$id)->delete();
 
-        $cek = \Log::channel('database')->info($getDataSupplier);
-        $query = DB::getQueryLog();
-        $query = end($query);
-        $this->save_log('delete data supplier' ,json_encode($query));
+        $countSupplier = StokModels::where('data_supplier_id', $id)->count();
+        if($countSupplier){
 
-        Alert::success('Success', 'Data berhasil di Hapus');
-        return redirect('m_inventaris/supplier');
+            Alert::error('Upsss', 'Data sedang di pakai di modul stok data');
+            return redirect('m_inventaris/supplier');
+
+        }else{
+
+            $getDataSupplier = SupplierModels::where('supplier_id',$id)->delete();
+
+            $cek = \Log::channel('database')->info($getDataSupplier);
+            $query = DB::getQueryLog();
+            $query = end($query);
+            $this->save_log('delete data supplier' ,json_encode($query));
+
+            Alert::success('Success', 'Data berhasil di Hapus');
+            return redirect('m_inventaris/supplier');
+        }
+
     }
 }

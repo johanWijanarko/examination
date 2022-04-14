@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\StokModels;
 use Illuminate\Http\Request;
 use App\Models\DataMerkModels;
 use Illuminate\Support\Facades\DB;
@@ -104,15 +105,25 @@ class DataMerkController extends Controller
     }
 
     public function delete($id){
-        
-        $getDatamerk = DataMerkModels::where('data_merk_id',$id)->delete();
+        $countMerk = StokModels::where('data_merk_id', $id)->count();
 
-        $cek = \Log::channel('database')->info($getDatamerk);
-        $query = DB::getQueryLog();
-        $query = end($query);
-        $this->save_log('delete data merk' ,json_encode($query ));
+        if($countMerk){
 
-        Alert::success('Success', 'Data berhasil di Hapus');
-        return redirect('m_inventaris/data_merk');
+            Alert::error('Upsss', 'Data sedang di pakai di modul stok data');
+            return redirect('m_inventaris/data_merk');
+
+        }else{
+
+            $getDatamerk = DataMerkModels::where('data_merk_id',$id)->delete();
+
+            $cek = \Log::channel('database')->info($getDatamerk);
+            $query = DB::getQueryLog();
+            $query = end($query);
+            $this->save_log('delete data merk' ,json_encode($query ));
+
+            Alert::success('Success', 'Data berhasil di Hapus');
+            return redirect('m_inventaris/data_merk');
+        }
+
     }
 }

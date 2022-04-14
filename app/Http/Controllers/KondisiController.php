@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\StokModels;
 use Illuminate\Http\Request;
 use App\Models\KondisiModels;
 use Illuminate\Support\Facades\DB;
@@ -104,15 +105,24 @@ class KondisiController extends Controller
     }
 
     public function delete($id){
-        
-        $getDataKondisi = KondisiModels::where('data_kondisi_id',$id)->delete();
+        $countMerk = StokModels::where('data_kondisi_id', $id)->count();
+        if($countMerk){
 
-        $cek = \Log::channel('database')->info($getDataKondisi);
-        $query = DB::getQueryLog();
-        $query = end($query);
-        $this->save_log('delete data kondisi' ,json_encode($query));
+            Alert::error('Upsss', 'Data sedang di pakai di modul stok data');
+            return redirect('m_inventaris/kondisi');
 
-        Alert::success('Success', 'Data berhasil di Hapus');
-        return redirect('m_inventaris/kondisi');
+        }else{
+            $getDataKondisi = KondisiModels::where('data_kondisi_id',$id)->delete();
+
+            $cek = \Log::channel('database')->info($getDataKondisi);
+            $query = DB::getQueryLog();
+            $query = end($query);
+            $this->save_log('delete data kondisi' ,json_encode($query));
+
+            Alert::success('Success', 'Data berhasil di Hapus');
+            return redirect('m_inventaris/kondisi');
+        }
+
+
     }
 }
