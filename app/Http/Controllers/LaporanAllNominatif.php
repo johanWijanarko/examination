@@ -87,14 +87,30 @@ class LaporanAllNominatif extends Controller
         $type = TypeKtegoryModels::get();
         $ruangan = RuanganModels::get();
         $gedung = GedungModels::get();
-
+        if ($request->all()) {
         $getMutasi = MutasiModels::with(['MutasiHasPegawai'=>function ($q){
-            $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
-        }, 'mutasiHasKondisi', 'MutasiHasDetail'=> function($q){
-            $q->with(['DetailMutasiHasPegawai'=> function ($q){
                 $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
-            }]);
-        }, 'MutasiHasGedung', 'MutasiHasRuangan', 'MutasiHasType'])->get();
+            }, 'mutasiHasKondisi', 'MutasiHasDetail'=> function($q){
+                $q->with(['DetailMutasiHasPegawai'=> function ($q){
+                    $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
+                }]);
+            }, 'MutasiHasGedung', 'MutasiHasRuangan', 'MutasiHasType'])
+            ->when($request->start || $request->end, function ($q) use ($request) {
+                $q->whereBetween('mutasi_tgl',[ date('Y-m-d',strtotime($request->start)) , date('Y-m-d',strtotime($request->end))]);
+            })
+            ->when($request->ruangan, function ($q) use ($request) {
+                $q->where('mutasi_ruangan_id', $request->ruangan);
+            })
+            ->when($request->gedung, function ($q) use ($request) {
+                $q->where('mutasi_gedung_id', $request->gedung);
+            })
+            ->when($request->type, function ($q) use ($request) {
+                $q->where('mutasi_data_id', $request->type);
+            })
+            ->get();
+            return view('laporan.laporanMutasi', compact('getMutasi', 'type', 'ruangan', 'gedung'));
+        }
+        $getMutasi=[];
         return view('laporan.laporanMutasi', compact('getMutasi', 'type', 'ruangan', 'gedung'));
     }
 

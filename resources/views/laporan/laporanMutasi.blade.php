@@ -16,7 +16,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-lg-12 mt-4" style="font-size: 12px !important">
-                <form action="" action="get">
+                <form action="{{ route('laporanMutasi') }}" action="get">
                     <div class="form-group row">
                         <label for="inputEmail3" class="col-sm-3 mt-2">*) Periode Laporan</label>
                         <div class="col-sm-3">
@@ -61,41 +61,20 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-3 mt-2">*)Pilih Status</label>
-                        <div class="col-sm-4">
-                            <select class="form-control" id="status" name="status">
-                                <option value="{{old('status')}}">Pilih Status</option>
-                                <option value="">All</option>
-                                <option value="1">Dipakai</option>
-                                <option value="2">Dipinjam</option>
-                                <option value="3">Sedang diperbaiki</option>
-                                <option value="4">Dikembalikan</option>
-                                <option value="5">Dimutasi</option>
-                                <option value="6">Selesai diperbaikai</option>
-                                <option value="7">Tidak dapat diperbaik</option>
 
-                            </select>
-                        </div>
-                    </div>
                     <div class="form-group row">
                         <div class="col-sm-12" style="text-align: center !important">
                             <button type="submit" class="btn btn-info">Show</button>
                         </div>
                     </div>
-                <div class="form-group row">
-                    <div class="col-sm-12" style="text-align: center !important">
-                        <button type="submit" class="btn btn-info">Show</button>
-                    </div>
-                </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-{{-- @if ($aplikasi == null)
+@if ($getMutasi == null)
 
-@else --}}
+@else
 <div class="card">
     <div class="card-body">
         <div>
@@ -129,9 +108,9 @@
                             <td>{{ $mut->MutasiHasPegawai->pegawai_name }}</td>
                             <td>{{ $mut->MutasiHasPegawai->pegawaiHasBagian->nama_bagian ?? '' }}</td>
                             <td>{{ $mut->MutasiHasPegawai->pegawaiHasSubBagian->sub_bagian_nama ?? '' }}</td>
-                            <td>{{ $mut->MutasiHasGedung->nama_data_gedung }}</td>
-                            <td>{{ $mut->MutasiHasRuangan->nama_data_ruangan }}</td>
-                            <td>{{ $mut->mutasiHasKondisi->nama_data_kondisi }}</td>
+                            <td>{{ $mut->MutasiHasGedung->nama_data_gedung ?? ''}}</td>
+                            <td>{{ $mut->MutasiHasRuangan->nama_data_ruangan ?? ''}}</td>
+                            <td>{{ $mut->mutasiHasKondisi->nama_data_kondisi ?? ''}}</td>
                             <td>{{ $mut->mutasi_tgl }}</td>
                             <td>{{ $mut->mutasi_keterangan }}</td>
                         </tr>
@@ -155,7 +134,7 @@
         </div>
     </div>
 </div>
-{{-- @endif --}}
+@endif
 @endsection
 @push('page-script')
 
