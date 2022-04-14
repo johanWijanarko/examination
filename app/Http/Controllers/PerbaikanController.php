@@ -257,8 +257,7 @@ class PerbaikanController extends Controller
 
     public function update(Request $request,$id)
     {
-        // dd($request->all());
-//
+        // dd($request->obj);
         $request->validate([
             'data_perbaikan' => 'required',
             'obj' => 'required',
@@ -291,6 +290,11 @@ class PerbaikanController extends Controller
             $UPDATE=['trs_detail_status'=>$request->status];
 
             $perbaikan =DetailTransaksi::where('trs_detail_id', $request->trs_detail_id)->update($UPDATE);
+            if($request->status == 7){
+                $stok = StokModels::where('data_stok_id',$request->obj);
+                $stok->increment('data_rusak',1);
+            }
+
 
         $cek = \Log::channel('database')->info($perbaikan);
         $query = DB::getQueryLog();
