@@ -113,6 +113,22 @@ class PengembalianController extends Controller
                 }
                 return '';
             })
+            ->addColumn('status', function (PengembalianModels $dp) {
+                $status = [
+                    '1' => 'Dipakai',
+                    '2' => 'Dipinjam',
+                    '3' => 'Sedang diperbaiki',
+                    '4' => 'Dikembalikan',
+                    '5' => 'Dimutasi',
+                    '6' => 'Selesai diperbaikai',
+                    '7' => 'Tidak dapat diperbaik',
+                ];
+                if ($dp->pengembalian_status_pinjam) {
+
+                       return  $status[$dp->pengembalian_status_pinjam];
+                    }
+                return '';
+            })
             ->rawColumns(['details_url'])
             ->addIndexColumn()
             ->make(true);
@@ -169,9 +185,9 @@ class PengembalianController extends Controller
         $this->save_log('tambah transaksi pengembalian' ,json_encode($query));
 
 
-        $product = StokModels::find($request->obj);
-        $product->decrement('data_dipakai', $request->jumlah_kembali);
-        $product->increment('data_jumlah', $request->jumlah_kembali);
+        // $product = StokModels::find($request->obj);
+        // $product->decrement('data_dipakai', $request->jumlah_kembali);
+        // $product->increment('data_jumlah', $request->jumlah_kembali);
 
 
         Alert::success('Success', 'Data berhasil di Simpan');
@@ -181,7 +197,7 @@ class PengembalianController extends Controller
     public function confrimApprove($id){
         $getData = PengembalianModels::find($id);
         // dd($getData);
-        return \view('transaksi/pengembalian.delete',compact('getData'));
+        return \view('transaksi/pengembalian.approve',compact('getData'));
     }
 
 
@@ -190,12 +206,17 @@ class PengembalianController extends Controller
         //   dd($trs_id);
           $detailTrs = DetailTransaksi::find($trs_id);
           $jumlahPinjam = $detailTrs->trs_detail_jumlah;
+          $updateStok = $detailTrs->trs_detail_data_stok_id;
+
+          $getStokdata = StokModels::where('data_stok_id', $updateStok)->first();
 
           $jmlKembali = PengembalianModels::find($id);
           $jml = $jmlKembali->pengembalian_jumlah;
 
           if($jumlahPinjam > 0 ){
               $detailTrs->decrement('trs_detail_jumlah', $jml);
+              $getStokdata->decrement('data_dipakai', $jml);
+              $getStokdata->increment('data_jumlah', $jml);
           }
 
           $detailTrs_ = DetailTransaksi::find($trs_id);
@@ -207,7 +228,9 @@ class PengembalianController extends Controller
               $updatetrans =DetailTransaksi::where('trs_detail_id', $request->trs_detail_id)->update($kembali);
           }
 
-        $kembaliUpdate =PengembalianModels::where('pengembalian_id', $id)->update([ 'pengembalian_status'=> 0 ]);
+        $kembaliUpdate =PengembalianModels::where('pengembalian_id', $id)->update([ 'pengembalian_status'=> 0 ,
+        'pengembalian_status_pinjam' => 4,
+    ]);
 
         Alert::success('Success', 'Data berhasil di Approve');
         return redirect('transaksi_data/pengembalian');

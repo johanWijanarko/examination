@@ -68,6 +68,22 @@ class PeminjamanController extends Controller
                 }
                 return '';
             })
+            ->addColumn('statusPinjam', function (PeminjamanModels $dk) {
+                $status = [
+                    '1' => 'Dipakai',
+                    '2' => 'Dipinjam',
+                    '3' => 'Sedang diperbaiki',
+                    '4' => 'Dikembalikan',
+                    '5' => 'Dimutasi',
+                    '6' => 'Selesai diperbaikai',
+                    '7' => 'Tidak dapat diperbaik',
+                ];
+                if ($dk->pinjamHasTrsDetail) {
+                    return  $status[$dk->pinjamHasTrsDetail->trs_detail_status];
+                }
+                return '';
+            })
+
             ->rawColumns([ 'gedung', 'ruangan', 'dataPinjam', 'pegawai', 'details_url', 'objek', 'tgl'])
             ->addIndexColumn()
             ->make(true);
@@ -177,7 +193,7 @@ class PeminjamanController extends Controller
         ]);
 
         ///////////////////////////////////////////////////////////////////////
-
+// dd($request->obj);
         $save_ = [
 
             'peminjaman_kode'=> $request->kode_pinjam,
@@ -224,15 +240,15 @@ class PeminjamanController extends Controller
 
 
         if($request->data_peminjaman == 3){
-            $product =  StokModels::where('data_stok_id',$request->jumlah_pinjam);
+            $product =  StokModels::where('data_stok_id',$request->obj);
             $product->increment('data_dipakai', $request->jumlah_pinjam);
             $product->decrement('data_jumlah', $request->jumlah_pinjam);
         }elseif($request->data_peminjaman == 4) {
-            $product =  StokModels::where('data_stok_id',$request->jumlah_pinjam);
+            $product =  StokModels::where('data_stok_id',$request->obj);
             $product->increment('data_dipakai', $request->jumlah_pinjam);
             $product->decrement('data_jumlah', $request->jumlah_pinjam);
         }elseif($request->data_peminjaman == 5) {
-            $product =  StokModels::where('data_stok_id',$request->jumlah_pinjam);
+            $product =  StokModels::where('data_stok_id',$request->obj);
             $product->increment('data_dipakai', $request->jumlah_pinjam);
             $product->decrement('data_jumlah', $request->jumlah_pinjam);
         }

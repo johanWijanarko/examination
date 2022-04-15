@@ -30,6 +30,7 @@
                         <th>Sub Bagian</th>
                         <th>Kondisi Sebelum</th>
                         <th>Kondisi Sesudah</th>
+                        <th>Status</th>
                         <th>Keterangan</th>
 
                     </tr>
@@ -108,6 +109,7 @@
             { data: 'subbagian', name: 'subbagian' },
             { data: 'konseb', name: 'konseb' },
             { data: 'konsek', name: 'konsek' },
+            { data: 'status', name: 'status' },
             { data: 'ket', name: 'ket' },
             ]
         });
@@ -129,7 +131,7 @@
             },
             // return the result
             success: function(result) {
-                $('#smallModal2').modal("show");
+                $('#smallModal').modal("show");
                 $('#smallBody').html(result).show();
             }
             , complete: function() {

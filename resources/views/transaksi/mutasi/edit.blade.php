@@ -157,8 +157,8 @@
 @push('page-script')
 <script>
 $(document).ready(function() {
-    $(' #pegawaian, #kePegawai, #gedung, #ruangan, #kondisi, #pegawai').select2();
-    $('#typeMutasi,  #obj').prop("disabled", true)
+    $(' #pegawaian, #kePegawai, #gedung, #ruangan, #kondisi').select2();
+    $('#typeMutasi,  #obj, #pegawai').prop("disabled", true)
 
 });
 
