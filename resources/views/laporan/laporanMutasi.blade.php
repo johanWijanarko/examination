@@ -119,14 +119,13 @@
             </table>
         </div>
         <div class="row-lg-12" style="align-content: center;">
-            <form action="" method="GET" id="v_excel2">
+            <form action="{{ route('laporanMutasiExcel') }}" method="GET" id="v_excel2">
                 {{ csrf_field() }}
                 <input type="hidden" value="{{ request()->start }}" name="start">
                 <input type="hidden" value="{{ request()->end }}" name="end">
                 <input type="hidden" value="{{ request()->gedung }}" name="gedung">
                 <input type="hidden" value="{{ request()->ruangan }}" name="ruangan">
                 <input type="hidden" value="{{ request()->type }}" name="type">
-                <input type="hidden" value="{{ request()->status }}" name="status">
                 <div class="d-flex justify-content-center">
                     <button type="" id="excel" class="btn btn-info">Excel</button>
                 </div>

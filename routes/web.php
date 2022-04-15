@@ -481,8 +481,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/lap_transaksi', [LaporanAllNominatif::class, 'laporanTransaksi'])->name('laporanTransaksi');
         Route::get('/lap_transaksi-excel', [LaporanAllNominatif::class, 'laporanTransaksiExcel'])->name('laporanTransaksiExcel');
         Route::get('/lap_mutasi', [LaporanAllNominatif::class, 'laporanMutasi'])->name('laporanMutasi');
+        Route::get('/lap_mutasiExcel', [LaporanAllNominatif::class, 'laporanMutasiExcel'])->name('laporanMutasiExcel');
         Route::get('/lap_peminjaman', [LaporanAllNominatif::class, 'laporanPeminjaman'])->name('laporanPeminjaman');
+        Route::get('/lap_peminjamanExcel', [LaporanAllNominatif::class, 'laporanPeminjamanExcel'])->name('laporanPeminjamanExcel');
         Route::get('/lap_pengembalian', [LaporanAllNominatif::class, 'laporanPengembalian'])->name('laporanPengembalian');
+        Route::get('/lap_pengembalianExcel', [LaporanAllNominatif::class, 'laporanPengembalianExcel'])->name('laporanPengembalianExcel');
         Route::get('/lap_perbaikan', [LaporanAllNominatif::class, 'laporanPerbaikan'])->name('laporanPerbaikan');
     });
 
