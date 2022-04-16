@@ -85,7 +85,7 @@
                             <button class="close" data-dismiss="alert">
                                 <span>&times;</span>
                             </button>
-                            Hello <strong>{{ strtoupper(Auth::user()->name) }}</strong>, Selamat Datang Di Aplikasi Sistem Inventory Kementerian Pertahanan Republik Indonesia 2022
+                            Hello <strong>{{ strtoupper(Auth::user()->name) }}</strong>, Selamat Datang Di E-Inventaris
                         </div>
                     </div>
                 </div>
@@ -151,7 +151,7 @@
                         </div>
                         </div>
                     </div>
-                </div>                  
+                </div>
             </div>
             <div class="row">
                 <div class=" col-md-12 col-sm-12 col-12">
@@ -183,7 +183,7 @@
                                             </p>
                                         </figure>
                                     </div>
-                                </div>      
+                                </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
@@ -207,12 +207,12 @@
                                             </p>
                                         </figure>
                                     </div>
-                                </div>              
+                                </div>
                             </div>
                         </div>
-                       
+
                     </div>
-                </div>                  
+                </div>
             </div>
 
             <div class="row">
@@ -275,7 +275,7 @@
                         </div>
                         </div>
                     </div>
-                </div>                  
+                </div>
             </div>
 
             {{-- grafik --}}
@@ -309,7 +309,7 @@
                                             </p>
                                         </figure>
                                     </div>
-                                </div>    
+                                </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="nav-profile1" role="tabpanel" aria-labelledby="nav-profile1-tab">
@@ -333,12 +333,12 @@
                                             </p>
                                         </figure>
                                     </div>
-                                </div>             
+                                </div>
                             </div>
                         </div>
-                        
+
                     </div>
-                </div>                  
+                </div>
             </div>
 
             <div class="row">
@@ -401,7 +401,7 @@
                         </div>
                         </div>
                     </div>
-                </div>                  
+                </div>
             </div>
             {{-- grafik --}}
             <div class="row">
@@ -434,7 +434,7 @@
                                             </p>
                                         </figure>
                                     </div>
-                                </div>           
+                                </div>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="nav-profile3" role="tabpanel" aria-labelledby="nav-profile3-tab">
@@ -458,12 +458,12 @@
                                             </p>
                                         </figure>
                                     </div>
-                                </div>             
+                                </div>
                             </div>
                         </div>
-                        
+
                     </div>
-                </div>                  
+                </div>
             </div>
         </div>
     </div>
@@ -1081,5 +1081,5 @@ Highcharts.chart('container10', {
     }]
 });
 </script>
-    
+
 @endpush

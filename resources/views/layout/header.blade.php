@@ -15,7 +15,7 @@ if ($avatar) {
 <head>
     <meta name="_token" content="{{ csrf_token() }}" />
     <meta charset="UTF-8">
-    <title>E-Inventory</title>
+    <title>E-Inventaris</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     {{-- <title>QPASS</title> --}}
     <link rel="icon" href="{{ asset('assets/img/kemhan2.png') }}" type="image/x-icon">
