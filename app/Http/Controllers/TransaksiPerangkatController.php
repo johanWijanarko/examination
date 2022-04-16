@@ -32,7 +32,7 @@ class TransaksiPerangkatController extends Controller
     {
         $trsPerangkat = TransaksiModels::with(['trsDetail' =>function ($q){
             $q->with(['trsHasPegawai2' ]);
-            $q->whereHas('trsHasStok2', function($q){
+            $q->whereHas('trsHasStok1', function($q){
                 $q->where('data_kategory_id',3);
             });
         }])->whereHas('trsDetail', function ($q){
@@ -54,15 +54,20 @@ class TransaksiPerangkatController extends Controller
                 return '';
             })
             ->addColumn('perangkat', function (TransaksiModels $dp) {
+                $detail_2='';
                 if ($dp->trsDetail) {
                     foreach ($dp->trsDetail as $key => $detail) {
-                        if($detail->trsHasStok2){
-                            return $detail->trsHasStok2->data_name;
+
+                        if($detail->trsHasStok1){
+                            $angka = $key+1;
+                            foreach ($detail->trsHasStok1 as $key => $value) {
+                                $detail_2 .= $angka.'. '.$value->data_name.'<br>';
+                            }
                         }
 
                     }
                 }
-                return '';
+                return $detail_2;
             })
             ->addColumn('pegawai', function (TransaksiModels $dp) {
                 $detail_='';

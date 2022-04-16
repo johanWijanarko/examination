@@ -18,6 +18,10 @@ class DetailTransaksi extends Model
     public function trsHasStok2(){
         return $this->belongsTo(StokModels::class, 'trs_detail_data_stok_id', 'data_stok_id');
     }
+
+    public function trsHasStok1(){
+        return $this->hasMany(StokModels::class, 'data_stok_id', 'trs_detail_data_stok_id');
+    }
     public function trsHasPegawai2(){
         return $this->belongsTo(PegawaiModels::class, 'trs_detail_pegawai_id', 'pegawai_id');
     }

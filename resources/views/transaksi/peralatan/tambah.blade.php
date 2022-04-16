@@ -55,7 +55,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <button type="button" class="add-new btn btn-info" id="addBtn">Add New Income</button>
+                                    <button type="button" class="add-new btn btn-info" id="addBtn">Add Detail</button>
                                 </div>
                             </div>
                             <div class="table-responsive mt-4">

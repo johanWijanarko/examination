@@ -55,7 +55,7 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
-                                    <button type="button" class="add-new btn btn-info" id="addBtn">Add New Income</button>
+                                    <button type="button" class="add-new btn btn-info" id="addBtn">Add Detail</button>
                                 </div>
                             </div>
                             <div class="table-responsive mt-4">
@@ -97,7 +97,7 @@ $(document).ready(function () {
 
   // jQuery button click event to add a row
   $('#addBtn').on('click', function () {
-  
+
     // Adding a row inside the tbody.
     $('#tbody').append(`<tr id="R${++rowIdx}">
          <td class="row-index text-center" width="20%">
