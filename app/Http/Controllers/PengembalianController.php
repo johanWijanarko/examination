@@ -213,6 +213,7 @@ class PengembalianController extends Controller
           $jmlKembali = PengembalianModels::find($id);
           $jml = $jmlKembali->pengembalian_jumlah;
 
+        //   dd($jml);
           if($jumlahPinjam > 0 ){
               $detailTrs->decrement('trs_detail_jumlah', $jml);
               $getStokdata->decrement('data_dipakai', $jml);
@@ -225,7 +226,7 @@ class PengembalianController extends Controller
               $kembali= [
                   'trs_detail_status'=>4
               ];
-              $updatetrans =DetailTransaksi::where('trs_detail_id', $request->trs_detail_id)->update($kembali);
+              $updatetrans =DetailTransaksi::where('trs_detail_id', $trs_id)->update($kembali);
           }
 
         $kembaliUpdate =PengembalianModels::where('pengembalian_id', $id)->update([ 'pengembalian_status'=> 0 ,
@@ -272,12 +273,12 @@ class PengembalianController extends Controller
     {
         // dd($request->all());
         $data = explode(":", $request->id);
-        $dataStok = (int)$data[1];
+        $trs_detail_id = (int)$data[1];
         $getRekapMutasi_ = DetailTransaksi ::with(['trsHasStok2'=> function($q){
             $q->with(['stokHasKondisi']);
         }])
         // ->where('trs_id', $trs_id)
-        ->where('trs_detail_data_stok_id',$dataStok)
+        ->where('trs_detail_id',$trs_detail_id)
         ->first();
 
        return response()->json($getRekapMutasi_);

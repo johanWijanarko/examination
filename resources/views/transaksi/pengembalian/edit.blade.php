@@ -210,7 +210,7 @@ var validate_stok = 0;
         var jmlPjm = $('#jmlPjm').val()
 
             if(parseInt(jumlah) > parseInt(jmlPjm)){
-                swal("Error!", 'Jumlah Pengambalian tidak boleh melebihi jumlah peminjaman')
+                swal("Uppss!", 'Jumlah Pengambalian tidak boleh melebihi jumlah peminjaman')
                 $('#jumlah_kembali').val('')
                 validate_stok = 1;
                 return false

@@ -1,5 +1,5 @@
 @extends('layout.app',[
-    
+
 ])
 @section('content')
 <style>
@@ -39,7 +39,7 @@
                                         <option value="">Pilih Pengembalian</option>
                                         @foreach ($type as $item)
                                         <option value="{{ $item->data_type_id }}">{{ $item->nama_data_type}}</option>
-                                            
+
                                         @endforeach
                                     </select>
                                 </div>
@@ -71,7 +71,7 @@
                                     <select class="form-control" id="pegawai" name="pegawai" required>
                                         <option value="{{old('pegawai')}}">Pilih Pegawai</option>
                                     </select>
-                                    <input type="hidden" name="trs_detail_id" id="trs_detail_id" class="form-control" placeholder="" readonly>
+                                    <input type="text" name="trs_detail_id" id="trs_detail_id" class="form-control" placeholder="" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -95,7 +95,7 @@
                                     </select>
                                 </div>
                             </div>
-                           
+
                             <div class="form-group row">
                                 <div class="col-md-3">
                                     <label class="col-form-label mandatory">Jumlah Pengembalian</label>
@@ -144,7 +144,7 @@ $('#data_pengembalian').on('change', function () {
             $('#obj').empty();
                     $('#obj').append(new Option('- Pilih -', ''))
             $('#obj').trigger('change')
-            
+
             $.each(response, function (id, name) {
             // console.log(name)
                 $('#obj').append(new Option(name, id))
@@ -166,15 +166,15 @@ $('#obj').on('change', function () {
             $('#pegawai').empty();
                     $('#pegawai').append(new Option('- Pilih -', ''))
             $('#pegawai').trigger('change')
-            
+
             response.forEach(item => {
                 // $('#pegawai').append(new Option(item.pegawe_name, item.id_peg))
-                $('#pegawai').append(new Option(item.pegawe_name, item.id_peg+':'+item.stok_id))
+                $('#pegawai').append(new Option(item.pegawe_name, item.id_peg+':'+item.trs_id))
                 // console.log(item.kondisi)
                 $('#kds_detail').val(item.kondisi)
                 $('#kds_detail_id').val(item.kondisi_id)
-                
-               
+
+
             });
         }
     })
@@ -189,21 +189,21 @@ $('#pegawai').on('change', function () {
         data: {id: $(this).val()},
         dataType : 'json',
         success: function (response) {
-            // console.log(response)
+            console.log(response)
             $('#jmlPjm').val(response.trs_detail_jumlah)
             $('#trs_detail_id').val(response.trs_detail_id)
-           
+
         }
     })
 })
 
 var validate_stok = 0;
-    $('#jumlah_kembali').on('input',function(){   
+    $('#jumlah_kembali').on('input',function(){
         var jumlah= $(this).val();
         var jmlPjm = $('#jmlPjm').val()
-       
+
             if(parseInt(jumlah) > parseInt(jmlPjm)){
-                swal("Error!", 'Jumlah Pengambalian tidak boleh melebihi jumlah peminjaman') 
+                swal("Upsss!", 'Jumlah Pengambalian tidak boleh melebihi jumlah peminjaman')
                 $('#jumlah_kembali').val('')
                 validate_stok = 1;
                 return false
