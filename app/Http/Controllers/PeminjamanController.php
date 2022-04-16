@@ -36,12 +36,29 @@ class PeminjamanController extends Controller
         return DataTables::of($getDataPinjaman)
             // ->addColumn('actions', 'transaksi/perangkat.actions')
             ->addColumn('details_url', function(PeminjamanModels $dp) {
-               if ($dp) {
-                   $btn = '<button data-url="'.route("detailpinjam",['id'=>$dp->peminjaman_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek">Detail</button>';
-                    $btn = $btn.'<a href="'.route("editpinjam",['id'=>$dp->peminjaman_id]).'" class="edit btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
-                   return $btn;
-                }
-                return '';
+            //    if ($dp) {
+            //        $btn = '<button data-url="'.route("detailpinjam",['id'=>$dp->peminjaman_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek">Detail</button>';
+            //         $btn = $btn.'<a href="'.route("editpinjam",['id'=>$dp->peminjaman_id]).'" class="edit btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
+            //        return $btn;
+            //     }
+            //     return '';
+
+
+                if ($dp) {
+
+                    $btn = '<button data-url="'.route("detailpinjam",['id'=>$dp->peminjaman_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek">Detail</button>';
+
+                        if($dp->peminjaman_status_id == 1){
+
+                            $btn = $btn.'<a href="'.route("editpinjam",['id'=>$dp->peminjaman_id]).'" class="edit btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
+
+                            $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("aprovePinjamConfrim",['id'=>$dp->peminjaman_id]).'" data-placement="top" title="Approve"  class="edit btn btn-primary btn-sm" >Approve</a>';
+                            $btn =$btn.'<a data-toggle="modal" id="smallButton2"  data-target="#smallModal2" data-attr="" data-placement="top" title="Approve"  class="edit btn btn-danger btn-sm" >Reject</a>';
+                        return $btn;
+                        }
+                        return $btn;
+                    }
+                    return '';
             })
             ->addColumn('dataPinjam', function (PeminjamanModels $dp) {
                 if ($dp->peminjamanHasType) {
@@ -81,7 +98,7 @@ class PeminjamanController extends Controller
                 if ($dk->pinjamHasTrsDetail) {
                     return  $status[$dk->pinjamHasTrsDetail->trs_detail_status];
                 }
-                return '';
+                return 'Dalam Proses';
             })
 
             ->rawColumns([ 'gedung', 'ruangan', 'dataPinjam', 'pegawai', 'details_url', 'objek', 'tgl'])
@@ -218,40 +235,29 @@ class PeminjamanController extends Controller
 
         ///////////////////////////////////////////////////////////////////////
 
-        $save = [
-            'trs_kode'=> $request->kode_pinjam,
-            'trs_keterangan'=> $request->keterangan,
-            'trs_date'=> Carbon::today(),
-        ];
-        $pinjamtrs =TransaksiModels::create($save);
-
-        $trsId = $pinjamtrs->trs_id;
-        $saveTrs = [
-            'trs_id' => $trsId,
-            'trs_detail_pegawai_id' => $request->pegawai,
-            'trs_detail_data_stok_id' => $request->obj,
-            'trs_detail_gedung_id' => $request->gedung,
-            'trs_detail_ruangan_id' => $request->ruangan,
-            'trs_detail_jumlah' => $request->jumlah_pinjam,
-            'trs_detail_status' => 2,
-            'trs_detail_pinjam_id' => $savePinjam->peminjaman_id,
-        ];
-        $saveTransaksi =DetailTransaksi::create($saveTrs);
+        // $save = [
+        //     'trs_kode'=> $request->kode_pinjam,
+        //     'trs_keterangan'=> $request->keterangan,
+        //     'trs_date'=> Carbon::today(),
+        // ];
+        // $pinjamtrs =TransaksiModels::create($save);
 
 
-        if($request->data_peminjaman == 3){
-            $product =  StokModels::where('data_stok_id',$request->obj);
-            $product->increment('data_dipakai', $request->jumlah_pinjam);
-            $product->decrement('data_jumlah', $request->jumlah_pinjam);
-        }elseif($request->data_peminjaman == 4) {
-            $product =  StokModels::where('data_stok_id',$request->obj);
-            $product->increment('data_dipakai', $request->jumlah_pinjam);
-            $product->decrement('data_jumlah', $request->jumlah_pinjam);
-        }elseif($request->data_peminjaman == 5) {
-            $product =  StokModels::where('data_stok_id',$request->obj);
-            $product->increment('data_dipakai', $request->jumlah_pinjam);
-            $product->decrement('data_jumlah', $request->jumlah_pinjam);
-        }
+
+
+        // if($request->data_peminjaman == 3){
+        //     $product =  StokModels::where('data_stok_id',$request->obj);
+        //     $product->increment('data_dipakai', $request->jumlah_pinjam);
+        //     $product->decrement('data_jumlah', $request->jumlah_pinjam);
+        // }elseif($request->data_peminjaman == 4) {
+        //     $product =  StokModels::where('data_stok_id',$request->obj);
+        //     $product->increment('data_dipakai', $request->jumlah_pinjam);
+        //     $product->decrement('data_jumlah', $request->jumlah_pinjam);
+        // }elseif($request->data_peminjaman == 5) {
+        //     $product =  StokModels::where('data_stok_id',$request->obj);
+        //     $product->increment('data_dipakai', $request->jumlah_pinjam);
+        //     $product->decrement('data_jumlah', $request->jumlah_pinjam);
+        // }
 
 
 
@@ -260,6 +266,43 @@ class PeminjamanController extends Controller
         return redirect('transaksi_data/peminjaman');
     }
 
+    public function confrimApprove(Request $request, $id)
+    {
+        $getDataPinjaman = PeminjamanModels::find($id);
+        // dd($getDataPinjaman);
+        return \view('transaksi/peminjaman.approve',compact('getDataPinjaman'));
+    }
+
+    public function approve(Request $request)
+    {
+        $save = [
+            'trs_kode'=> $request->kode_pinjam,
+            'trs_keterangan'=> $request->peminjaman_keterangan,
+            'trs_date'=> Carbon::today(),
+        ];
+        $pinjamtrs =TransaksiModels::create($save);
+
+        $trsId = $pinjamtrs->trs_id;
+        $saveTrs = [
+            'trs_id' => $trsId,
+            'trs_detail_pegawai_id' => $request->peminjaman_pegawai_id,
+            'trs_detail_data_stok_id' => $request->peminjaman_obejk_id,
+            'trs_detail_gedung_id' => $request->peminjaman_gedung_id,
+            'trs_detail_ruangan_id' => $request->peminjaman_ruangan_id,
+            'trs_detail_jumlah' => $request->peminjaman_jumlah,
+            'trs_detail_status' => 2,
+            'trs_detail_pinjam_id' => $request->peminjaman_id,
+        ];
+        $saveTransaksi =DetailTransaksi::create($saveTrs);
+
+        $product =  StokModels::where('data_stok_id',$request->peminjaman_obejk_id);
+        $product->increment('data_dipakai', $request->peminjaman_jumlah);
+        $product->decrement('data_jumlah', $request->peminjaman_jumlah);
+        $updateStatusPinjam =PeminjamanModels::where('peminjaman_id', $request->peminjaman_id)->update(['peminjaman_status_id'=> 0]);
+
+        Alert::success('Success', 'Data berhasil di Approve');
+        return redirect('transaksi_data/peminjaman');
+    }
     public function edit(Request $request, $id)
     {
         $getDataPinjaman = PeminjamanModels::with(['peminjamanHasObjek'=> function($q){

@@ -15,7 +15,7 @@ if ($avatar) {
 <head>
     <meta name="_token" content="{{ csrf_token() }}" />
     <meta charset="UTF-8">
-    <title>E-Inventory - Kementrian Pertahanan Republik Indonesia</title>
+    <title>E-Inventory</title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     {{-- <title>QPASS</title> --}}
     <link rel="icon" href="{{ asset('assets/img/kemhan2.png') }}" type="image/x-icon">
@@ -125,7 +125,7 @@ if ($avatar) {
          $data_notifikasi = $notifikasi->where( function ( $query )
         {
         $query->where('read_at', '=', null )->orWhere('notifications.updated_at', '=', null );})->count() > 0 ? 'beep': '';
-         
+
          $notifikasi_main = DB::table('notifications')
           ->leftjoin('users', 'user_proyek', '=', 'user_to')->where('user_to', Auth::user()->user_proyek);
       //  echo Auth::user()->user_proyek;
@@ -141,7 +141,7 @@ if ($avatar) {
                                                     <div class="dropdown-list-content dropdown-list-message">
                                                       {{-- @foreach ($notifikasi_main->select('notifications.*','users.name')->where('read_at', '=', null )->orWhere('notifications.updated_at', '=', null )->limit(10)->orderByDesc('id')->get() as $notif)
                                                       @php
-                                                          $link=$notif->link.'?pic_id='.$notif->pic_id.'&pic_auditee_id='.$notif->pic_auditee_id.'&id_trfinspect='.$notif->id_trfinspect; 
+                                                          $link=$notif->link.'?pic_id='.$notif->pic_id.'&pic_auditee_id='.$notif->pic_auditee_id.'&id_trfinspect='.$notif->id_trfinspect;
                                                       @endphp --}}
                                                       {{-- <a href="#" data-id="{{ $notif->id }}" data-link="{{ $link }}" class="dropdown-item dropdown-item-unread notify"> --}}
                                                           <a href="#" data-id="" class="dropdown-item dropdown-item-unread notify">
