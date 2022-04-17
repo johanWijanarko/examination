@@ -7,10 +7,15 @@
                 <label class="col-form-label">Nama Perangkat</label>
             </div>
             <div class="col-md-8">
-            @php
+            {{-- @php
                 $detail= $details->trsDetail->first();
-            @endphp
-                    <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $detail->trsHasStok2->data_name;}}" placeholder="" readonly>
+            @endphp --}}
+            @foreach ($details->trsDetail as $key=> $item)
+                @foreach ($item->trsHasStok1 as $key1=> $item2)
+                        <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $key+1  }}. {{ $item2->data_name}}" placeholder="" readonly><br>
+                @endforeach
+
+            @endforeach
             </div>
         </div>
         <div class="form-group row">
@@ -44,13 +49,13 @@
                     @foreach ($details->trsDetail as $key_1 => $detail)
                         @if ($detail->hasManyPegawai)
                             @foreach ($detail->hasManyPegawai as $key => $value)
-                        <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $key_1+1}}. {{ $value->pegawai_name }}" placeholder="" readonly>
+                        <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $key_1+1}}. {{ $value->pegawai_name }}" placeholder="" readonly><br>
                             @endforeach
                         @endif
-                            
+
                     @endforeach
                 @endif
-                    
+
             </div>
         </div>
         <div class="form-group row">
@@ -63,14 +68,17 @@
                         @if ($detail->hasManyPegawai)
                             @foreach ($detail->hasManyPegawai as $key => $value)
                                 @if ($value->pegawaiHasBagian)
-                                    <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $key_1+1}}. {{ $value->pegawaiHasBagian->nama_bagian }}" placeholder="" readonly>
+                                    <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $key_1+1}}. {{ $value->pegawaiHasBagian->nama_bagian }}" placeholder="" readonly><br>
+
+                                    @else
+                                    <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="" placeholder="" readonly><br>
                                 @endif
                             @endforeach
                         @endif
-                            
+
                     @endforeach
                 @endif
-                
+
             </div>
         </div>
         <div class="form-group row">
@@ -78,14 +86,16 @@
                 <label class="col-form-label">Nama Sub Bagian</label>
             </div>
             <div class="col-md-8">
-               
+
                 @if ($details->trsDetail)
                 @foreach ($details->trsDetail as $key_1 => $detail)
                     @if ($detail->hasManyPegawai)
                         @foreach ($detail->hasManyPegawai as $key => $value)
                             @if ($value->pegawaiHasSubBagian)
-                                <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $key_1+1}}. {{ $value->pegawaiHasSubBagian->sub_bagian_nama }}" placeholder="" readonly>
-                                
+                                <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $key_1+1}}. {{ $value->pegawaiHasSubBagian->sub_bagian_nama }}" placeholder="" readonly><br>
+                            @else
+                                <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="" placeholder="" readonly><br>
+
                             @endif
                         @endforeach
                     @endif
@@ -100,7 +110,7 @@
             <div class="col-md-8">
                 @if ($details->trsDetail)
                     @foreach ($details->trsDetail as $key_1 => $detail)
-                        <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{$key_1+1}}. {{$detail->trsHasGedung->nama_data_gedung}}" placeholder="" readonly>
+                        <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{$key_1+1}}. {{$detail->trsHasGedung->nama_data_gedung}}" placeholder="" readonly><br>
                     @endforeach
                 @endif
             </div>
@@ -112,11 +122,11 @@
             <div class="col-md-8">
                 @if ($details->trsDetail)
                     @foreach ($details->trsDetail as $key_1 => $detail)
-                        <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{$key_1+1}}. {{$detail->trsHasRuangan->nama_data_ruangan}}" placeholder="" readonly>
+                        <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{$key_1+1}}. {{$detail->trsHasRuangan->nama_data_ruangan}}" placeholder="" readonly><br>
                     @endforeach
                 @endif
             </div>
         </div>
     </div>
-    
+
 </form>

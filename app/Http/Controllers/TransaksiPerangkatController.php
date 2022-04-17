@@ -126,9 +126,12 @@ class TransaksiPerangkatController extends Controller
                 $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
             }, 'trsHasStok2'=> function ($q){
                 $q->with(['stokHasMerk','stokHasKondisi']);
-            }]);
+            }, 'trsHasStok1']);
             $q->with(['trsHasGedung', 'trsHasRuangan']);
             $q->whereHas('trsHasStok2', function($q){
+                $q->where('data_kategory_id',3);
+            });
+            $q->whereHas('trsHasStok1', function($q){
                 $q->where('data_kategory_id',3);
             });
         }])->where('trs_id', $id)->first();
