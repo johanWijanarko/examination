@@ -227,8 +227,8 @@ $('#tgl').datepicker({
             }
         })
     });
-
-    $('#pegawai').on('change', function () {
+    $("#pegawai").on("change", e => {
+    // $('#pegawai').on('change', function () {
         //  console.log($(this).val());
         $.ajax({
             url: '{{ url('transaksi_data/perangkat_trans/getPegawai') }}',
@@ -247,8 +247,5 @@ $('#tgl').datepicker({
             }
         })
     });
-
-
-
 </script>
 @endpush

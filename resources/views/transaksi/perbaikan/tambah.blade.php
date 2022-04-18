@@ -110,12 +110,13 @@ $(document).ready(function() {
     $('#data_perbaikan, #pegawai,  #obj').select2();
 });
 
-$('#data_perbaikan').on('change', function () {
+// $('#data_perbaikan').on('change', function () {
+$("#data_perbaikan").on("change", e => {
     //  console.log($(this).val());
     $.ajax({
         url: '{{ url('transaksi_data/perbaikan/getObejkPerbaikan') }}',
         method: 'get',
-        data: {id: $(this).val()},
+        data: {id: $(e.currentTarget).val()},
         dataType : 'json',
         success: function (response) {
             // console.log(response)
@@ -132,12 +133,14 @@ $('#data_perbaikan').on('change', function () {
     })
 });
 
-$('#obj').on('change', function () {
-    //  console.log($(this).val());
+// $('#obj').on('change', function () {
+$("#obj").on("change", e => {
+    // for handler this make currentTarget
+    // console.log($(e.currentTarget).val());
     $.ajax({
         url: '{{ url('transaksi_data/perbaikan/getPegawiPerbaikan') }}',
         method: 'get',
-        data: {id: $(this).val()},
+        data: {id: $(e.currentTarget).val()},
         dataType : 'json',
         success: function (response) {
             console.log(response)
