@@ -1,5 +1,5 @@
 @extends('layout.app',[
-    
+
 ])
 @section('content')
 <style>
@@ -14,7 +14,7 @@
         <div>
             <h5>Transaksi Inventaris</h5>
         </div><br>
-        <div class="input-group-append" style="float: right; margin-bottom: 10px; " > 
+        <div class="input-group-append" style="float: right; margin-bottom: 10px; " >
             <a class="btn btn-outline-success btn-outline-oke" href="{{ route('add_trsInv') }}">Tambah</a>
           {{-- <a class="btn btn-outline-info btn-outline-oke" href="{{ url('parameter/par_audit') }}"><i class="fas fa-arrow-left"></i> Kembali</a> --}}
         </div>
@@ -24,6 +24,7 @@
                     <tr>
                         <th>Action</th>
                         <th>No</th>
+                        <th>Kode Transaksis</th>
                         <th>Nama Inventaris</th>
                         <th>Nama Pegawai</th>
                         <th>Status</th>
@@ -41,7 +42,7 @@
 @push('page-script')
 <!-- small modal -->
 <div class="modal fade" id="smallModal" tabindex="-1" role="dialog" aria-labelledby="smallModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-dialog  modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -56,7 +57,7 @@
         </div>
     </div>
 </div>
-<script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script> 
+<script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
 
 <script type="text/javascript">
 
@@ -78,6 +79,7 @@ $(function() {
                 data: 'details_url', name: 'details_url',
             },
             { "data": 'DT_RowIndex',orderable: false, searchable: false },
+            { data: 'trs_kode', name: 'trs_kode' },
             { data: 'perangkat', name: 'perangkat' },
             { data: 'pegawai', name: 'pegawai' },
             { data: 'status', name: 'status' },
@@ -127,7 +129,7 @@ $(function() {
     }
 
    // Add event listener for opening and closing details
-    
+
 
    // display a modal (small modal)
    $(document).on('click', '#smallButton', function(event) {

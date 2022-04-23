@@ -57,20 +57,32 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
+                                    <label class="col-form-label mandatory">Inventaris</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <select class="form-control inventaris" id="inventaris" name="inventaris" required>
+                                        <option value="{{old('inventaris')}}">Pilih Inventaris</option>
+                                        @foreach ($dataInv as $stok)
+                                            <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
                                     <button type="button" class="add-new btn btn-info" id="addBtn">Add Detail</button>
                                 </div>
                             </div>
                             <div class="table-responsive mt-4">
                                 <table class="table table-bordered table-striped table-inka" id="data_perangkat" width="100%">
                                     <thead>
-                                      <tr>
-                                        <th class="text-center">Nama Perangkat</th>
-                                        <th class="text-center">Pegawai</th>
-                                        <th class="text-center">Gedung</th>
-                                        <th class="text-center">Ruangan</th>
-                                        <th class="text-center">Jumlah</th>
-                                        <th class="text-center">Remove</th>
-                                      </tr>
+                                        <tr>
+                                            <th class="text-center">Pegawai</th>
+                                            <th class="text-center">Gedung</th>
+                                            <th class="text-center">Ruangan</th>
+                                            <th class="text-center">Jumlah</th>
+                                            <th class="text-center">Remove</th>
+                                        </tr>
                                     </thead>
                                     <tbody id="tbody">
                                     </tbody>
@@ -93,7 +105,7 @@
 @push('page-script')
 <script>
 $(document).ready(function () {
-
+    $("#inventaris").select2();
 // Denotes total number of rows
 var rowIdx = 0;
 
@@ -102,14 +114,6 @@ $('#addBtn').on('click', function () {
 
   // Adding a row inside the tbody.
   $('#tbody').append(`<tr id="R${++rowIdx}">
-       <td class="row-index text-center" width="20%">
-          <select class="form-control inventaris" id="inventaris${rowIdx}" name="inventaris[]" required>
-              <option value="{{old('inventaris')}}">Pilih Inventaris</option>
-              @foreach ($dataInv as $stok)
-                  <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
-              @endforeach
-          </select>
-       </td>
        <td class="row-index text-center" width="20%">
           <select class="form-control pegawai" id="pegawai${rowIdx}" name="pegawai[]" required>
               <option value="{{old('pegawai')}}">Pilih Pegawai</option>

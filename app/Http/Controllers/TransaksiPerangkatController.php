@@ -51,13 +51,6 @@ class TransaksiPerangkatController extends Controller
             ->addColumn('perangkat', function (TransaksiModels $dp) {
                 if ($dp->trsHasStok) {
                     return $dp->trsHasStok->data_name;
-                    // revisi
-                     // foreach ($dp->trsDetail as $key => $detail) {
-                    //     if($detail->trsHasStok2){
-                    //         return $detail->trsHasStok2->data_name;
-                    //     }
-
-                    // }
                 }
                 return '';
             })

@@ -34,19 +34,13 @@ class TransaksiInvController extends Controller
 
     public function getTrsInv()
     {
-        $trsInv = TransaksiModels::with(['trsDetail' =>function ($q){
-            $q->with(['trsHasPegawai2' ]);
-            $q->whereHas('trsHasStok2', function($q){
-                $q->where('data_kategory_id',5);
-            });
-        }])->whereHas('trsDetail', function ($q){
-            $q->whereHas('trsHasStok2', function($q){
-                $q->where('data_kategory_id',5);
-            });
+        $trsInv = TransaksiModels::with(['trsHasStok','trsDetail' =>function ($q){
+            $q->with(['hasManyPegawai' ]);
+        }])->whereHas('trsHasStok', function ($q){
+            $q->where('data_kategory_id',5);
         })
         ->orderBy('trs_id', 'asc')->where('trs_status_id',1)
         ->get();
-
 
         return DataTables::of($trsInv)
             ->addColumn('details_url', function(TransaksiModels $dp) {
@@ -58,13 +52,8 @@ class TransaksiInvController extends Controller
                 return '';
             })
             ->addColumn('perangkat', function (TransaksiModels $dp) {
-                if ($dp->trsDetail) {
-                    foreach ($dp->trsDetail as $key => $detail) {
-                        if($detail->trsHasStok2){
-                            return $detail->trsHasStok2->data_name;
-                        }
-
-                    }
+                if ($dp->trsHasStok) {
+                    return $dp->trsHasStok->data_name;
                 }
                 return '';
             })
@@ -103,7 +92,6 @@ class TransaksiInvController extends Controller
                     }
 
                 }
-
                 return $detail_2;
             })
             ->addColumn('keterangan', function (TransaksiModels $dp) {
@@ -119,16 +107,14 @@ class TransaksiInvController extends Controller
 
     public function detail($id)
     {
-        $details = TransaksiModels::with(['trsDetail'=> function($q){
-            $q->with(['trsHasPegawai2' => function($q){
+        $details = TransaksiModels::with(['trsHasStok' => function ($q){
+            $q->with(['stokHasMerk','stokHasKondisi']);
+        },'trsDetail'=> function($q){
+            $q->with(['hasManyPegawai' => function($q){
                 $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
-            }, 'trsHasStok2'=> function ($q){
-                $q->with(['stokHasMerk','stokHasKondisi']);
             }]);
             $q->with(['trsHasGedung', 'trsHasRuangan']);
-            $q->whereHas('trsHasStok2', function($q){
-                $q->where('data_kategory_id',5);
-            });
+
         }])->where('trs_id', $id)->first();
 
         return \view('transaksi/inventaris.detail', compact('details'));
@@ -181,35 +167,37 @@ class TransaksiInvController extends Controller
         $request->validate([
             'keterangan' => 'required',
             'tgl' => 'required',
+            'inventaris' => 'required',
 
         ],
         [
             'keterangan.required' => 'Keterangan tidak boleh kosong!',
             'tgl.required' => ' Tanggal tidak boleh kosong!',
+            'inventaris.required' => ' Aplikasi tidak boleh kosong!',
         ]);
 
         $save = [
             'trs_kode'=> $request->id_trs_prkt,
             'trs_keterangan'=> $request->keterangan,
+            'trs_data_stok_id'=> $request->inventaris,
             'trs_date'=> $tgl,
         ];
         $trsAtk =TransaksiModels::create($save);
         // dd($trsAtk->trs_id);
         $trsId = $trsAtk->trs_id;
         $data2 = array();
-        if ($request->inventaris) {
-            foreach ($request->inventaris as $key => $data) {
+        if ($request->pegawai) {
+            foreach ($request->pegawai as $key => $data) {
                 $data2[$key]['trs_id'] = $trsId;
                 $data2[$key]['trs_detail_pegawai_id'] = $request->pegawai[$key];
-                $data2[$key]['trs_detail_data_stok_id'] = $request->inventaris[$key];
                 $data2[$key]['trs_detail_gedung_id'] = $request->gedung[$key];
                 $data2[$key]['trs_detail_ruangan_id'] = $request->ruangan[$key];
                 $data2[$key]['trs_detail_jumlah'] = $request->jml[$key];
 
-                $stok = StokModels::whereIn('data_stok_id',[$request->inventaris[$key]]);
+                $stok = StokModels::where('data_stok_id',$request->inventaris);
                 $stok->decrement('data_jumlah', $request->jml[$key]);
 
-                $stok = StokModels::whereIn('data_stok_id',[$request->inventaris[$key]]);
+                $stok = StokModels::where('data_stok_id',$request->inventaris);
                 $stok->increment('data_dipakai', $request->jml[$key]);
             }
 
@@ -228,7 +216,7 @@ class TransaksiInvController extends Controller
     public function edit($id)
     {
         $detail = TransaksiModels::with(['trsDetail'=> function($q){
-            $q->with(['trsHasPegawai2' => function($q){
+            $q->with(['hasManyPegawai' => function($q){
                 $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
             }]);
         }])->where('trs_id', $id)->first();
@@ -249,18 +237,20 @@ class TransaksiInvController extends Controller
         $request->validate([
             'keterangan' => 'required',
             'tgl' => 'required',
+            'inventaris' => 'required',
 
         ],
         [
             'keterangan.required' => 'Keterangan tidak boleh kosong!',
             'tgl.required' => ' Tanggal tidak boleh kosong!',
+            'inventaris.required' => ' Inventaris tidak boleh kosong!',
         ]);
 
         $save = [
             'trs_keterangan'=> $request->keterangan,
+            'trs_data_stok_id'=> $request->inventaris,
             'trs_date'=> $tgl,
         ];
-
         $updatedata = TransaksiModels::where('trs_id', $id)->update($save);
 
 
@@ -276,19 +266,18 @@ class TransaksiInvController extends Controller
                 }
 
                 $data2 = array();
-                if ($request->inventaris_insert) {
-                    foreach ($request->inventaris_insert as $key => $data) {
+                if ($request->pegawai_insert) {
+                    foreach ($request->pegawai_insert as $key => $data) {
                         $data2[$key]['trs_id'] = $id;
                         $data2[$key]['trs_detail_pegawai_id'] = $request->pegawai_insert[$key];
-                        $data2[$key]['trs_detail_data_stok_id'] = $request->inventaris_insert[$key];
                         $data2[$key]['trs_detail_gedung_id'] = $request->gedung_insert[$key];
                         $data2[$key]['trs_detail_ruangan_id'] = $request->ruangan_insert[$key];
                         $data2[$key]['trs_detail_jumlah'] = $request->jml_insert[$key];
 
-                        $stok = StokModels::whereIn('data_stok_id',[$request->inventaris_insert[$key]]);
+                        $stok = StokModels::where('data_stok_id',$request->inventaris);
                         $stok->decrement('data_jumlah', $request->jml_insert[$key]);
 
-                        $stok = StokModels::whereIn('data_stok_id',[$request->inventaris_insert[$key]]);
+                        $stok = StokModels::where('data_stok_id',$request->inventaris);
                         $stok->increment('data_dipakai', $request->jml_insert[$key]);
                     }
 
