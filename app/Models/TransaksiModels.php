@@ -11,7 +11,7 @@ class TransaksiModels extends Model
     protected $table = 'trs_inventaris';
     protected $primaryKey = 'trs_id';
 
-    protected $fillable = ['trs_id', 'trs_kode', 'trs_data_stok_id','trs_gedung_id', 'trs_ruang_id', 'trs_pic_id', 'trs_status_id', 'trs_date', 'trs_keterangan', 'trs_pegawai_id','created_at', 'updated_at'];
+    protected $fillable = ['trs_id', 'trs_kode', 'trs_data_stok_id', 'trs_status_id', 'trs_date', 'trs_keterangan', 'trs_pegawai_id','created_at', 'updated_at'];
 
     public function trsHasStok(){
         return $this->belongsTo(StokModels::class, 'trs_data_stok_id', 'data_stok_id');
