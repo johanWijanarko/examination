@@ -180,13 +180,13 @@ class TransaksiPerangkatController extends Controller
         $request->validate([
             'keterangan' => 'required',
             'tgl' => 'required',
-            'trs_data_stok_id' => 'required',
+            'perangkat' => 'required',
 
         ],
         [
             'keterangan.required' => 'Keterangan tidak boleh kosong!',
             'tgl.required' => ' Tanggal tidak boleh kosong!',
-            'trs_data_stok_id.required' => ' Aplikasi tidak boleh kosong!',
+            'perangkat.required' => ' Aplikasi tidak boleh kosong!',
         ]);
 
         $save = [

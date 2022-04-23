@@ -28,6 +28,7 @@
                     <tr>
                         <th>Action</th>
                         <th>No</th>
+                        <th>Kode Transaksi</th>
                         <th>Nama Alat Kantor</th>
                         <th>Nama Pegawai</th>
                         <th>Status</th>
@@ -81,6 +82,7 @@ $(function() {
                 data: 'details_url', name: 'details_url',
             },
             { "data": 'DT_RowIndex',orderable: false, searchable: false },
+            { data: 'trs_kode', name: 'trs_kode' },
             { data: 'perangkat', name: 'perangkat' },
             { data: 'pegawai', name: 'pegawai' },
             { data: 'status', name: 'status' },
