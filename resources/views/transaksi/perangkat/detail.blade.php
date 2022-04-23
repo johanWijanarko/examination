@@ -42,8 +42,8 @@
             <div class="col-md-8">
                 @php
                 $detail= $details->trsDetail->first();
-            @endphp
-                    <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value=" {{ $detail->trsHasStok2->data_keterangan;}}" placeholder="" readonly>
+                @endphp
+                    <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value=" {{ $details->trsHasStok->data_keterangan;}}" placeholder="" readonly>
             </div>
         </div>
         <div class="form-group row">

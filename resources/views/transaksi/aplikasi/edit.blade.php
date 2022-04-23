@@ -55,6 +55,19 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
+                                    <label class="col-form-label mandatory">Aplikasi</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <select class="form-control aplikasi" id="aplikasi" name="aplikasi" required>
+                                        <option value="{{old('aplikasi')}}">Pilih Aplikasi</option>
+                                        @foreach ($dataStok as $perangkat)
+                                        <option {{ ($detail->trs_data_stok_id == $perangkat->data_stok_id ) ? 'selected' : ''}}  value="{{$perangkat->data_stok_id}}" >{{ $perangkat->data_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
                                     <button type="button" class="add-new btn btn-info" id="addBtn">Add Detail</button>
                                 </div>
                             </div>
@@ -62,25 +75,15 @@
                                 <table class="table table-bordered table-striped table-inka" id="data_perangkat" width="100%">
                                     <thead>
                                       <tr>
-                                        <th class="text-center" width="20%">Nama Aplikasi</th>
                                         <th class="text-center" width="20%">Pegawai</th>
                                         <th class="text-center" width="20%">Gedung</th>
                                         <th class="text-center" width="20%">Ruangan</th>
-                                        <th class="text-center" width="15%">Jumlah</th>
                                         <th class="text-center" width="10%">Remove</th>
                                       </tr>
                                     </thead>
                                     <tbody id="tbody">
                                         @foreach ($detail->trsDetail as $key=>$item)
                                         <tr id="cek{{ $key}}">
-                                            <td>
-                                                <select class="form-control aplikasi" id="aplikasi{{ $key}}" name="aplikasi[]" required>
-                                                    <option value="{{old('aplikasi')}}">Pilih Aplikasi</option>
-                                                    @foreach ($dataStok as $aplikasi)
-                                                    <option {{ ($item->trs_detail_data_stok_id == $aplikasi->data_stok_id ) ? 'selected' : ''}}  value="{{$aplikasi->data_stok_id}}" >{{ $aplikasi->data_name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
                                             <td>
                                                 <select class="form-control pegawai" id="pegawai{{ $key}}" name="pegawai[]" required>
                                                     <option value="{{old('pegawai')}}">Pilih Pegawai</option>
@@ -104,9 +107,6 @@
                                                         <option {{ ($item->trs_detail_ruangan_id ==  $ru->data_ruangan_id ) ? 'selected' : '' }} value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
                                                     @endforeach
                                                 </select>
-                                            </td>
-                                            <td>
-                                                <input type="text" name="jml[]" id="jml" value="{{ $item->trs_detail_jumlah }}" class="form-control" placeholder="" required>
                                             </td>
                                             <td>
                                                 <a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="" data-placement="top" title="delete" class="btn btn-sm btn-danger rounded-circle del" ><i class="fas fa-trash"></i></a>
@@ -152,14 +152,6 @@ $(document).ready(function () {
     // Adding a row inside the tbody.
     $('#tbody').append(`<tr id="R${++rowIdx}">
          <td class="row-index text-center" width="20%">
-            <select class="form-control aplikasi_insert" id="aplikasi_insert${rowIdx}" name="aplikasi_insert[]" required>
-                <option value="{{old('aplikasi')}}">Pilih aplikasi</option>
-                @foreach ($dataStok as $stok)
-                    <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
-                @endforeach
-            </select>
-         </td>
-         <td class="row-index text-center" width="20%">
             <select class="form-control pegawai_insert" id="pegawai_insert${rowIdx}" name="pegawai_insert[]" required>
                 <option value="{{old('pegawai')}}">Pilih Pegawai</option>
                 @foreach ($dataPegawai as $pegawai)
@@ -182,9 +174,6 @@ $(document).ready(function () {
                     <option value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
                 @endforeach
             </select>
-        </td>
-        <td width="15%">
-            <input type="text" name="jml_insert[]" id="jml" class="form-control" placeholder="" required>
         </td>
         <td width="10%">
             <a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="" data-placement="top" title="delete" class="btn btn-sm btn-danger rounded-circle remove" ><i class="fas fa-trash"></i></a>

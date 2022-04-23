@@ -55,6 +55,19 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
+                                    <label class="col-form-label mandatory">Aplikasi</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <select class="form-control aplikasi" id="aplikasi" name="aplikasi" required>
+                                        <option value="{{old('aplikasi')}}">Pilih Aplikasi</option>
+                                         @foreach ($dataStok as $stok)
+                                             <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
+                                         @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
                                     <button type="button" class="add-new btn btn-info" id="addBtn">Add Detail</button>
                                 </div>
                             </div>
@@ -62,11 +75,11 @@
                                 <table class="table table-bordered table-striped table-inka" id="data_perangkat" width="100%">
                                     <thead>
                                       <tr>
-                                        <th class="text-center">Nama Aplikasi</th>
+                                        {{-- <th class="text-center">Nama Aplikasi</th> --}}
                                         <th class="text-center">Pegawai</th>
                                         <th class="text-center">Gedung</th>
                                         <th class="text-center">Ruangan</th>
-                                        <th class="text-center">Jumlah</th>
+                                        {{-- <th class="text-center">Jumlah</th> --}}
                                         <th class="text-center">Remove</th>
                                       </tr>
                                     </thead>
@@ -101,14 +114,6 @@ $(document).ready(function () {
     // Adding a row inside the tbody.
     $('#tbody').append(`<tr id="R${++rowIdx}">
          <td class="row-index text-center" width="20%">
-            <select class="form-control aplikasi" id="aplikasi${rowIdx}" name="aplikasi[]" required>
-                <option value="{{old('aplikasi')}}">Pilih Aplikasi</option>
-                @foreach ($dataStok as $stok)
-                    <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
-                @endforeach
-            </select>
-         </td>
-         <td class="row-index text-center" width="20%">
             <select class="form-control pegawai" id="pegawai${rowIdx}" name="pegawai[]" required>
                 <option value="{{old('pegawai')}}">Pilih Pegawai</option>
                 @foreach ($dataPegawai as $pegawai)
@@ -131,9 +136,6 @@ $(document).ready(function () {
                     <option value="{{ $ru->data_ruangan_id }}">{{ $ru->nama_data_ruangan }}</option>
                 @endforeach
             </select>
-        </td>
-        <td width="15%">
-            <input type="text" name="jml[]" id="jml" class="form-control" placeholder="" required>
         </td>
         <td width="10%">
             <a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="" data-placement="top" title="delete" class="btn btn-sm btn-danger rounded-circle remove" ><i class="fas fa-trash"></i></a>

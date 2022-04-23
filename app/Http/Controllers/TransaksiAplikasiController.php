@@ -25,33 +25,40 @@ class TransaksiAplikasiController extends Controller
 {
     public function index()
     {
-        $trsDetail = TransaksiModels::whereHas('trsDetail', function($q){
-            $q->whereHas('trsHasPegawai2');
-            $q->whereHas('trsHasStok2', function($q){
-                $q->where('data_kategory_id',13);
-            });
+        $trsDetail = TransaksiModels::with(['trsHasStok','trsDetail' =>function ($q){
+            $q->with(['hasManyPegawai' ]);
+        }])->whereHas('trsHasStok', function ($q){
+            $q->where('data_kategory_id',13);
         })
         ->orderBy('trs_id', 'asc')->where('trs_status_id',1)
         ->get();
+
         // dd($trsDetail);
         return \view('transaksi/aplikasi.index');
     }
 
     public function getTrsaplikasi()
     {
-        $trsDetail = TransaksiModels::with(['trsDetail' =>function ($q){
-            $q->with(['trsHasPegawai2' ]);
-            $q->whereHas('trsHasStok2', function($q){
+        // $trsDetail = TransaksiModels::with(['trsDetail' =>function ($q){
+        //     $q->with(['trsHasPegawai2' ]);
+        //     $q->whereHas('trsHasStok2', function($q){
+        //         $q->where('data_kategory_id',13);
+        //     });
+        // }])->whereHas('trsDetail', function ($q){
+        //     $q->whereHas('trsHasStok2', function($q){
+        //         $q->where('data_kategory_id',13);
+        //     });
+        // })
+        // ->orderBy('trs_id', 'asc')->where('trs_status_id',1)
+        // ->get();
+
+        $trsDetail = TransaksiModels::with(['trsHasStok','trsDetail' =>function ($q){
+                $q->with(['hasManyPegawai' ]);
+            }])->whereHas('trsHasStok', function ($q){
                 $q->where('data_kategory_id',13);
-            });
-        }])->whereHas('trsDetail', function ($q){
-            $q->whereHas('trsHasStok2', function($q){
-                $q->where('data_kategory_id',13);
-            });
-        })
+            })
         ->orderBy('trs_id', 'asc')->where('trs_status_id',1)
         ->get();
-
         return DataTables::of($trsDetail)
         ->addColumn('details_url', function(TransaksiModels $dp) {
            if ($dp->trs_id) {
@@ -62,14 +69,15 @@ class TransaksiAplikasiController extends Controller
             return '';
         })
         ->addColumn('perangkat', function (TransaksiModels $dp) {
-            if ($dp->trsDetail) {
-                foreach ($dp->trsDetail as $key => $detail) {
-                    if($detail->trsHasStok2){
-                        return $detail->trsHasStok2->data_name;
-                    }
-                   
-                }
-                // return $dp->trsHasStok2->data_name;
+            if ($dp->trsHasStok) {
+                return $dp->trsHasStok->data_name;
+                // revisi
+                 // foreach ($dp->trsDetail as $key => $detail) {
+                //     if($detail->trsHasStok2){
+                //         return $detail->trsHasStok2->data_name;
+                //     }
+
+                // }
             }
             return '';
         })
@@ -77,16 +85,15 @@ class TransaksiAplikasiController extends Controller
             $detail_='';
             if ($dp->trsDetail) {
                 foreach ($dp->trsDetail as $key_1 => $detail) {
-                    
+
                     if($detail->hasManyPegawai){
                         $angka = $key_1+1;
                         foreach ($detail->hasManyPegawai as $key => $value) {
                             $detail_ .= $angka.'. '.$value->pegawai_name.'<br>';
                         }
                     }
-                   
+
                 }
-                // return $dp->trsHasStok2->data_name;
             }
             return $detail_;
         })
@@ -97,6 +104,8 @@ class TransaksiAplikasiController extends Controller
                 '3' => 'Sedang diperbaiki',
                 '4' => 'Dikembalikan',
                 '5' => 'Dimutasi',
+                '6' => 'Selesai diperbaikai',
+                '7' => 'Tidak dapat diperbaik',
             ];
 
             $detail_2='';
@@ -105,9 +114,7 @@ class TransaksiAplikasiController extends Controller
                     $angka = $key_1+1;
                     $detail_2 .=  $angka.'. '.$status[$detail->trs_detail_status].'<br>';
                 }
-                
             }
-           
             return $detail_2;
         })
         ->addColumn('keterangan', function (TransaksiModels $dp) {
@@ -121,21 +128,22 @@ class TransaksiAplikasiController extends Controller
         ->make(true);
 
     }
- 
+
 
     public function detail($id){
-        $details = TransaksiModels::with(['trsDetail'=> function($q){
-            $q->with(['trsHasPegawai2' => function($q){
+        $details = TransaksiModels::with(['trsHasStok' => function ($q){
+            $q->with(['stokHasMerk','stokHasKondisi']);
+        },'trsDetail'=> function($q){
+            $q->with(['hasManyPegawai' => function($q){
                 $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
-            }, 'trsHasStok2'=> function ($q){
-                $q->with(['stokHasMerk','stokHasKondisi']);
             }]);
             $q->with(['trsHasGedung', 'trsHasRuangan']);
-            $q->whereHas('trsHasStok2', function($q){
-                $q->where('data_kategory_id',13);
-            });
-        }])->where('trs_id', $id)->first();
 
+        }])
+        ->whereHas('trsHasStok', function($q){
+            $q->where('data_kategory_id',13);
+        })->where('trs_id', $id)->first();
+        // dd($details);
         return view('transaksi/aplikasi.detail',compact('details'));
     }
 
@@ -192,36 +200,32 @@ class TransaksiAplikasiController extends Controller
         $request->validate([
             'keterangan' => 'required',
             'tgl' => 'required',
+            'aplikasi' => 'required',
 
         ],
         [
             'keterangan.required' => 'Keterangan tidak boleh kosong!',
             'tgl.required' => ' Tanggal tidak boleh kosong!',
+            'aplikasi.required' => ' Aplikasi tidak boleh kosong!',
         ]);
 
         $save = [
             'trs_kode'=> $request->id_trs_prkt,
             'trs_keterangan'=> $request->keterangan,
+            'trs_data_stok_id'=> $request->aplikasi,
             'trs_date'=> $tgl,
         ];
         $trsAtk =TransaksiModels::create($save);
         // dd($trsAtk->trs_id);
         $trsId = $trsAtk->trs_id;
         $data2 = array();
-        if ($request->aplikasi) {
-            foreach ($request->aplikasi as $key => $data) {
+        if ($request->pegawai) {
+            foreach ($request->pegawai as $key => $data) {
                 $data2[$key]['trs_id'] = $trsId;
                 $data2[$key]['trs_detail_pegawai_id'] = $request->pegawai[$key];
-                $data2[$key]['trs_detail_data_stok_id'] = $request->aplikasi[$key];
+                // $data2[$key]['trs_detail_data_stok_id'] = $request->aplikasi[$key];
                 $data2[$key]['trs_detail_gedung_id'] = $request->gedung[$key];
                 $data2[$key]['trs_detail_ruangan_id'] = $request->ruangan[$key];
-                $data2[$key]['trs_detail_jumlah'] = $request->jml[$key];
-
-                // $stok = StokModels::whereIn('data_stok_id',[$request->aplikasi[$key]]);
-                // $stok->decrement('data_jumlah', $request->jml[$key]);
-
-                $stok = StokModels::whereIn('data_stok_id',[$request->aplikasi[$key]]);
-                $stok->increment('data_dipakai', $request->jml[$key]);
             }
 
             $save_detail = DB::table('trs_detail')->insert($data2);
@@ -238,7 +242,7 @@ class TransaksiAplikasiController extends Controller
 
     public function edit($id){
         $detail = TransaksiModels::with(['trsDetail'=> function($q){
-            $q->with(['trsHasPegawai2' => function($q){
+            $q->with(['hasManyPegawai' => function($q){
                 $q->with(['pegawaiHasBagian', 'pegawaiHasSubBagian']);
             }]);
         }])->where('trs_id', $id)->first();
@@ -257,15 +261,18 @@ class TransaksiAplikasiController extends Controller
         $request->validate([
             'keterangan' => 'required',
             'tgl' => 'required',
+            'aplikasi' => 'required',
 
         ],
         [
             'keterangan.required' => 'Keterangan tidak boleh kosong!',
             'tgl.required' => ' Tanggal tidak boleh kosong!',
+            'aplikasi.required' => ' Aplikasi tidak boleh kosong!',
         ]);
 
         $save = [
             'trs_keterangan'=> $request->keterangan,
+            'trs_data_stok_id'=> $request->aplikasi,
             'trs_date'=> $tgl,
         ];
 
@@ -278,28 +285,21 @@ class TransaksiAplikasiController extends Controller
             foreach ($checkFile as $key => $file) {
                 if(!in_array($file, $getOld)){
                     $getDelete =DetailTransaksi::where('trs_detail_id',$file)->first();
-                       
+
                         $getDelete->delete();
                     }
-                }  
+                }
 
                 $data2 = array();
-                if ($request->aplikasi_insert) {
-                    foreach ($request->aplikasi_insert as $key => $data) {
+                if ($request->pegawai_insert) {
+                    foreach ($request->pegawai_insert as $key => $data) {
                         $data2[$key]['trs_id'] = $id;
                         $data2[$key]['trs_detail_pegawai_id'] = $request->pegawai_insert[$key];
-                        $data2[$key]['trs_detail_data_stok_id'] = $request->aplikasi_insert[$key];
                         $data2[$key]['trs_detail_gedung_id'] = $request->gedung_insert[$key];
                         $data2[$key]['trs_detail_ruangan_id'] = $request->ruangan_insert[$key];
-                        $data2[$key]['trs_detail_jumlah'] = $request->jml_insert[$key];
-        
-                        // $stok = StokModels::whereIn('data_stok_id',[$request->aplikasi_insert[$key]]);
-                        // $stok->decrement('data_jumlah', $request->jml_insert[$key]);
-        
-                        $stok = StokModels::whereIn('data_stok_id',[$request->aplikasi_insert[$key]]);
-                        $stok->increment('data_dipakai', $request->jml_insert[$key]);
+
                     }
-        
+
                     $save_detail = DB::table('trs_detail')->insert($data2);
                 }
 
