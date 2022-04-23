@@ -180,11 +180,13 @@ class TransaksiPerangkatController extends Controller
         $request->validate([
             'keterangan' => 'required',
             'tgl' => 'required',
+            'trs_data_stok_id' => 'required',
 
         ],
         [
             'keterangan.required' => 'Keterangan tidak boleh kosong!',
             'tgl.required' => ' Tanggal tidak boleh kosong!',
+            'trs_data_stok_id.required' => ' Aplikasi tidak boleh kosong!',
         ]);
 
         $save = [
@@ -206,10 +208,10 @@ class TransaksiPerangkatController extends Controller
                 $data2[$key]['trs_detail_ruangan_id'] = $request->ruangan[$key];
                 $data2[$key]['trs_detail_jumlah'] = $request->jml[$key];
 
-                $stok = StokModels::whereIn('data_stok_id',[$request->pegawai[$key]]);
+                $stok = StokModels::where('data_stok_id',$request->perangkat);
                 $stok->decrement('data_jumlah', $request->jml[$key]);
 
-                $stok = StokModels::whereIn('data_stok_id',[$request->pegawai[$key]]);
+                $stok = StokModels::where('data_stok_id',$request->perangkat);
                 $stok->increment('data_dipakai', $request->jml[$key]);
             }
 
@@ -286,10 +288,10 @@ class TransaksiPerangkatController extends Controller
                         $data2[$key]['trs_detail_ruangan_id'] = $request->ruangan_insert[$key];
                         $data2[$key]['trs_detail_jumlah'] = $request->jml_insert[$key];
 
-                        $stok = StokModels::whereIn('data_stok_id',[$request->pegawai_insert[$key]]);
+                        $stok = StokModels::where('data_stok_id',$request->perangkat);
                         $stok->decrement('data_jumlah', $request->jml_insert[$key]);
 
-                        $stok = StokModels::whereIn('data_stok_id',[$request->pegawai_insert[$key]]);
+                        $stok = StokModels::where('data_stok_id',$request->perangkat);
                         $stok->increment('data_dipakai', $request->jml_insert[$key]);
                     }
 
