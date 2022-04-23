@@ -55,6 +55,19 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
+                                    <label class="col-form-label mandatory">Perangkat</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <select class="form-control perangkat" id="perangkat" name="perangkat" required>
+                                        <option value="{{old('perangkat')}}">Pilih Perangkat</option>
+                                        @foreach ($dataStok as $stok)
+                                            <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
                                     <button type="button" class="add-new btn btn-info" id="addBtn">Add Detail</button>
                                 </div>
                             </div>
@@ -62,7 +75,7 @@
                                 <table class="table table-bordered table-striped table-inka" id="data_perangkat" width="100%">
                                     <thead>
                                       <tr>
-                                        <th class="text-center">Nama Perangkat</th>
+                                        {{-- <th class="text-center">Nama Perangkat</th> --}}
                                         <th class="text-center">Pegawai</th>
                                         <th class="text-center">Gedung</th>
                                         <th class="text-center">Ruangan</th>
@@ -100,14 +113,7 @@ $(document).ready(function () {
 
     // Adding a row inside the tbody.
     $('#tbody').append(`<tr id="R${++rowIdx}">
-         <td class="row-index text-center" width="20%">
-            <select class="form-control perangkat" id="perangkat${rowIdx}" name="perangkat[]" required>
-                <option value="{{old('perangkat')}}">Pilih Perangkat</option>
-                @foreach ($dataStok as $stok)
-                    <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
-                @endforeach
-            </select>
-         </td>
+
          <td class="row-index text-center" width="20%">
             <select class="form-control pegawai" id="pegawai${rowIdx}" name="pegawai[]" required>
                 <option value="{{old('pegawai')}}">Pilih Pegawai</option>
