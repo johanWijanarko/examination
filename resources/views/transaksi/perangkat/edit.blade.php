@@ -55,6 +55,19 @@
                             </div>
                             <div class="form-group row">
                                 <div class="col-md-3">
+                                    <label class="col-form-label mandatory">Perangkat</label>
+                                </div>
+                                <div class="col-md-5">
+                                    <select class="form-control perangkat" id="perangkat" name="perangkat" required>
+                                        <option value="{{old('perangkat')}}">Pilih Perangkat</option>
+                                        @foreach ($dataStok as $perangkat)
+                                        <option {{ ($detail->trs_data_stok_id == $perangkat->data_stok_id ) ? 'selected' : ''}}  value="{{$perangkat->data_stok_id}}" >{{ $perangkat->data_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
                                     <button type="button" class="add-new btn btn-info" id="addBtn">Add Detail</button>
                                 </div>
                             </div>
@@ -62,7 +75,7 @@
                                 <table class="table table-bordered table-striped table-inka" id="data_perangkat" width="100%">
                                     <thead>
                                       <tr>
-                                        <th class="text-center" width="20%">Nama Alat Kantor</th>
+                                        {{-- <th class="text-center" width="20%">Nama Alat Kantor</th> --}}
                                         <th class="text-center" width="20%">Pegawai</th>
                                         <th class="text-center" width="20%">Gedung</th>
                                         <th class="text-center" width="20%">Ruangan</th>
@@ -73,14 +86,14 @@
                                     <tbody id="tbody">
                                         @foreach ($detail->trsDetail as $key=>$item)
                                         <tr id="cek{{ $key}}">
-                                            <td>
+                                            {{-- <td>
                                                 <select class="form-control perangkat" id="perangkat{{ $key}}" name="perangkat[]" required>
                                                     <option value="{{old('perangkat')}}">Pilih Perangkat</option>
                                                     @foreach ($dataStok as $perangkat)
                                                     <option {{ ($item->trs_detail_data_stok_id == $perangkat->data_stok_id ) ? 'selected' : ''}}  value="{{$perangkat->data_stok_id}}" >{{ $perangkat->data_name }}</option>
                                                     @endforeach
                                                 </select>
-                                            </td>
+                                            </td> --}}
                                             <td>
                                                 <select class="form-control pegawai" id="pegawai{{ $key}}" name="pegawai[]" required>
                                                     <option value="{{old('pegawai')}}">Pilih Pegawai</option>
@@ -151,15 +164,7 @@ $(document).ready(function () {
 
     // Adding a row inside the tbody.
     $('#tbody').append(`<tr id="R${++rowIdx}">
-         <td class="row-index text-center" width="20%">
-            <select class="form-control perangkat_insert" id="perangkat_insert${rowIdx}" name="perangkat_insert[]" required>
-                <option value="{{old('perangkat')}}">Pilih Perangkat</option>
-                @foreach ($dataStok as $stok)
-                    <option value="{{ $stok->data_stok_id }}">{{ $stok->data_name }}</option>
-                @endforeach
-            </select>
-         </td>
-         <td class="row-index text-center" width="20%">
+        <td class="row-index text-center" width="20%">
             <select class="form-control pegawai_insert" id="pegawai_insert${rowIdx}" name="pegawai_insert[]" required>
                 <option value="{{old('pegawai')}}">Pilih Pegawai</option>
                 @foreach ($dataPegawai as $pegawai)
