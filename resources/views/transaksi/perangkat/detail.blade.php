@@ -7,15 +7,10 @@
                 <label class="col-form-label">Nama Perangkat</label>
             </div>
             <div class="col-md-8">
-            {{-- @php
-                $detail= $details->trsDetail->first();
-            @endphp --}}
-            @foreach ($details->trsDetail as $key=> $item)
-                @foreach ($item->trsHasStok1 as $key1=> $item2)
-                        <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $key+1  }}. {{ $item2->data_name}}" placeholder="" readonly><br>
-                @endforeach
-
-            @endforeach
+                {{-- @php
+                    $detail= $details->trsDetail->first();
+                @endphp --}}
+                    <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value="{{ $details->trsHasStok->data_name;}}" placeholder="" readonly>
             </div>
         </div>
         <div class="form-group row">
@@ -23,10 +18,21 @@
                 <label class="col-form-label">Merk</label>
             </div>
             <div class="col-md-8">
-                @php
+                {{-- @php
                     $detail= $details->trsDetail->first();
-                @endphp
-                    <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value=" {{ $detail->trsHasStok2->stokHasMerk->nama_data_merk}}" placeholder="" readonly>
+                @endphp --}}
+                    <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value=" {{ $details->trsHasStok->stokHasMerk->nama_data_merk}}" placeholder="" readonly>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <label class="col-form-label">Kondisi</label>
+            </div>
+            <div class="col-md-8">
+                {{-- @php
+                    $detail= $details->trsDetail->first();
+                @endphp --}}
+                    <input type="text" name="id_trs_prkt" id="id_trs_prkt" class="form-control" value=" {{ $details->trsHasStok->stokHasKondisi->nama_data_kondisi}}" placeholder="" readonly>
             </div>
         </div>
         <div class="form-group row">
