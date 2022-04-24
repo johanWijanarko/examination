@@ -1,5 +1,5 @@
 @extends('layout.app',[
-    
+
 ])
 @section('content')
 <style>
@@ -14,12 +14,12 @@
         <div>
             <h5>Permohonan Perbaikan</h5>
         </div><br>
-        <div class="input-group-append" style="float: right; margin-bottom: 10px; " > 
+        <div class="input-group-append" style="float: right; margin-bottom: 10px; " >
             <a class="btn btn-outline-success btn-outline-oke" href="{{ route('tambahPerbaikan') }}">Tambah</a>
           {{-- <a class="btn btn-outline-info btn-outline-oke" href="{{ url('parameter/par_audit') }}"><i class="fas fa-arrow-left"></i> Kembali</a> --}}
         </div>
         <div class="table-responsive mt-4">
-            <table class="table table-bordered table-striped table-inka" id="data_perangkat">
+            <table class="table table-bordered table-striped table-inka" id="data_perangkat" width="100%">
                 <thead>
                     <tr>
                         <th>Action</th>
@@ -58,7 +58,7 @@
         </div>
     </div>
 </div>
-<script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script> 
+<script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
 
 <script type="text/javascript">
 
@@ -70,14 +70,14 @@ $(function() {
             responsive: true,
             ajax: '{{ url('transaksi_data/perbaikan/getDataPerbaikan') }}',
             columns: [
-                  
+
                  {
                 "className":      'details-control',
                 "orderable":      false,
                 "searchable":      false,
                 "data":           null,
                 "defaultContent": '',
-                
+
                 data: 'details_url', name: 'details_url',
             },
                 { "data": 'DT_RowIndex',orderable: false, searchable: false },
@@ -139,7 +139,7 @@ $(function() {
     }
 
    // Add event listener for opening and closing details
-    
+
 
    // display a modal (small modal)
    $(document).on('click', '#smallButton', function(event) {

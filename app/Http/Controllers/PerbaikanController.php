@@ -101,19 +101,21 @@ class PerbaikanController extends Controller
 
      public function getPegawiPerbaikan(Request $request)
     {
-        $getPegawiMutasi = DetailTransaksi ::with('trsHasPegawai2')
-        ->where('trs_detail_data_stok_id', $request->id)
-        ->orderBy('trs_detail_id', 'asc')->get()
-        // ->map('trsHasPegawai.pegawai_name', 'trsHasPegawai.pegawai_id');
+        $getPegawai = PegawaiModels::whereHas('pegawaiHasTrsDetail', function ($q) use($request){
+            $q->whereHas('mainTransaksi',function($q) use($request){
+                $q->where('trs_data_stok_id', $request->id);
+            });
+            $q->where('trs_detail_jumlah', '>', 0);
+        })->get()
         ->map(function ($p){
             return [
-                'id' => $p->trs_detail_id,
-                'id_peg' => $p->trsHasPegawai2->pegawai_id,
-                'pegawe_name' => $p->trsHasPegawai2->pegawai_name,
+                'id' => $p->pegawaiHasTrsDetail->trs_detail_id,
+                'id_peg' => $p->pegawai_id,
+                'pegawe_name' => $p->pegawai_name,
             ];
         });
-            // dd($getPegawiPerbaikan);
-        return response()->json($getPegawiMutasi);
+
+        return response()->json($getPegawai);
     }
 
     public function getRekapPerbaikan(Request $request)
@@ -249,8 +251,14 @@ class PerbaikanController extends Controller
 
         $opjekPerbaikan = StokModels::where('data_kategory_id', $dataPerbaikan->perbaikan_data_id)->get();
 
-        $dataPegawai = DetailTransaksi::with(['trsHasPegawai2'])->where('trs_detail_data_stok_id',$dataPerbaikan->perbaikan_objek_id)->get();
-        // dd($dataPerbaikan);
+
+
+        $dataPegawai =PegawaiModels::whereHas('pegawaiHasTrsDetail', function ($q) use($dataPerbaikan){
+            $q->whereHas('mainTransaksi',function($q) use($dataPerbaikan){
+                $q->where('trs_data_stok_id', $dataPerbaikan->perbaikan_objek_id);
+            });
+            $q->where('trs_detail_jumlah', '>', 0);
+        })->get();
         return \view('transaksi/perbaikan.edit', \compact('dataPegawai', 'dataPerbaikan', 'opjekPerbaikan', 'type'));
 
     }
@@ -259,15 +267,15 @@ class PerbaikanController extends Controller
     {
         // dd($request->obj);
         $request->validate([
-            'data_perbaikan' => 'required',
-            'obj' => 'required',
+            // 'data_perbaikan' => 'required',
+            // 'obj' => 'required',
             'tglPerbikan' => 'required',
             'estimasi' => 'required',
             'ketPerbaikan' => 'required',
         ],
         [
-            'data_perbaikan.required' => 'Data Perbaikan tidak boleh kosong!',
-            'obj.required' => 'Objek Perbaikan tidak boleh kosong!',
+            // 'data_perbaikan.required' => 'Data Perbaikan tidak boleh kosong!',
+            // 'obj.required' => 'Objek Perbaikan tidak boleh kosong!',
             'tglPerbikan.required' => 'Tanggal Perbaikan tidak boleh kosong!',
             'estimasi.required' => 'Estimasi tidak boleh kosong!',
             'ketPerbaikan.required' => 'Keterangan tidak boleh kosong!',
@@ -275,9 +283,9 @@ class PerbaikanController extends Controller
 
 
             $save = [
-                'perbaikan_data_id'=> $request->data_perbaikan,
-                'perbaikan_objek_id'=> $request->obj,
-                'perbaikan_pegawai_id'=> $request->pegawai,
+                // 'perbaikan_data_id'=> $request->data_perbaikan,
+                // 'perbaikan_objek_id'=> $request->obj,
+                // 'perbaikan_pegawai_id'=> $request->pegawai,
                 'perbaikan_tgl_in'=> $request->tglPerbikan,
                 'perbaikan_estimasi'=>$request->estimasi,
                 'perbaikan_keterangan'=>$request->ketPerbaikan,

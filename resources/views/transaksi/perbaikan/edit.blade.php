@@ -66,7 +66,7 @@
                                    <select class="form-control" id="pegawai" name="pegawai" required>
                                         <option value="{{old('pegawai')}}">Pilih Pegawai</option>
                                         @foreach ($dataPegawai as $pgw)
-                                            <option {{ ($dataPerbaikan->perbaikan_pegawai_id == $pgw->trsHasPegawai2->pegawai_id ) ? 'selected' : ''}}  value="{{$pgw->trsHasPegawai2->pegawai_id}}" >{{$pgw->trsHasPegawai2->pegawai_name}}
+                                            <option {{ ($dataPerbaikan->perbaikan_pegawai_id == $pgw->pegawai_id ) ? 'selected' : ''}}  value="{{$pgw->pegawai_id}}" >{{$pgw->pegawai_name}}
                                             </option>
                                         @endforeach
                                     </select>
@@ -129,7 +129,8 @@
 
 
 $(document).ready(function() {
-    $('#data_perbaikan, #pegawai,  #obj').select2();
+    $('#data_perbaikan, #pegawai,  #obj').prop("disabled", true)
+
 });
 
 $('#data_perbaikan').on('change', function () {

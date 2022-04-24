@@ -34,5 +34,9 @@ class PegawaiModels extends Model
     {
         return $this->belongsTo(SubBagianModels::class, 'pegawai_sub_bagian_id', 'sub_bagian_id');
     }
+    public function pegawaiHasTrsDetail()
+    {
+        return $this->belongsTo(DetailTransaksi::class, 'pegawai_id', 'trs_detail_pegawai_id');
+    }
 
 }

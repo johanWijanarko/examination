@@ -139,8 +139,8 @@
                                     <input type="text" name="keterangan" value="{{ $getDataPinjaman->peminjaman_keterangan }}" id="keterangan" class="form-control" placeholder="" required>
                                 </div>
                             </div>
-                            <input type="hidden" name="trs_detail_id" value="{{ $getDataPinjaman->pinjamHasTrsDetail->trs_detail_id}}">
-                            <input type="hidden" name="trs_id" value="{{ $getDataPinjaman->pinjamHasTrsDetail->trs_id}}">
+                            {{-- <input type="hidden" name="trs_detail_id" value="{{ $getDataPinjaman->pinjamHasTrsDetail->trs_detail_id}}"> --}}
+                            {{-- <input type="hidden" name="trs_id" value="{{ $getDataPinjaman->pinjamHasTrsDetail->trs_id}}"> --}}
                             <div class="form-group row">
                                 <div class="col-sm-12">
                                     <a href="{{ url('transaksi_data/peminjaman') }}" class="btn btn-info">Kembali</a>
@@ -158,8 +158,8 @@
 @push('page-script')
 <script>
 $(document).ready(function() {
-    $("#data_peminjaman,#obj").prop("disabled", true);
-    $('#pegawai').select2();
+    // $("").prop("disabled", true);
+    $('#pegawai,#data_peminjaman,#obj').select2();
 });
 
 $('#data_peminjaman').on('change', function () {

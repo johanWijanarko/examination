@@ -318,6 +318,9 @@ class PeminjamanController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
+            'data_peminjaman' => 'required',
+            'obj' => 'required',
+            'jumlah_pinjam' => 'required',
             'pegawai' => 'required',
             'gedung' => 'required',
             'ruangan' => 'required',
@@ -326,15 +329,20 @@ class PeminjamanController extends Controller
 
         ],
         [
+            'data_peminjaman.required' => 'Data Peminjam tidak boleh kosong!',
+            'obj.required' => ' Objek Peminjaman tidak boleh kosong!',
+            'jumlah_pinjam.required' => 'Jumlah Peminjaman tidak boleh kosong!',
             'pegawai.required' => 'Nama Pegawai tidak boleh kosong!',
             'gedung.required' => 'Gedung tidak boleh kosong!',
             'ruangan.required' => 'Ruangan tidak boleh kosong!',
-            'kelompok.required' => 'Kelompok tidak boleh kosong!',
             'tglPinjam.required' => 'Tanggal Pinjam tidak boleh kosong!',
             'keterangan.required' => 'Keterangan tidak boleh kosong!',
         ]);
 
         $save = [
+            'peminjaman_kode'=> $request->kode_pinjam,
+            'peminjamanType'=> $request->data_peminjaman,
+            'peminjaman_obejk_id'=> $request->obj,
             'peminjaman_pegawai_id'=> $request->pegawai,
             'peminjaman_gedung_id'=> $request->gedung,
             'peminjaman_ruangan_id'=> $request->ruangan,
