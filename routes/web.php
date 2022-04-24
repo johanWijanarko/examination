@@ -475,9 +475,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/detail/{id}', [PeminjamanController::class, 'detailpinjaman'])->name('detailpinjam');
         Route::get('/edit/{id}', [PeminjamanController::class, 'edit'])->name('editpinjam');
         Route::post('/update/{id}', [PeminjamanController::class, 'update'])->name('updatepinjam');
-
         Route::get('/confrimApprove/{id}', [PeminjamanController::class, 'confrimApprove'])->name('aprovePinjamConfrim');
+        Route::get('/confrimReject/{id}', [PeminjamanController::class, 'confrimReject'])->name('confrimReject');
         Route::post('/aprovePinjam', [PeminjamanController::class, 'approve'])->name('aprovePinjam');
+        Route::post('/reject', [PeminjamanController::class, 'reject'])->name('rejectPinjam');
+        Route::get('/ketReject/{id}', [PeminjamanController::class, 'ketReject'])->name('ketReject');
     });
 
     Route::group(['prefix' => 'laporan_nominatif/'], function () {

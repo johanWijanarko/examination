@@ -71,7 +71,7 @@
                                     <select class="form-control" id="pegawai" name="pegawai" required>
                                         <option value="{{old('pegawai')}}">Pilih Pegawai</option>
                                     </select>
-                                    <input type="text" name="trs_detail_id" id="trs_detail_id" class="form-control" placeholder="" readonly>
+                                    <input type="hidden" name="trs_detail_id" id="trs_detail_id" class="form-control" placeholder="" readonly>
                                 </div>
                             </div>
                             <div class="form-group row">

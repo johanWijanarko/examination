@@ -51,13 +51,13 @@ class PengembalianController extends Controller
             ->addColumn('details_url', function(PengembalianModels $dp) {
                if ($dp) {
 
-                $btn ='<a data-toggle="modal" id="smallButton2"  data-target="#smallModal2" data-attr="'.route("detailkembali",['id'=>$dp->pengembalian_id]).'" data-placement="top" title="Approve"  class="edit btn btn-warning btn-sm" >Detail</a>';
+                $btn ='<a data-toggle="modal" id="smallButton2"  data-target="#smallModal2" data-attr="'.route("detailkembali",['id'=>$dp->pengembalian_id]).'" data-placement="top" title="Detail"  class="edit btn btn-success btn-sm rounded-circle" ><i class="fas fa-eye"></i></a>&nbsp';
 
                     if($dp->pengembalian_status == 1){
 
-                        $btn = $btn.'<a href="'.route("editKembali",['id'=>$dp->pengembalian_id, 'detail'=>$dp->pengembalian_trs_detail_id]).'" class="edit btn btn-success btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
+                        $btn = $btn.'<a href="'.route("editKembali",['id'=>$dp->pengembalian_id, 'detail'=>$dp->pengembalian_trs_detail_id]).'" class="edit btn btn-warning btn-sm rounded-circle" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>&nbsp';
 
-                        $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("confrimApprove",['id'=>$dp->pengembalian_id]).'" data-placement="top" title="Approve"  class="edit btn btn-primary btn-sm" >Approve</a>';
+                        $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("confrimApprove",['id'=>$dp->pengembalian_id]).'" data-placement="top" title="Approve"  class="btn btn-primary btn-sm rounded-circle" ><i class="fas fa-thumbs-up"></i></a>&nbsp';
                     return $btn;
                     }
                     return $btn;

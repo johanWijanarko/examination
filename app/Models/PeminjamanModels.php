@@ -10,7 +10,7 @@ class PeminjamanModels extends Model
     use HasFactory;
     protected $table = 'peminjaman';
     protected $primaryKey = 'peminjaman_id';
-    protected $fillable = ['peminjaman_id', 'peminjaman_kode', 'peminjamanType', 'peminjaman_obejk_id','peminjaman_pegawai_id', 'peminjaman_tanggal', 'peminjaman_gedung_id','peminjaman_ruangan_id','peminjaman_pic_id','peminjaman_kelompok_id','peminjaman_keterangan','peminjaman_jumlah','created_at', 'updated_at'];
+    protected $fillable = ['peminjaman_id', 'peminjaman_kode', 'peminjamanType', 'peminjaman_obejk_id','peminjaman_pegawai_id', 'peminjaman_tanggal', 'peminjaman_gedung_id','peminjaman_ruangan_id','peminjaman_pic_id','peminjaman_kelompok_id','peminjaman_keterangan','peminjaman_jumlah','peminjaman_ket','created_at', 'updated_at'];
 
     public function peminjamanHasObjek(){
         return $this->belongsTo(StokModels::class, 'peminjaman_obejk_id', 'data_stok_id');
@@ -36,5 +36,5 @@ class PeminjamanModels extends Model
     {
         return $this->belongsTo(DetailTransaksi::class, 'peminjaman_id', 'trs_detail_pinjam_id');
     }
-    
+
 }

@@ -30,7 +30,7 @@ class Stokdata extends Controller
         return DataTables::of($DataPerangkat)
             ->addColumn('details_url', function(StokModels $dp) {
                 if ($dp->data_stok_id) {
-                    $btn ='<a href="'.route("edit_stok",['id'=>$dp->data_stok_id]).'" data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-sm btn-success rounded-circle " ><i class="fas fa-edit"></i></i></a>';
+                    $btn ='<a href="'.route("edit_stok",['id'=>$dp->data_stok_id]).'" data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-sm btn-warning rounded-circle " ><i class="fas fa-edit"></i></i></a>';
                     $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("confrimdelstok",['id'=>$dp->data_stok_id]).'" data-placement="top" title="delete" class="btn btn-sm btn-danger rounded-circle " ><i class="fas fa-trash"></i></a>';
 
                     return $btn;

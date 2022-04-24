@@ -34,29 +34,24 @@ class PeminjamanController extends Controller
         $getDataPinjaman = PeminjamanModels::with(['peminjamanHasObjek', 'peminjamanHasPegawai', 'peminjamanHasGedung', 'peminjamanHasRuangan', 'peminjamanHasType'])->orderBy('peminjaman_id', 'desc')->get();
 
         return DataTables::of($getDataPinjaman)
-            // ->addColumn('actions', 'transaksi/perangkat.actions')
             ->addColumn('details_url', function(PeminjamanModels $dp) {
-            //    if ($dp) {
-            //        $btn = '<button data-url="'.route("detailpinjam",['id'=>$dp->peminjaman_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek">Detail</button>';
-            //         $btn = $btn.'<a href="'.route("editpinjam",['id'=>$dp->peminjaman_id]).'" class="edit btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
-            //        return $btn;
-            //     }
-            //     return '';
-
-
                 if ($dp) {
+                    if($dp->peminjaman_status_id == 1 || $dp->peminjaman_status_id == 2){
+                        $btn = '<button data-url="'.route("detailpinjam",['id'=>$dp->peminjaman_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek rounded-circle"><i class="fas fa-eye"></i></button>';
 
-                    $btn = '<button data-url="'.route("detailpinjam",['id'=>$dp->peminjaman_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek">Detail</button>';
+                        $btn = $btn.'<a href="'.route("editpinjam",['id'=>$dp->peminjaman_id]).'" data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-sm btn-warning rounded-circle " ><i class="fas fa-edit"></i></a>';
 
-                        if($dp->peminjaman_status_id == 1){
+                        $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("aprovePinjamConfrim",['id'=>$dp->peminjaman_id]).'" data-placement="top" title="Approve"  class="edit btn btn-primary btn-sm rounded-circle" ><i class="fas fa-thumbs-up"></i></a>&nbsp';
 
-                            $btn = $btn.'<a href="'.route("editpinjam",['id'=>$dp->peminjaman_id]).'" class="edit btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
+                        $btn =$btn.'<a data-toggle="modal" id="smallButton2"  data-target="#smallModal2" data-attr="'.route("confrimReject",['id'=>$dp->peminjaman_id]).'" data-placement="top" title="Reject"  class="edit btn btn-danger btn-sm rounded-circle" ><i class="fas fa-exclamation-circle"></i></a>';
 
-                            $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("aprovePinjamConfrim",['id'=>$dp->peminjaman_id]).'" data-placement="top" title="Approve"  class="edit btn btn-primary btn-sm" >Approve</a>';
-                            $btn =$btn.'<a data-toggle="modal" id="smallButton2"  data-target="#smallModal2" data-attr="" data-placement="top" title="Approve"  class="edit btn btn-danger btn-sm" >Reject</a>';
                         return $btn;
+                    }elseif ($dp->peminjaman_status_id == 3) {
+                            $btn = '<button data-url="'.route("detailpinjam",['id'=>$dp->peminjaman_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek rounded-circle"><i class="fas fa-eye"></i></button>';
+
+                            return $btn;
                         }
-                        return $btn;
+
                     }
                     return '';
             })
@@ -86,22 +81,28 @@ class PeminjamanController extends Controller
                 return '';
             })
             ->addColumn('statusPinjam', function (PeminjamanModels $dk) {
-                $status = [
-                    '1' => 'Dipakai',
-                    '2' => 'Dipinjam',
-                    '3' => 'Sedang diperbaiki',
-                    '4' => 'Dikembalikan',
-                    '5' => 'Dimutasi',
-                    '6' => 'Selesai diperbaikai',
-                    '7' => 'Tidak dapat diperbaik',
-                ];
-                if ($dk->pinjamHasTrsDetail) {
-                    return  $status[$dk->pinjamHasTrsDetail->trs_detail_status];
+
+                if ($dk) {
+                    if($dk->peminjaman_status_id == 1){
+                        $btn = '<a href="javascript:void(0)" class="edit_ btn btn-info btn-sm">Belum Di Proses</a>';
+                        return $btn;
+                    }elseif ($dk->peminjaman_status_id == 2) {
+
+                        $btn = '<a data-toggle="modal" id="smallButton3"  data-target="#smallModal3" data-attr="'.route("ketReject",['id'=>$dk->peminjaman_id]).'" data-placement="top" title="Approve"  class="edit_ btn btn-danger" >Reject</a>&nbsp';
+
+                        return $btn;
+                    }elseif ($dk->peminjaman_status_id == 3) {
+                        # code...
+                        $btn = '<a href="javascript:void(0)" class="edit_ btn btn-primary btn-sm">Approve</a>';
+                        return $btn;
+                    }
+
                 }
-                return 'Dalam Proses';
+                return '';
+
             })
 
-            ->rawColumns([ 'gedung', 'ruangan', 'dataPinjam', 'pegawai', 'details_url', 'objek', 'tgl'])
+            ->rawColumns([ 'gedung', 'ruangan', 'dataPinjam', 'pegawai', 'details_url', 'objek', 'tgl', 'statusPinjam', 'statusPinjam'])
             ->addIndexColumn()
             ->make(true);
     }
@@ -210,7 +211,7 @@ class PeminjamanController extends Controller
         ]);
 
         ///////////////////////////////////////////////////////////////////////
-// dd($request->obj);
+        // dd($request->obj);
         $save_ = [
 
             'peminjaman_kode'=> $request->kode_pinjam,
@@ -233,35 +234,6 @@ class PeminjamanController extends Controller
         $query = end($query);
         $this->save_log('tambah transaksi peminjaman' ,json_encode($query));
 
-        ///////////////////////////////////////////////////////////////////////
-
-        // $save = [
-        //     'trs_kode'=> $request->kode_pinjam,
-        //     'trs_keterangan'=> $request->keterangan,
-        //     'trs_date'=> Carbon::today(),
-        // ];
-        // $pinjamtrs =TransaksiModels::create($save);
-
-
-
-
-        // if($request->data_peminjaman == 3){
-        //     $product =  StokModels::where('data_stok_id',$request->obj);
-        //     $product->increment('data_dipakai', $request->jumlah_pinjam);
-        //     $product->decrement('data_jumlah', $request->jumlah_pinjam);
-        // }elseif($request->data_peminjaman == 4) {
-        //     $product =  StokModels::where('data_stok_id',$request->obj);
-        //     $product->increment('data_dipakai', $request->jumlah_pinjam);
-        //     $product->decrement('data_jumlah', $request->jumlah_pinjam);
-        // }elseif($request->data_peminjaman == 5) {
-        //     $product =  StokModels::where('data_stok_id',$request->obj);
-        //     $product->increment('data_dipakai', $request->jumlah_pinjam);
-        //     $product->decrement('data_jumlah', $request->jumlah_pinjam);
-        // }
-
-
-
-
         Alert::success('Success', 'Data berhasil di Simpan');
         return redirect('transaksi_data/peminjaman');
     }
@@ -273,12 +245,35 @@ class PeminjamanController extends Controller
         return \view('transaksi/peminjaman.approve',compact('getDataPinjaman'));
     }
 
+    public function ketReject(Request $request, $id)
+    {
+        $getDataPinjaman = PeminjamanModels::find($id);
+        // dd($getDataPinjaman);
+        return \view('transaksi/peminjaman.ketReject',compact('getDataPinjaman'));
+    }
+
+    public function confrimReject(Request $request, $id)
+    {
+        $getDataPinjaman = PeminjamanModels::find($id);
+        // dd($getDataPinjaman);
+        return \view('transaksi/peminjaman.reject',compact('getDataPinjaman'));
+    }
+
+    public function reject(Request $request){
+        // dd($request->all());
+        $updateStatusPinjam =PeminjamanModels::where('peminjaman_id', $request->peminjaman_id)->update(['peminjaman_status_id'=> 2, 'peminjaman_ket'=> $request->rejectKeterangan]);
+
+        Alert::success('Success', 'Data berhasil di Reject');
+        return redirect('transaksi_data/peminjaman');
+    }
     public function approve(Request $request)
     {
         $save = [
-            'trs_kode'=> $request->kode_pinjam,
+            'trs_kode'=> $request->peminjaman_kode,
             'trs_keterangan'=> $request->peminjaman_keterangan,
+            'trs_data_stok_id'=> $request->peminjaman_obejk_id,
             'trs_date'=> Carbon::today(),
+            'trs_pic_id'=> Auth::user()->id,
         ];
         $pinjamtrs =TransaksiModels::create($save);
 
@@ -298,7 +293,7 @@ class PeminjamanController extends Controller
         $product =  StokModels::where('data_stok_id',$request->peminjaman_obejk_id);
         $product->increment('data_dipakai', $request->peminjaman_jumlah);
         $product->decrement('data_jumlah', $request->peminjaman_jumlah);
-        $updateStatusPinjam =PeminjamanModels::where('peminjaman_id', $request->peminjaman_id)->update(['peminjaman_status_id'=> 0]);
+        $updateStatusPinjam =PeminjamanModels::where('peminjaman_id', $request->peminjaman_id)->update(['peminjaman_status_id'=> 3]);
 
         Alert::success('Success', 'Data berhasil di Approve');
         return redirect('transaksi_data/peminjaman');

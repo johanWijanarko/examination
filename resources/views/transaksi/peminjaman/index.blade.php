@@ -8,6 +8,10 @@
         cursor:pointer;
         width:18px;
     }
+    .edit_ {
+    min-width: 80px;
+    max-width: 80px;
+}
 </style>
 <div class="card">
     <div class="card-body">
@@ -19,7 +23,7 @@
           {{-- <a class="btn btn-outline-info btn-outline-oke" href="{{ url('parameter/par_audit') }}"><i class="fas fa-arrow-left"></i> Kembali</a> --}}
         </div>
         <div class="table-responsive mt-4">
-            <table class="table table-bordered table-striped table-inka" id="data_perangkat">
+            <table class="table table-bordered table-striped table-inka" id="data_perangkat" width = "100%">
                 <thead>
                     <tr>
                         <th>Action</th>
@@ -59,6 +63,42 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="smallModal2" tabindex="-1" role="dialog" aria-labelledby="smallModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="display:block !important; text-align:center;">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+
+            </div>
+            <div class="modal-body" id="smallBody2">
+                <div>
+                    <!-- the result to be displayed apply here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="smallModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Keterangan Reject :</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="smallBody3">
+          ...
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 <script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
 
 <script type="text/javascript">
@@ -159,6 +199,55 @@ $(function() {
         })
     });
 
+    $(document).on('click', '#smallButton2', function(event) {
+        event.preventDefault();
+        let href = $(this).attr('data-attr');
+        $.ajax({
+            url: href
+            , beforeSend: function() {
+                $('#loader').show();
+            },
+            // return the result
+            success: function(result) {
+                $('#smallModal2').modal("show");
+                $('#smallBody2').html(result).show();
+            }
+            , complete: function() {
+                $('#loader').hide();
+            }
+            , error: function(jqXHR, testStatus, error) {
+                console.log(error);
+                alert("Page " + href + " cannot open. Error:" + error);
+                $('#loader').hide();
+            }
+            , timeout: 8000
+        })
+    });
+
+    $(document).on('click', '#smallButton3', function(event) {
+        event.preventDefault();
+        let href = $(this).attr('data-attr');
+        $.ajax({
+            url: href
+            , beforeSend: function() {
+                $('#loader').show();
+            },
+            // return the result
+            success: function(result) {
+                $('#smallModal3').modal("show");
+                $('#smallBody3').html(result).show();
+            }
+            , complete: function() {
+                $('#loader').hide();
+            }
+            , error: function(jqXHR, testStatus, error) {
+                console.log(error);
+                alert("Page " + href + " cannot open. Error:" + error);
+                $('#loader').hide();
+            }
+            , timeout: 8000
+        })
+    });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 <script id="details-template" type="text/x-handlebars-template">

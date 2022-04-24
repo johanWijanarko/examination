@@ -51,8 +51,8 @@ class MutasiController extends Controller
             // ->addColumn('actions', 'transaksi/perangkat.actions')
             ->addColumn('details_url', function(MutasiModels $dp) {
                if ($dp) {
-                    $btn = '<button data-url="'.route("detailMutasi",['id_trs'=>$dp->mutasi_trs_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek">Detail</button>';
-                    $btn = $btn.'<a href="'.route("editMutasi",['id'=>$dp->mutasi_id]).'" class="edit btn btn-primary btn-sm" data-toggle="tooltip" data-placement="top" title="Edit">Edit</a>';
+                    $btn = '<button data-url="'.route("detailMutasi",['id_trs'=>$dp->mutasi_trs_id]).'" data-toggle="tooltip" data-placement="top" title="Detail" class="btn btn-success mr-1 btn-sm cek rounded-circle"><i class="fas fa-eye"></i></button>';
+                    $btn = $btn.'<a href="'.route("editMutasi",['id'=>$dp->mutasi_id]).'" data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-sm btn-warning rounded-circle " ><i class="fas fa-edit"></i></a>';
                    return $btn;
                 }
                 return '';

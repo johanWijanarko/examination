@@ -43,7 +43,7 @@ class TransaksiPerangkatController extends Controller
             ->addColumn('details_url', function(TransaksiModels $dp) {
                if ($dp->trs_id) {
                 $btn ='<a href="'.route("edit_trs",['id'=>$dp->trs_id]).'" data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-sm btn-warning rounded-circle " ><i class="fas fa-edit"></i></i></a>';
-                $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("detail_trs_prkt",['id'=>$dp->trs_id]).'" data-placement="top" title="Edit" class="btn btn-sm btn-success rounded-circle " ><i class="fas fa-eye"></i></a>';
+                $btn =$btn.'<a data-toggle="modal" id="smallButton"  data-target="#smallModal" data-attr="'.route("detail_trs_prkt",['id'=>$dp->trs_id]).'" data-placement="top" title="Detail" class="btn btn-sm btn-success rounded-circle " ><i class="fas fa-eye"></i></a>';
                 return $btn;
                 }
                 return '';
