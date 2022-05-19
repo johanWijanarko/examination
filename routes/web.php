@@ -6,11 +6,13 @@ use App\Http\Controllers\Stokdata;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Pelatihan;
+use App\Http\Controllers\Pertanyaan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LaporanGrafik;
 use App\Http\Controllers\LaporanMutasi;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\ExamController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RoleController;
@@ -30,6 +32,7 @@ use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\RuanganController;
 use App\Http\Controllers\DataMerkController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\UserExamController;
 use App\Http\Controllers\LaporanAllNominatif;
 use App\Http\Controllers\LaporanPengembalian;
 use App\Http\Controllers\PerbaikanController;
@@ -494,7 +497,19 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/lap_perbaikan', [LaporanAllNominatif::class, 'laporanPerbaikan'])->name('laporanPerbaikan');
     });
 
-
+    Route::group(['prefix' => 'pertanyan/'], function () {
+        Route::get('/quest', [Pertanyaan::class, 'index'])->name('quest');
+        Route::get('/create', [Pertanyaan::class, 'create'])->name('quest.create');
+        Route::post('/save', [Pertanyaan::class, 'save'])->name('quest.save');
+        Route::get('/exam', [ExamController::class, 'index'])->name('exam');
+    });
+Route::group(['prefix' => 'pertanyan/'], function () {
+        Route::get('/quest', [Pertanyaan::class, 'index'])->name('quest');
+        Route::get('/create', [Pertanyaan::class, 'create'])->name('quest.create');
+        Route::post('/save', [Pertanyaan::class, 'save'])->name('quest.save');
+        Route::get('/exam', [ExamController::class, 'index'])->name('exam');
+        Route::post('/savejawban', [ExamController::class, 'saveJwaban'])->name('exam');
+    });
 
 
     // ubah password cek

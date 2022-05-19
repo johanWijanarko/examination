@@ -28,9 +28,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-       
+
         //
         Paginator::useBootstrap();
+        // Paginator::defaultView('custom');
+        // Paginator::defaultSimpleView('custom-pagination');
         Collection::macro('paginate', function ($perPage, $total = null, $page = null, $pageName = 'page') {
             $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
 
