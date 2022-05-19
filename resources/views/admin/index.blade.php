@@ -85,7 +85,7 @@
                             <button class="close" data-dismiss="alert">
                                 <span>&times;</span>
                             </button>
-                            Hello <strong>{{ strtoupper(Auth::user()->name) }}</strong>, Selamat Datang Di E-Inventaris
+                            Hello <strong>{{ strtoupper(Auth::user()->name) }}</strong>, Selamat Datang Di Sistem Administrasi Ujian
                         </div>
                     </div>
                 </div>
@@ -99,7 +99,7 @@
                         </div>
                         <div class="card-wrap">
                         <div class="card-header">
-                            <h4>Rekapitulasi Perangkat</h4>
+                            <h4>Jumlah Peserta</h4>
                         </div>
                         <div class="card-body">
                             {{ $countPerangkat }}
@@ -114,7 +114,7 @@
                         </div>
                         <div class="card-wrap">
                             <div class="card-header">
-                                <h4>Rekapitulasi Aplikasi</h4>
+                                <h4>Total Soal</h4>
                             </div>
                             <div class="card-body">
                                 {{ $countAplikasi }}
@@ -129,7 +129,7 @@
                         </div>
                         <div class="card-wrap">
                         <div class="card-header">
-                            <h4>Rekapitulasi Alat Kantor</h4>
+                            <h4>Jumlah Peserta Lulus</h4>
                         </div>
                         <div class="card-body">
                             {{ $countAtk }}
@@ -144,7 +144,7 @@
                         </div>
                         <div class="card-wrap">
                         <div class="card-header">
-                            <h4>Rekapitulasi Inventaris</h4>
+                            <h4>Jumlah Peserta Gagal</h4>
                         </div>
                         <div class="card-body">
                             {{ $countInv }}

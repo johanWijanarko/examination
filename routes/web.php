@@ -21,6 +21,7 @@ use App\Http\Controllers\AplikasiLaporan;
 use App\Http\Controllers\BagianController;
 use App\Http\Controllers\FungsiController;
 use App\Http\Controllers\GedungController;
+use App\Http\Controllers\KotamaController;
 use App\Http\Controllers\LaporanPerangkat;
 use App\Http\Controllers\LokasiController;
 use App\Http\Controllers\MutasiController;
@@ -379,9 +380,10 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/getSubBagian', [TransaksiPerangkatController::class, 'getSubBagian'])->name('getSubBagian');
         Route::get('/getPegawai', [TransaksiPerangkatController::class, 'getPegawai'])->name('getPegawai');
     });
+
     Route::group(['prefix' => 'transaksi_data/aplikasi_trans'], function () {
 
-    // trs aplikasi
+        // trs aplikasi
         Route::get('/', [TransaksiAplikasiController::class, 'index'])->name('trs_aplikasi');
         Route::get('/add', [TransaksiAplikasiController::class, 'tambah'])->name('add_trs_aplikasi');
         Route::get('/getTrsaplikasi', [TransaksiAplikasiController::class, 'getTrsaplikasi'])->name('getTrsaplikasi');
@@ -503,15 +505,27 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/save', [Pertanyaan::class, 'save'])->name('quest.save');
         Route::get('/exam', [ExamController::class, 'index'])->name('exam');
     });
-Route::group(['prefix' => 'pertanyan/'], function () {
+    Route::group(['prefix' => 'pertanyan/'], function () {
         Route::get('/quest', [Pertanyaan::class, 'index'])->name('quest');
         Route::get('/create', [Pertanyaan::class, 'create'])->name('quest.create');
         Route::post('/save', [Pertanyaan::class, 'save'])->name('quest.save');
         Route::get('/exam', [ExamController::class, 'index'])->name('exam');
         Route::post('/savejawban', [ExamController::class, 'saveJwaban'])->name('exam');
+        Route::post('/savejawban', [ExamController::class, 'saveJwaban'])->name('exam');
     });
 
+    // data baru project ujian 
+    // master data 
 
+    Route::group(['prefix' => 'master/'], function () {
+        Route::get('/kotama', [KotamaController::class, 'index'])->name('kotama');
+        Route::post('/savekotama', [KotamaController::class, 'save'])->name('savekotama');
+        Route::get('/getDataKotama', [KotamaController::class, 'getDataKotama'])->name('savekotama');
+        Route::get('/editkotama{id}', [KotamaController::class, 'edit'])->name('editkotama');
+        Route::post('/updatekotama', [KotamaController::class, 'update'])->name('updatekotama');
+        Route::get('/confrimdeletekotama/{id}', [KotamaController::class, 'confrimDelete'])->name('confrimdeletekotama');
+        Route::get('/deletekotama/{id}', [KotamaController::class, 'delete'])->name('deletekotama');
+    });
     // ubah password cek
     Route::get('ubah_password/{id}', [HomeController::class, 'ubah_password'])->name('ubah_password');
     Route::post('update_password/{id}', [HomeController::class, 'update_password'])->name('update_password');
